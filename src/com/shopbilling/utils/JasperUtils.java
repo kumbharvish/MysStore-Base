@@ -77,7 +77,6 @@ public class JasperUtils {
             // load report location
 			String homeLocation = PDFUtils.getAppDataValues(AppConstants.MYSTORE_HOME).get(0);
         	String jrxmlLocation = homeLocation+"Jrxml\\\\"+JrxmlLoc;
-        	logger.error("jrxmlLocation : "+jrxmlLocation);
         	//With JRXML
         	//JasperReport jasperReport = JasperCompileManager.compileReport(jrxmlLocation);
         	
@@ -107,6 +106,47 @@ public class JasperUtils {
             String filePath=  fileLocation+reportName+"_"+sdf.format(new Date())+".pdf";
             JasperExportManager.exportReportToPdfFile(jasperPrint, filePath);
             PDFUtils.openWindowsDocument(filePath);
+        } catch (Exception e) {
+        	e.printStackTrace();
+        	isSucess = false;
+        	logger.error("Jasper Exception: ",e);
+        }
+        return isSucess;
+    }
+	
+	public static boolean createPDFForBarcode(List<Map<String,?>> dataSourceMap,String JrxmlName,String pdfName) {
+		boolean isSucess=true;
+		try {       
+            // load report location
+			String homeLocation = PDFUtils.getAppDataValues(AppConstants.MYSTORE_HOME).get(0);
+        	String jrxmlLocation = homeLocation+"Jrxml\\\\"+JrxmlName;
+        	//With JRXML
+        	//JasperReport jasperReport = JasperCompileManager.compileReport(jrxmlLocation);
+        	
+        	//With Jasper File
+        	FileInputStream fis = new FileInputStream(jrxmlLocation);
+            BufferedInputStream bufferedInputStream = new BufferedInputStream(fis);
+            JasperReport jasperReport = (JasperReport) JRLoader.loadObject(bufferedInputStream);
+            
+            JRMapCollectionDataSource dataSource = new JRMapCollectionDataSource(dataSourceMap);
+            
+             //Add Report Headers
+             HashMap<String,Object> headerParamsMap = new HashMap<String, Object>();
+             MyStoreDetails details =  MyStoreServices.getMyStoreDetails();
+             headerParamsMap.put("StoreName", details.getStoreName());
+             headerParamsMap.put("Address", details.getAddress());
+             headerParamsMap.put("Address2",details.getAddress2()+","+details.getCity()+",Dist."+details.getDistrict());
+             headerParamsMap.put("MobileNumber","Mob. "+details.getMobileNo());
+             headerParamsMap.put("State",details.getState());
+            // compile report
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, headerParamsMap, dataSource);
+ 
+            // view report to UI
+            //JasperViewer.viewReport(jasperPrint, false);
+            //Export To PDF
+            String fileLocation = homeLocation+"\\"+AppConstants.BARCODE_SHEET_FOLER+"\\";
+            String filePath=  fileLocation+pdfName+".pdf";
+            JasperExportManager.exportReportToPdfFile(jasperPrint, filePath);
         } catch (Exception e) {
         	e.printStackTrace();
         	isSucess = false;

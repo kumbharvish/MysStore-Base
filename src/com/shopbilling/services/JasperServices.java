@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.shopbilling.dto.Barcode;
 import com.shopbilling.dto.BillDetails;
 import com.shopbilling.dto.Customer;
 import com.shopbilling.dto.ItemDetails;
@@ -151,5 +152,18 @@ public class JasperServices {
 	           dataSourceMaps.add(map);
 	       }  
 	       return dataSourceMaps;
+		}
+		
+		//Barcode Data Source
+		public static List<Map<String,?>> createDataForBarcode(List<Barcode> barcodeList){
+			 List<Map<String,?>> dataSourceMaps = new ArrayList<Map<String, ?>> ();
+	        for (Barcode barcode : barcodeList) {
+	            Map<String,Object> map = new HashMap<String, Object>();
+	            map.put("ProductName", barcode.getProductName());
+	            map.put("Barcode", barcode.getBarcode());
+	            map.put("Price", PDFUtils.getDecimalFormat(barcode.getPrice()));
+	            dataSourceMaps.add(map);
+	        }  
+	        return dataSourceMaps;
 		}
 }

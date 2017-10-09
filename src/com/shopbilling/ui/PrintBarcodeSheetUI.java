@@ -9,15 +9,17 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
@@ -29,10 +31,12 @@ import org.fuin.utils4swing.layout.scalable.DefaultScalableLayoutRegistry;
 import org.fuin.utils4swing.layout.scalable.ScalableLayoutUtils;
 
 import com.shopbilling.constants.AppConstants;
+import com.shopbilling.dto.Barcode;
 import com.shopbilling.dto.Product;
 import com.shopbilling.services.AutoSuggestTable;
-import com.shopbilling.services.BarCodeServices;
+import com.shopbilling.services.JasperServices;
 import com.shopbilling.services.ProductServices;
+import com.shopbilling.utils.JasperUtils;
 import com.shopbilling.utils.PDFUtils;
 
 public class PrintBarcodeSheetUI extends JInternalFrame {
@@ -43,10 +47,11 @@ public class PrintBarcodeSheetUI extends JInternalFrame {
 	private JTextField tf_CategoryName;
 	private JTextField tf_Barcode;
 	private AutoSuggestTable<String> autoSuggestTable;
-	private JComboBox comboBox;
-	private String fileName;
-	private String fileLocation;
 	private final static Logger logger = Logger.getLogger(PrintBarcodeSheetUI.class);
+	private JTextField tf_Mrp;
+	private JRadioButton rdbtnStickers_65;
+	private JRadioButton rdbtnStickers_24;
+	private JRadioButton rdbtnStickers_21;
 	/**
 	 * Create the frame.
 	 */
@@ -104,6 +109,13 @@ public class PrintBarcodeSheetUI extends JInternalFrame {
 		label_3.setBorder(border);
 		panel_1.add(label_3);
 		
+		JLabel mrplabel = new JLabel("MRP  ");
+		mrplabel.setHorizontalAlignment(SwingConstants.RIGHT);
+		mrplabel.setForeground(Color.GRAY);
+		mrplabel.setBounds(77, 197, 120, 25);
+		mrplabel.setBorder(border);
+		panel_1.add(mrplabel);
+		
 		tf_ProductName = new JTextField();
 		tf_ProductName.setFont(new Font("Dialog", Font.BOLD, 13));
 		tf_ProductName.setEnabled(false);
@@ -145,49 +157,49 @@ public class PrintBarcodeSheetUI extends JInternalFrame {
 		tf_Barcode.setBounds(196, 173, 279, 25);
 		panel_1.add(tf_Barcode);
 		
-		JLabel lblNewLabel = new JLabel("Note : One A4 Size Page holds 52 Barcode labels");
-		lblNewLabel.setBounds(155, 228, 294, 14);
-		panel_1.add(lblNewLabel);
-		
-		JLabel lblSelectNoOf = new JLabel("Select No of Pages :");
-		lblSelectNoOf.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblSelectNoOf.setBounds(77, 290, 120, 27);
-		panel_1.add(lblSelectNoOf);
-		
-		comboBox = new JComboBox();
-		comboBox.setBounds(207, 290, 217, 27);
-		comboBox.addItem("Page 1 : 52 Barcode Labels");
-		comboBox.addItem("Page 2 : 104 Barcode Labels");
-		comboBox.addItem("Page 3 : 156 Barcode Labels");
-		comboBox.addItem("Page 4 : 208 Barcode Labels");
-		comboBox.addItem("Page 5 : 260 Barcode Labels");
-		
-		panel_1.add(comboBox);
-		fileLocation = PDFUtils.getAppDataValues(AppConstants.MYSTORE_HOME).get(0)+AppConstants.BARCODE_SHEET_FOLER+"\\";
+		tf_Mrp = new JTextField();
+		tf_Mrp.setFont(new Font("Dialog", Font.BOLD, 13));
+		tf_Mrp.setEnabled(false);
+		tf_Mrp.setEditable(false);
+		tf_Mrp.setDisabledTextColor(Color.DARK_GRAY);
+		tf_Mrp.setColumns(10);
+		tf_Mrp.setBorder(border);
+		tf_Mrp.setBounds(196, 197, 279, 25);
+		panel_1.add(tf_Mrp);
 		
 		JButton btnCreateBarcodeSheet = new JButton("Create Barcode Sheet");
 		btnCreateBarcodeSheet.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(PDFUtils.isMandatoryEntered(tf_Barcode) && PDFUtils.isMandatoryEntered(tf_ProductName)){
-					BarCodeServices barcode = new BarCodeServices();
-					try {
-						fileName = fileLocation+tf_ProductName.getText()+".pdf";
-						int noOfPages = comboBox.getSelectedIndex()+1;
-						barcode.createPdf(fileName, tf_Barcode.getText().trim(), tf_ProductName.getText(),noOfPages);
-						JOptionPane.showMessageDialog(getContentPane(), "Barcode Sheet Ready at "+fileName);
-						PDFUtils.openWindowsDocument(fileName);
-					} catch (Exception e1) {
-						e1.printStackTrace();
-						logger.error("Print Barcode Sheet Exception : ",e1);
-					} 
-				}else{
-					JOptionPane.showMessageDialog(getContentPane(), "Please Select the Product !");
-				}
-				
+				createBarcodeSheet();
 			}
 		});
-		btnCreateBarcodeSheet.setBounds(175, 380, 211, 23);
+		btnCreateBarcodeSheet.setBounds(154, 360, 211, 23);
 		panel_1.add(btnCreateBarcodeSheet);
+		
+		JLabel lblStickerPaperType = new JLabel("Sticker Paper Type :");
+		lblStickerPaperType.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblStickerPaperType.setBounds(26, 279, 120, 27);
+		panel_1.add(lblStickerPaperType);
+		
+		ButtonGroup bg = new ButtonGroup();
+		
+		rdbtnStickers_65 = new JRadioButton("65 Stickers");
+		rdbtnStickers_65.setBounds(154, 281, 108, 23);
+		rdbtnStickers_65.setSelected(true);
+		panel_1.add(rdbtnStickers_65);
+		
+		rdbtnStickers_24 = new JRadioButton("24 Stickers");
+		rdbtnStickers_24.setBounds(264, 281, 108, 23);
+		rdbtnStickers_24.setEnabled(false);
+		panel_1.add(rdbtnStickers_24);
+		
+		rdbtnStickers_21 = new JRadioButton("21 Stickers");
+		rdbtnStickers_21.setBounds(374, 281, 101, 23);
+		rdbtnStickers_21.setEnabled(false);
+		panel_1.add(rdbtnStickers_21);
+		bg.add(rdbtnStickers_65);
+		bg.add(rdbtnStickers_21);
+		bg.add(rdbtnStickers_24);
 		
 		autoSuggestTable.addKeyListener(new KeyAdapter() {
 			@Override
@@ -210,6 +222,7 @@ public class PrintBarcodeSheetUI extends JInternalFrame {
 		tf_CategoryName.setText(" "+product.getProductCategory());
 		tf_Barcode.setText(" "+String.valueOf(product.getProductBarCode()));
 		tf_StockQty.setText(" "+String.valueOf(product.getQuanity()));
+		tf_Mrp.setText(" "+PDFUtils.getDecimalFormat(product.getProductMRP()) );
 	}
 	
 	private void resetFields(){
@@ -217,6 +230,7 @@ public class PrintBarcodeSheetUI extends JInternalFrame {
 		tf_CategoryName.setText("");
 		tf_Barcode.setText("");
 		tf_StockQty.setText("");
+		tf_Mrp.setText("");
 	}
 
 	public List<String> getProductName(){
@@ -228,5 +242,57 @@ public class PrintBarcodeSheetUI extends JInternalFrame {
 			productMap.put(product.getProductName()+" : "+PDFUtils.getDecimalFormat(product.getProductMRP()),product);
 		}
 		return productNameList;
+	}
+
+	private void createBarcodeSheet() {
+		String fileName = tf_ProductName.getText();
+		String JrxmlName = null;
+		List<Barcode> barcodeList=null;
+		if(PDFUtils.isMandatoryEntered(tf_Barcode) 
+				&& PDFUtils.isMandatoryEntered(tf_ProductName)
+				&& PDFUtils.isMandatoryEntered(tf_Mrp)){
+			try {
+				Barcode barcode = new  Barcode();
+				barcode.setBarcode(tf_Barcode.getText());
+				barcode.setPrice(Double.valueOf(tf_Mrp.getText()));
+				barcode.setProductName(tf_ProductName.getText());
+				
+				if(rdbtnStickers_65.isSelected()) {
+					JrxmlName = AppConstants.BARCODE_65_JASPER;
+					barcodeList = createDataSource(barcode,65);
+				}else if (rdbtnStickers_24.isSelected()) {
+					JrxmlName = AppConstants.BARCODE_24_JASPER;
+					barcodeList = createDataSource(barcode,24);
+				}else if(rdbtnStickers_21.isSelected()) {
+					JrxmlName = AppConstants.BARCODE_21_JASPER;
+					barcodeList = createDataSource(barcode,21);
+				}
+				
+				JasperUtils.createPDFForBarcode(JasperServices.createDataForBarcode(barcodeList), JrxmlName, fileName);
+				JOptionPane.showMessageDialog(getContentPane(), "Barcode Sheet created sucessfully!");
+				String fileLocation = PDFUtils.getAppDataValues(AppConstants.MYSTORE_HOME).get(0)+AppConstants.BARCODE_SHEET_FOLER+"\\";
+				fileName = fileLocation+tf_ProductName.getText()+".pdf";
+				PDFUtils.openWindowsDocument(fileName);
+			} catch (Exception e1) {
+				e1.printStackTrace();
+				logger.error("Print Barcode Sheet Exception : ",e1);
+			} 
+		}else{
+			JOptionPane.showMessageDialog(getContentPane(), "Please Select the Product !");
+		}
+	}
+
+	private List<Barcode> createDataSource(Barcode barcode ,int size) {
+		 List<Barcode> barcodeList = new ArrayList<Barcode> (); 
+		 Barcode br;
+		for(int i=0;i<size;i++) {
+			br = new Barcode();
+			br.setBarcode(barcode.getBarcode());
+			br.setPrice(barcode.getPrice());
+			br.setProductName(barcode.getProductName());
+			br.setShopName(barcode.getShopName());
+			barcodeList.add(br);
+		}
+		return barcodeList;
 	}
 }

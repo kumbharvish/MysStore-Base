@@ -172,8 +172,8 @@ public class PDFUtils {
 	}
 	
 	public static long getBarcode() {
-		long min = 70000000;
-		long max = 79999999;
+		long min = 890000000000L;
+		long max = 899999999999L;
 		long randonCode = (long) Math.floor(Math.random() * (max - min + 1))
 				+ min;
 		return randonCode;
@@ -300,7 +300,7 @@ public class PDFUtils {
 	}
 	
 	public static void main(String[] args) {
-		System.out.println(getAmountFormat(54.809));		
+		System.out.println(getBarcode());		
 	}
 	
 	public static void openWindowsDocument(String filePath){
