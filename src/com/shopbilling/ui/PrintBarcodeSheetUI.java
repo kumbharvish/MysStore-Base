@@ -51,7 +51,7 @@ public class PrintBarcodeSheetUI extends JInternalFrame {
 	private JTextField tf_Mrp;
 	private JRadioButton rdbtnStickers_65;
 	private JRadioButton rdbtnStickers_24;
-	private JRadioButton rdbtnStickers_21;
+	//private JRadioButton rdbtnStickers_30;
 	/**
 	 * Create the frame.
 	 */
@@ -190,15 +190,13 @@ public class PrintBarcodeSheetUI extends JInternalFrame {
 		
 		rdbtnStickers_24 = new JRadioButton("24 Stickers");
 		rdbtnStickers_24.setBounds(264, 281, 108, 23);
-		rdbtnStickers_24.setEnabled(false);
 		panel_1.add(rdbtnStickers_24);
 		
-		rdbtnStickers_21 = new JRadioButton("21 Stickers");
-		rdbtnStickers_21.setBounds(374, 281, 101, 23);
-		rdbtnStickers_21.setEnabled(false);
-		panel_1.add(rdbtnStickers_21);
+		/*rdbtnStickers_30 = new JRadioButton("30 Stickers");
+		rdbtnStickers_30.setBounds(374, 281, 101, 23);
+		panel_1.add(rdbtnStickers_30);*/
 		bg.add(rdbtnStickers_65);
-		bg.add(rdbtnStickers_21);
+		//bg.add(rdbtnStickers_30);
 		bg.add(rdbtnStickers_24);
 		
 		autoSuggestTable.addKeyListener(new KeyAdapter() {
@@ -253,7 +251,7 @@ public class PrintBarcodeSheetUI extends JInternalFrame {
 				&& PDFUtils.isMandatoryEntered(tf_Mrp)){
 			try {
 				Barcode barcode = new  Barcode();
-				barcode.setBarcode(tf_Barcode.getText());
+				barcode.setBarcode(tf_Barcode.getText().trim());
 				barcode.setPrice(Double.valueOf(tf_Mrp.getText()));
 				barcode.setProductName(tf_ProductName.getText());
 				
@@ -263,10 +261,10 @@ public class PrintBarcodeSheetUI extends JInternalFrame {
 				}else if (rdbtnStickers_24.isSelected()) {
 					JrxmlName = AppConstants.BARCODE_24_JASPER;
 					barcodeList = createDataSource(barcode,24);
-				}else if(rdbtnStickers_21.isSelected()) {
-					JrxmlName = AppConstants.BARCODE_21_JASPER;
-					barcodeList = createDataSource(barcode,21);
-				}
+				}/*else if(rdbtnStickers_30.isSelected()) {
+					JrxmlName = AppConstants.BARCODE_30_JASPER;
+					barcodeList = createDataSource(barcode,30);
+				}*/
 				
 				JasperUtils.createPDFForBarcode(JasperServices.createDataForBarcode(barcodeList), JrxmlName, fileName);
 				JOptionPane.showMessageDialog(getContentPane(), "Barcode Sheet created sucessfully!");
