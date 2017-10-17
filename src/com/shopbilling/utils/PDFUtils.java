@@ -22,22 +22,24 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.JTableHeader;
 
 import org.apache.log4j.Logger;
 
+import com.shopbilling.properties.AppProperties;
+
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
-
-import com.shopbilling.properties.AppProperties;
 
 public class PDFUtils {
 
@@ -299,10 +301,6 @@ public class PDFUtils {
 	    }
 	}
 	
-	public static void main(String[] args) {
-		System.out.println(getBarcode());		
-	}
-	
 	public static void openWindowsDocument(String filePath){
 		try {
 			if ((new File(filePath)).exists()) {
@@ -338,4 +336,29 @@ public class PDFUtils {
         return image;
     }
 	
+	public static void licenseExpiryAlert(Container panel) {
+		try {
+			String licenseDateStr =dec(getAppDataValues("APP_SECURE_KEY").get(0));
+			SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
+			Date licenseDate = sdf.parse(licenseDateStr);
+			Date currentDate = new Date();
+			long diff = getDifferenceDays(currentDate,licenseDate);
+			System.out.println("Days Difference : "+diff);
+			if(diff<=15) {
+				JOptionPane.showMessageDialog(panel,"Your license expires in "+diff+" days. Kindly renew your license.","Renew License",JOptionPane.WARNING_MESSAGE);
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+			logger.error("licenseExpiryAlert :",e);
+		}
+	}
+	
+	public static long getDifferenceDays(Date d1, Date d2) {
+	    long diff = d2.getTime() - d1.getTime();
+	    return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+	}
+	
+	
+	public static void main(String[] args) throws Exception {
+	}
 }

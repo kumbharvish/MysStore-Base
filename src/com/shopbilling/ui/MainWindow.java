@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.SystemColor;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -33,8 +34,7 @@ import com.shopbilling.dto.MyStoreDetails;
 import com.shopbilling.dto.UserDetails;
 import com.shopbilling.services.DBBackupService;
 import com.shopbilling.services.MyStoreServices;
-import com.shopbilling.services.ReportServices;
-import java.awt.GridLayout;
+import com.shopbilling.utils.PDFUtils;
 
 public class MainWindow extends JFrame{
 
@@ -826,6 +826,8 @@ public class MainWindow extends JFrame{
 		//ScalableLayoutUtils.installScalableLayoutAndKeys(new DefaultScalableLayoutRegistry(), this, 0.1);
 		System.out.println("width " +width);
 		System.out.println("height "+height);
+		//Display alert for license expire
+		PDFUtils.licenseExpiryAlert(getContentPane());
 	}
 	
 	protected void closeAllInternalFrames() {
