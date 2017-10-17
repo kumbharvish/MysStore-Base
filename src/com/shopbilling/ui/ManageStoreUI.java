@@ -123,14 +123,6 @@ public class ManageStoreUI extends JFrame {
 		btnLogin.setBounds(72, 228, 157, 62);
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		btnLogin.setBackground(UIManager.getColor("Button.background"));
-		btnLogin.setFont(new Font("Tahoma", Font.BOLD, 18));
-		btnLogin.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				
 				String user = userName.getText();
 				String pwd = passwordField.getText();
 				if ("".equals(user)|| "".equals(pwd)){
@@ -150,11 +142,13 @@ public class ManageStoreUI extends JFrame {
 							JOptionPane.showMessageDialog(contentPane, "Invalid User Type !");
 						}
 					}else{
-						JOptionPane.showMessageDialog(contentPane, "Login Failed!");
+						JOptionPane.showMessageDialog(contentPane, "Entered username / password is incorrect!","Login Failed",JOptionPane.WARNING_MESSAGE);
 					}
 				}
 			}
 		});
+		btnLogin.setBackground(UIManager.getColor("Button.background"));
+		btnLogin.setFont(new Font("Tahoma", Font.BOLD, 18));
 		
 		JButton btnClose = new JButton("Close");
 		btnClose.setIcon(null);
@@ -190,6 +184,7 @@ public class ManageStoreUI extends JFrame {
 		contentPane.add(lblNewLabel);
 		//Update Last Run
 		AppLicenseServices.updateLastRun();
+		contentPane.getRootPane().setDefaultButton(btnLogin);
 	}
 	
 	public static void main(String[] args) {
