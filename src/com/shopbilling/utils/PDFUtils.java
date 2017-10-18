@@ -174,8 +174,8 @@ public class PDFUtils {
 	}
 	
 	public static long getBarcode() {
-		long min = 700000L;
-		long max = 799999L;
+		long min = 700000000000L;
+		long max = 799999999999L;
 		long randonCode = (long) Math.floor(Math.random() * (max - min + 1))
 				+ min;
 		return randonCode;

@@ -189,7 +189,7 @@ public class SalesReturnCustomerDialogUI extends JDialog {
 		 table.getColumnModel().getColumn(6).setPreferredWidth(100);
 		 table.getColumnModel().getColumn(7).setPreferredWidth(130);
 		 table.getColumnModel().getColumn(8).setPreferredWidth(120);
-		
+		 contentPane.getRootPane().setDefaultButton(btnSearch);
 	}
 	
 	//Fill Report Table

@@ -16,12 +16,16 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.swing.JOptionPane;
 
+import org.apache.log4j.Logger;
+
 import com.shopbilling.dto.MailConfigDTO;
 import com.shopbilling.dto.StatusDTO;
+import com.shopbilling.services.DBBackupService;
  
 public class EmailAttachmentSender {
 	
- 
+	private final static Logger logger = Logger.getLogger(EmailAttachmentSender.class);
+
     public static StatusDTO sendEmailWithAttachments(MailConfigDTO mail,String attachment){
     	StatusDTO status = new StatusDTO();    	
     	try{
@@ -87,6 +91,7 @@ public class EmailAttachmentSender {
     		e.printStackTrace();
     		status.setStatusCode(-1);
     		status.setException(e.getMessage());
+    		logger.error("Email Sender Exception : ",e);
     	}
     	return status;
     }
