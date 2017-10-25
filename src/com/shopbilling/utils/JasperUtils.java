@@ -8,6 +8,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
+import com.shopbilling.constants.AppConstants;
+import com.shopbilling.dto.MyStoreDetails;
+import com.shopbilling.services.MyStoreServices;
+
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -15,12 +21,7 @@ import net.sf.jasperreports.engine.JasperPrintManager;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRMapCollectionDataSource;
 import net.sf.jasperreports.engine.util.JRLoader;
-
-import org.apache.log4j.Logger;
-
-import com.shopbilling.constants.AppConstants;
-import com.shopbilling.dto.MyStoreDetails;
-import com.shopbilling.services.MyStoreServices;
+import net.sf.jasperreports.view.JasperViewer;
 
 public class JasperUtils {
 
@@ -142,11 +143,23 @@ public class JasperUtils {
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, headerParamsMap, dataSource);
  
             // view report to UI
-            //JasperViewer.viewReport(jasperPrint, false);
+            JasperViewer.viewReport(jasperPrint, false);
+            
             //Export To PDF
-            String fileLocation = homeLocation+"\\"+AppConstants.BARCODE_SHEET_FOLER+"\\";
+           /* String fileLocation = homeLocation+"\\"+AppConstants.BARCODE_SHEET_FOLER+"\\";
             String filePath=  fileLocation+pdfName+".pdf";
-            JasperExportManager.exportReportToPdfFile(jasperPrint, filePath);
+            JasperExportManager.exportReportToPdfFile(jasperPrint, filePath);*/
+            
+            /*String fileLocation = homeLocation+"\\"+AppConstants.BARCODE_SHEET_FOLER+"\\";
+            String filePath=  fileLocation+pdfName+".doc";
+            Exporter exporter = new JRDocxExporter();
+            exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+            File exportReportFile = new File(filePath);
+            exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(exportReportFile));
+            exporter.exportReport();*/
+            
+            //Export To DOC
+           // PDFUtils.openWindowsDocument(filePath);
         } catch (Exception e) {
         	e.printStackTrace();
         	isSucess = false;

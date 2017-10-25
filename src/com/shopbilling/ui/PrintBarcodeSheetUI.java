@@ -266,11 +266,10 @@ public class PrintBarcodeSheetUI extends JInternalFrame {
 					barcodeList = createDataSource(barcode,30);
 				}*/
 				
-				JasperUtils.createPDFForBarcode(JasperServices.createDataForBarcode(barcodeList), JrxmlName, fileName);
-				JOptionPane.showMessageDialog(getContentPane(), "Barcode Sheet created sucessfully!");
-				String fileLocation = PDFUtils.getAppDataValues(AppConstants.MYSTORE_HOME).get(0)+AppConstants.BARCODE_SHEET_FOLER+"\\";
-				fileName = fileLocation+tf_ProductName.getText()+".pdf";
-				PDFUtils.openWindowsDocument(fileName);
+				boolean isSuccess = JasperUtils.createPDFForBarcode(JasperServices.createDataForBarcode(barcodeList), JrxmlName, fileName);
+				if(!isSuccess) {
+					JOptionPane.showMessageDialog(getContentPane(),"Barcode length should be 12 digits! Please correct barcode number!","Barcode Invalid",JOptionPane.WARNING_MESSAGE);
+				}
 			} catch (Exception e1) {
 				e1.printStackTrace();
 				logger.error("Print Barcode Sheet Exception : ",e1);
