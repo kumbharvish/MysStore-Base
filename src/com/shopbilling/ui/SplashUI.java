@@ -13,8 +13,8 @@ public class SplashUI {
 	public SplashUI(){
 		JWindow window = new JWindow();
 		window.getContentPane().add(
-		    new JLabel("", new ImageIcon(SplashUI.class.getResource("/images/splash.png")), SwingConstants.CENTER));
-		window.setBounds(100, 250, 300, 250);
+		    new JLabel("", new ImageIcon(SplashUI.class.getResource("/images/splash1.jpg")), SwingConstants.CENTER));
+		window.setBounds(100, 250, 550, 140);
 		 Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
 		    int x = (int) ((dimension.getWidth() - window.getWidth()) / 2);
 		    int y = (int) ((dimension.getHeight() - window.getHeight()) / 2);

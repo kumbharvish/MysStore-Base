@@ -187,7 +187,7 @@ public class ManageStoreUI extends JFrame {
 		contentPane.getRootPane().setDefaultButton(btnLogin);
 	}
 	
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		PropertyConfigurator.configure(ManageStoreUI.class.getClassLoader().getResourceAsStream("resources/log4j.properties"));
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -214,5 +214,5 @@ public class ManageStoreUI extends JFrame {
 				}
 			}
 		});
-	}
+	}*/
 }
