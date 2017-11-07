@@ -817,7 +817,7 @@ public class MainWindow extends JFrame{
 		contentPane.add(myStoreNamelbl);
 		
 		//Create Database Backup
-		DBBackupService.createDBDump();
+		new Thread(new MailTask()).start();
 		// Add Opening Stock Value Amount Entry
 		//ReportServices.doRecurrsiveInsertOpeningAmount();
 		
@@ -830,6 +830,14 @@ public class MainWindow extends JFrame{
 		PDFUtils.licenseExpiryAlert(getContentPane());
 	}
 	
+	class MailTask implements Runnable{
+		@Override
+		public void run() {
+			DBBackupService.createDBDumpSendOnMail();			
+		}
+		
+	}
+
 	protected void closeAllInternalFrames() {
 		if(newBill != null){
 			if(!btnNewBill.isEnabled())

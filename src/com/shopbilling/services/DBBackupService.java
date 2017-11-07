@@ -83,7 +83,7 @@ public class DBBackupService {
 	            			JOptionPane.showMessageDialog(null, "Please check your Internet Connection !", "Mail Send Error", JOptionPane.INFORMATION_MESSAGE);
 	            		}
 	        			if(status.getException().contains("AuthFail")){
-	            			JOptionPane.showMessageDialog(null, "Your Mail From Id or Password is incorrect. Please check Mail Configurations !", "Mail Send Error", JOptionPane.INFORMATION_MESSAGE);
+	            			JOptionPane.showMessageDialog(null, "Your Mail From Id or Password is incorrect. Please check Mail Configurations ! / Login denied ", "Mail Send Error", JOptionPane.INFORMATION_MESSAGE);
 	            		}
 	        		}
 	        	}else{

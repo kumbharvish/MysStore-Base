@@ -87,6 +87,7 @@ public class EmailAttachmentSender {
     		e.printStackTrace();
     		status.setStatusCode(-1);
     		status.setException("AuthFail");
+    		logger.error("Email Sender Exception : ",e);
     	}catch (Exception e) {
     		e.printStackTrace();
     		status.setStatusCode(-1);
