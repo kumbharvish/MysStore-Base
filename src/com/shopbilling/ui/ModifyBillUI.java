@@ -51,6 +51,7 @@ import com.shopbilling.services.BillingServices;
 import com.shopbilling.services.ProductServices;
 import com.shopbilling.services.SalesReturnServices;
 import com.shopbilling.services.UserServices;
+import com.shopbilling.services.WiremanServices;
 import com.shopbilling.utils.PDFUtils;
 
 public class ModifyBillUI extends JDialog {
@@ -83,6 +84,7 @@ public class ModifyBillUI extends JDialog {
 	private JTextField tf_Discount;
 	private JTextField tf_NetSalesAmt;
 	JComboBox cb_PaymentMode;
+	private JComboBox cb_Wireman;
 	//JButton btnPrint;
 	JButton btnSaveBill;
 	//
@@ -105,6 +107,7 @@ public class ModifyBillUI extends JDialog {
 	private JPanel panelBarCode;
 	private HashMap<String,Customer> customerMap;
 	private BillDetails existingBill;
+	private HashMap<String, Long> wiremanMap = new HashMap<>();
 
 	/**
 	 * Create the frame.
@@ -360,7 +363,7 @@ public class ModifyBillUI extends JDialog {
 		tf_TotalAmount.setFont(amtFont);
 		tf_TotalAmount.setText("0.00");
 		
-		JLabel lblTax = new JLabel("TAX (%)");
+		JLabel lblTax = new JLabel("Wireman");
 		lblTax.setBounds(20, 303, 91, 35);
 		paymentDetails.add(lblTax);
 		
@@ -368,6 +371,7 @@ public class ModifyBillUI extends JDialog {
 		tf_TAX.setColumns(10);
 		tf_TAX.setBounds(120, 303, 180, 38);
 		tf_TAX.setText("0.00");
+		tf_TAX.setVisible(false);
 		paymentDetails.add(tf_TAX);
 		tf_TAX.setHorizontalAlignment(SwingConstants.RIGHT);
 		tf_TAX.setFont(amtFont);
@@ -400,6 +404,11 @@ public class ModifyBillUI extends JDialog {
 		cb_PaymentMode.setBounds(120, 264, 180, 38);
 		PDFUtils.populateDropdown(cb_PaymentMode,"PAYMENT_MODE");
 		paymentDetails.add(cb_PaymentMode);
+		
+		cb_Wireman = new JComboBox();
+		cb_Wireman.setBounds(120, 303, 180, 38);
+		WiremanServices.populateDropdown(cb_Wireman,wiremanMap);
+		paymentDetails.add(cb_Wireman);
 		
 		JLabel lblDiscount = new JLabel("Discount (%)");
 		lblDiscount.setBounds(20, 147, 91, 35);
@@ -805,6 +814,7 @@ public class ModifyBillUI extends JDialog {
 			tf_NetSalesAmt.setText(PDFUtils.getDecimalFormat(bill.getNetSalesAmt()));
 			tf_GrossAmt.setText(PDFUtils.getDecimalFormat(bill.getGrandTotal()));
 			cb_PaymentMode.setSelectedItem(bill.getPaymentMode());
+			cb_Wireman.setSelectedItem(bill.getWiremanName());
 			tf_TotalAmount.setText(PDFUtils.getDecimalFormat(bill.getTotalAmount()));
 			totalQty =bill.getTotalQuanity();
 			netSalesAmt = bill.getNetSalesAmt();
@@ -916,6 +926,7 @@ public class ModifyBillUI extends JDialog {
 		bill.setNetSalesAmt(Double.valueOf(tf_NetSalesAmt.getText()));
 		bill.setNoOfItems(Integer.valueOf(tf_NoOfItems.getText()));
 		bill.setPaymentMode((String)cb_PaymentMode.getSelectedItem());
+		bill.setWiremanMobile(wiremanMap.get((String)cb_Wireman.getSelectedItem()));
 		bill.setPurchaseAmt(billPurchaseAmt);
 		bill.setTotalAmount(Double.valueOf(tf_TotalAmount.getText()));
 		bill.setTotalQuanity(Integer.valueOf(tf_TotalQty.getText()));

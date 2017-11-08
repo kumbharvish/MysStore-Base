@@ -54,7 +54,7 @@ public class ViewCustomerBill extends JDialog {
 	private JTextField tf_TotalQty;
 	private JTextField tf_SubTotal;
 	private JTextField tf_Discount;
-	private JTextField tf_Tax;
+	private JTextField tf_WiremanName;
 	private JTextField tf_PaymentMode;
 	private JTextField tf_GrandTotal;
 	private JTextField tf_DiscAmt;
@@ -269,7 +269,7 @@ public class ViewCustomerBill extends JDialog {
 		lblPay.setForeground(lablColor);
 		panel_1.add(lblPay);
 		
-		JLabel lblTax = new JLabel("Tax(%) ");
+		JLabel lblTax = new JLabel("Wireman Name ");
 		lblTax.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblTax.setBounds(10, 289, 120, 25);
 		lblTax.setBorder(border);
@@ -283,16 +283,16 @@ public class ViewCustomerBill extends JDialog {
 		
 		panel_1.add(lblNetSalesAmount);
 		
-		tf_Tax = new JTextField();
-		tf_Tax.setEnabled(false);
-		tf_Tax.setEditable(false);
-		tf_Tax.setColumns(10);
-		tf_Tax.setBounds(129, 289, 161, 25);
-		tf_Tax.setBorder(border);
-		tf_Tax.setText(" "+PDFUtils.getDecimalFormat(bill.getTax()));
-		tf_Tax.setFont(valueFont);
-		tf_Tax.setDisabledTextColor(valueColor);
-		panel_1.add(tf_Tax);
+		tf_WiremanName = new JTextField();
+		tf_WiremanName.setEnabled(false);
+		tf_WiremanName.setEditable(false);
+		tf_WiremanName.setColumns(10);
+		tf_WiremanName.setBounds(129, 289, 161, 25);
+		tf_WiremanName.setBorder(border);
+		tf_WiremanName.setFont(valueFont);
+		tf_WiremanName.setDisabledTextColor(valueColor);
+		tf_WiremanName.setText(" "+bill.getWiremanName());
+		panel_1.add(tf_WiremanName);
 		
 		tf_PaymentMode = new JTextField();
 		tf_PaymentMode.setEnabled(false);

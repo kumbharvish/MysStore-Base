@@ -59,8 +59,8 @@ public class ProductServices {
 
 	private static final String INS_BILL_DETAILS = "INSERT INTO CUSTOMER_BILL_DETAILS (BILL_NUMBER,BILL_DATE_TIME,CUST_MOB_NO,CUST_NAME,NO_OF_ITEMS," +
 												  "BILL_QUANTITY,TOTAL_AMOUNT,BILL_TAX,GRAND_TOTAL,PAYMENT_MODE," +
-												  "BILL_DISCOUNT,BILL_DISC_AMOUNT,NET_SALES_AMOUNT,BILL_PURCHASE_AMT)" +
-												  " VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+												  "BILL_DISCOUNT,BILL_DISC_AMOUNT,NET_SALES_AMOUNT,BILL_PURCHASE_AMT,WIREMAN_MOB_NO)" +
+												  " VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	
 	private static final String INS_BILL_ITEM_DETAILS = "INSERT INTO BILL_ITEM_DETAILS (BILL_NUMBER,ITEM_NUMBER,ITEM_NAME,ITEM_MRP,ITEM_RATE," +
 			  											"ITEM_QTY,ITEM_AMOUNT,ITEM_PURCHASE_AMT) VALUES(?,?,?,?,?,?,?,?)";
@@ -72,9 +72,8 @@ public class ProductServices {
 	private static final String SELECT_BILL_WITH_BILLNO_AND_DATE = "SELECT CBD.*,CD.CUST_NAME AS CUSTOMER_NAME FROM CUSTOMER_BILL_DETAILS CBD,CUSTOMER_DETAILS CD WHERE CBD.BILL_NUMBER=? AND" +
 															" CBD.CUST_MOB_NO=CD.CUST_MOB_NO AND DATE(BILL_DATE_TIME) BETWEEN ? AND ?";
 	
-	private static final String SELECT_BILL_WITH_BILLNO = "SELECT CBD.*,CD.CUST_NAME AS CUSTOMER_NAME FROM CUSTOMER_BILL_DETAILS CBD,CUSTOMER_DETAILS CD WHERE CBD.BILL_NUMBER=? AND" +
-														" CBD.CUST_MOB_NO=CD.CUST_MOB_NO";
-	
+	private static final String SELECT_BILL_WITH_BILLNO = "SELECT CBD.*,CD.CUST_NAME AS CUSTOMER_NAME,WD.NAME AS WIREMAN_NAME FROM CUSTOMER_BILL_DETAILS CBD,CUSTOMER_DETAILS CD,WIREMAN_DETAILS WD WHERE CBD.BILL_NUMBER=? AND" +
+														" CBD.CUST_MOB_NO=CD.CUST_MOB_NO AND CBD.WIREMAN_MOB_NO=WD.MOBILE_NUMBER";
 	
 	private static final String SELECT_ITEM_DETAILS = "SELECT BID.*,PD.PRODUCT_NAME FROM BILL_ITEM_DETAILS BID,PRODUCT_DETAILS PD WHERE BILL_NUMBER=? AND BID.ITEM_NUMBER=PD.PRODUCT_ID";
 	
@@ -329,6 +328,7 @@ public class ProductServices {
 				stmt.setDouble(12, bill.getDiscountAmt());
 				stmt.setDouble(13, bill.getNetSalesAmt());
 				stmt.setDouble(14, bill.getPurchaseAmt());
+				stmt.setLong(15, bill.getWiremanMobile());
 				int i = stmt.executeUpdate();
 				if(i>0){
 					staus.setStatusCode(0);
@@ -420,7 +420,7 @@ public class ProductServices {
 			PreparedStatement stmt = null;
 			BillDetails billDetails=null;
 			List<BillDetails> billDetailsList = new ArrayList<BillDetails>();
-			StringBuilder SELECT_BILL_DETAILS = new StringBuilder("SELECT CBD.*,CD.CUST_NAME AS CUSTOMER_NAME FROM CUSTOMER_BILL_DETAILS CBD,CUSTOMER_DETAILS CD WHERE DATE(CBD.BILL_DATE_TIME) BETWEEN ? AND ?  AND CBD.CUST_MOB_NO=CD.CUST_MOB_NO ");
+			StringBuilder SELECT_BILL_DETAILS = new StringBuilder("SELECT CBD.*,CD.CUST_NAME AS CUSTOMER_NAME,WD.NAME AS WIREMAN_NAME FROM CUSTOMER_BILL_DETAILS CBD,CUSTOMER_DETAILS CD,WIREMAN_DETAILS WD WHERE DATE(CBD.BILL_DATE_TIME) BETWEEN ? AND ?  AND CBD.CUST_MOB_NO=CD.CUST_MOB_NO AND CBD.WIREMAN_MOB_NO=WD.MOBILE_NUMBER ");
 			
 			String ORDER_BY_CLAUSE = "ORDER BY CBD.BILL_DATE_TIME DESC";
 			String CUSTOMER_MOB_QEUERY = " AND CBD.CUST_MOB_NO LIKE ? ";
@@ -461,6 +461,7 @@ public class ProductServices {
 						billDetails.setDiscountAmt(rs.getDouble("BILL_DISC_AMOUNT"));
 						billDetails.setNetSalesAmt(rs.getDouble("NET_SALES_AMOUNT"));
 						billDetails.setPurchaseAmt(rs.getDouble("BILL_PURCHASE_AMT"));
+						billDetails.setWiremanName(rs.getString("WIREMAN_NAME"));
 						
 						billDetailsList.add(billDetails);
 				}
@@ -723,6 +724,7 @@ public class ProductServices {
 					billDetails.setDiscountAmt(rs.getDouble("BILL_DISC_AMOUNT"));
 					billDetails.setNetSalesAmt(rs.getDouble("NET_SALES_AMOUNT"));
 					billDetails.setPurchaseAmt(rs.getDouble("BILL_PURCHASE_AMT"));
+					billDetails.setWiremanName(rs.getString("WIREMAN_NAME"));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

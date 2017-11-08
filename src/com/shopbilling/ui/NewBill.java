@@ -57,6 +57,7 @@ import com.shopbilling.services.JasperServices;
 import com.shopbilling.services.ProductHistoryServices;
 import com.shopbilling.services.ProductServices;
 import com.shopbilling.services.UserServices;
+import com.shopbilling.services.WiremanServices;
 import com.shopbilling.utils.JasperUtils;
 import com.shopbilling.utils.PDFUtils;
 
@@ -90,6 +91,7 @@ public class NewBill extends JInternalFrame {
 	private JTextField tf_Discount;
 	private JTextField tf_NetSalesAmt;
 	JComboBox cb_PaymentMode;
+	JComboBox cb_Wireman;
 	JButton btnPrint;
 	JButton btnSaveBill;
 	JButton btnReset;
@@ -118,6 +120,7 @@ public class NewBill extends JInternalFrame {
 	private String custName;
 	private JLabel custNamelbl;
 	private JFrame mainFrame;
+	private HashMap<String,Long> wiremanMap = new HashMap<>();
 
 	/**
 	 * Create the frame.
@@ -445,7 +448,7 @@ public class NewBill extends JInternalFrame {
 		tf_TotalAmount.setFont(amtFont);
 		tf_TotalAmount.setText("0.00");
 		
-		JLabel lblTax = new JLabel("TAX (%)");
+		JLabel lblTax = new JLabel("Wireman");
 		lblTax.setBounds(20, 303, 91, 35);
 		paymentDetails.add(lblTax);
 		
@@ -453,6 +456,7 @@ public class NewBill extends JInternalFrame {
 		tf_TAX.setColumns(10);
 		tf_TAX.setBounds(120, 303, 180, 38);
 		tf_TAX.setText("0.00");
+		tf_TAX.setVisible(false);
 		paymentDetails.add(tf_TAX);
 		tf_TAX.setHorizontalAlignment(SwingConstants.RIGHT);
 		tf_TAX.setFont(amtFont);
@@ -492,6 +496,18 @@ public class NewBill extends JInternalFrame {
 	        }
 	    });
 		paymentDetails.add(cb_PaymentMode);
+		
+		cb_Wireman = new JComboBox();
+		cb_Wireman.setBounds(120, 303, 180, 38);
+		WiremanServices.populateDropdown(cb_Wireman,wiremanMap);
+		cb_Wireman.setRenderer(new DefaultListCellRenderer() {
+	        @Override
+	        public void paint(Graphics g) {
+	            setForeground(Color.BLACK);
+	            super.paint(g);
+	        }
+	    });
+		paymentDetails.add(cb_Wireman);
 		
 		JLabel lblDiscount = new JLabel("Discount (%)");
 		lblDiscount.setBounds(20, 147, 91, 35);
@@ -985,6 +1001,7 @@ public class NewBill extends JInternalFrame {
 		tf_Discount.setText("0.00");
 		tf_DiscountAmt.setText("0.00");
 		cb_PaymentMode.setSelectedIndex(0);
+		cb_Wireman.setSelectedIndex(0);
 		tf_TotalAmount.setText("0.00");
 		noOfItems = 0;
 		totalQty = 0;
@@ -1012,6 +1029,7 @@ public class NewBill extends JInternalFrame {
 		itemName.setEnabled(false);
 		quantity.setEnabled(false);
 		cb_PaymentMode.setEnabled(false);
+		cb_Wireman.setEnabled(false);
 		mouseListnerFlag = false;
 		//billDate.setEnabled(false);
 		tf_barCode.setEnabled(false);
@@ -1025,6 +1043,7 @@ public class NewBill extends JInternalFrame {
 		itemName.setEnabled(true);
 		quantity.setEnabled(true);
 		cb_PaymentMode.setEnabled(true);
+		cb_Wireman.setEnabled(true);
 		customerMobileNo.requestFocus();
 		mouseListnerFlag=true;
 		//billDate.setEnabled(true);
@@ -1076,6 +1095,7 @@ public class NewBill extends JInternalFrame {
 		else
 			bill.setTax(0);
 		bill.setTimestamp(new java.sql.Timestamp(System.currentTimeMillis()));
+		bill.setWiremanMobile(wiremanMap.get((String)cb_Wireman.getSelectedItem()));
 	}
 	
 	private List<Product> getProductList(List<ItemDetails> itemList){

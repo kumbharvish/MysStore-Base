@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -21,35 +23,33 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 
-import net.java.dev.designgridlayout.DesignGridLayout;
-import net.java.dev.designgridlayout.LabelAlignment;
-
 import org.fuin.utils4swing.layout.scalable.DefaultScalableLayoutRegistry;
 import org.fuin.utils4swing.layout.scalable.ScalableLayoutUtils;
 
-import com.shopbilling.dto.Product;
-import com.shopbilling.dto.ProductCategory;
 import com.shopbilling.dto.StatusDTO;
 import com.shopbilling.dto.UserDetails;
-import com.shopbilling.services.ProductCategoryServices;
-import com.shopbilling.services.ProductServices;
+import com.shopbilling.dto.WiremanDetails;
+import com.shopbilling.services.WiremanServices;
 import com.shopbilling.utils.PDFUtils;
+
+import net.java.dev.designgridlayout.DesignGridLayout;
+import net.java.dev.designgridlayout.LabelAlignment;
 
 public class ManageWiremanUI extends JInternalFrame {
 
 	private JPanel contentPane;
 	private UserDetails userDetails;
-	private JTextField categoryCode ;
-	private JTextField categoryName;
-	private JTextField categoryDescription; 
-	//private JTextField categoryComission ;
-	private DefaultTableModel productCategoryModel;
-	private JTable productCategoryTable;
+	private JTextField id ;
+	private JTextField mobileNumber;
+	private JTextField name; 
+	private JTextField address ;
+	private DefaultTableModel wiremanModel;
+	private JTable wiremanTable;
 
 	public ManageWiremanUI() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(200, 85, 1107, 698);
-		setTitle("Manage Product Categroy");
+		setTitle("Manage Wireman");
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -62,30 +62,33 @@ public class ManageWiremanUI extends JInternalFrame {
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new LineBorder(new Color(0, 0, 0)));
-		panel_1.setBounds(34, 27, 739, 111);
+		panel_1.setBounds(34, 27, 739, 159);
 		panel.add(panel_1);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(33, 156, 741, 353);
+		scrollPane.setBounds(33, 210, 741, 299);
 		panel.add(scrollPane);
 		DesignGridLayout layout = new DesignGridLayout(panel_1);
 		layout.labelAlignment(LabelAlignment.RIGHT);
-		 categoryCode = new JTextField();
-		 categoryCode.setEditable(false);
-		 categoryName = new JTextField(20);
-		 categoryName.setFont(new Font("Tahoma", Font.BOLD, 12));
-		 categoryDescription = new JTextField(20);
-		 categoryDescription.setFont(new Font("Tahoma", Font.BOLD, 12));
-		 //categoryComission = new JTextField(10);
+		 id = new JTextField();
+		 id.setEditable(false);
+		 mobileNumber = new JTextField(20);
+		 mobileNumber.setFont(new Font("Tahoma", Font.BOLD, 12));
+		 name = new JTextField(20);
+		 name.setFont(new Font("Tahoma", Font.BOLD, 12));
+		 address = new JTextField(10);
+		 address.setFont(new Font("Tahoma", Font.BOLD, 12));
  		JButton deleteButton = new JButton("Delete");
  		JButton updateButton = new JButton("Update");
  		JButton saveButton = new JButton("Add");
  		JButton resetButton = new JButton("Reset");
-		layout.row().grid(new JLabel("Category Name *:"))	.add(categoryName).grid(new JLabel(""));
-		layout.row().grid(new JLabel("Category Description :"))	.add(categoryDescription).grid(new JLabel(""));//.grid(new JLabel("Category Commission *:"))	.add(categoryComission);
+		layout.row().grid(new JLabel("Mobile Number *:"))	.add(mobileNumber).grid(new JLabel(""));
+		layout.row().grid(new JLabel("Name *:"))	.add(name).grid(new JLabel(""));
+		layout.row().grid(new JLabel("Address:"))	.add(address).grid(new JLabel(""));
+		layout.row().grid(new JLabel(""));
 		layout.emptyRow();
  		layout.row().right().add(saveButton).add(updateButton).add(deleteButton).add(resetButton);
- 		productCategoryModel = new DefaultTableModel(){
+ 		wiremanModel = new DefaultTableModel(){
 			 boolean[] columnEditables = new boolean[] {
 						false, false, false, false
 					};
@@ -93,118 +96,109 @@ public class ManageWiremanUI extends JInternalFrame {
 						return columnEditables[column];
 					}
 		 };
-		 productCategoryModel.setColumnIdentifiers(new String[] {
-				"Categroy Code", "Categroy Name", "Categroy Description", "Comission"
+		 wiremanModel.setColumnIdentifiers(new String[] {
+				"id", "Mobile Number", "Name", "Address"
 			}
         );
-		 productCategoryTable = new JTable();
-		 productCategoryTable.addMouseListener(new MouseAdapter() {
+		 wiremanTable = new JTable();
+		 wiremanTable.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				int row = productCategoryTable.getSelectedRow();
-	        	categoryCode.setText(productCategoryTable.getModel().getValueAt(row, 0).toString());
-				categoryName.setText(productCategoryTable.getModel().getValueAt(row, 1).toString());
-				categoryDescription.setText(productCategoryTable.getModel().getValueAt(row, 2).toString());
-				//categoryComission.setText(table.getModel().getValueAt(row, 3).toString());
+				int row = wiremanTable.getSelectedRow();
+	        	id.setText(wiremanTable.getModel().getValueAt(row, 0).toString());
+				mobileNumber.setText(wiremanTable.getModel().getValueAt(row, 1).toString());
+				name.setText(wiremanTable.getModel().getValueAt(row, 2).toString());
+				address.setText(wiremanTable.getModel().getValueAt(row, 3).toString());
 			}
 		});
 		 //Table Row Height 
-		 PDFUtils.setTableRowHeight(productCategoryTable);
+		 PDFUtils.setTableRowHeight(wiremanTable);
 		 
-		 productCategoryTable.setModel(productCategoryModel);
-		scrollPane.setViewportView(productCategoryTable);
-		//Hide Category Code Column
-		productCategoryTable.getColumnModel().getColumn(0).setMinWidth(0);
-		productCategoryTable.getColumnModel().getColumn(0).setMaxWidth(0);
-		productCategoryTable.getColumnModel().getColumn(0).setWidth(0);
-		//Hide Category Comission
-		productCategoryTable.getColumnModel().getColumn(3).setMinWidth(0);
-		productCategoryTable.getColumnModel().getColumn(3).setMaxWidth(0);
-		productCategoryTable.getColumnModel().getColumn(3).setWidth(0);
+		 wiremanTable.setModel(wiremanModel);
+		scrollPane.setViewportView(wiremanTable);
+		//Hide Id Column
+		wiremanTable.getColumnModel().getColumn(0).setMinWidth(0);
+		wiremanTable.getColumnModel().getColumn(0).setMaxWidth(0);
+		wiremanTable.getColumnModel().getColumn(0).setWidth(0);
+		wiremanTable.getColumnModel().getColumn(1).setMinWidth(150);
+		wiremanTable.getColumnModel().getColumn(1).setMaxWidth(150);
+		wiremanTable.getColumnModel().getColumn(1).setWidth(150);
 		contentPane.setLayout(null);
 		contentPane.add(panel);
-		fillCategoryTableData(productCategoryModel);
+		fillWiemanTableData(wiremanModel);
 		 
 		//Reset Button Action
 		resetButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				resetCategoryTextFields();
+				resetWiremanTextFields();
 			}
 		});
 		
 		//Save Button Action
 		saveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				saveCategoryAction();
+				saveWiremanAction();
 			}
 		});
 		//Update Button Action
 		updateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				updateCategoryAction();
+				updateWiremanAction();
 			}
 		});
 		//Delete Button Action
 		deleteButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				deleteCategoryAction();
+				deleteWiremanAction();
 			}
 		});
 			
+		mobileNumber.addKeyListener(new KeyAdapter() {
+		   public void keyTyped(KeyEvent e) {
+		      char c = e.getKeyChar();
+		      if ( ((c < '0') || (c > '9')) && (c != KeyEvent.VK_BACK_SPACE)) {
+		         e.consume();  // ignore event
+		      }
+		   }
+		});
+		
 		ScalableLayoutUtils.installScalableLayoutAndKeys(new DefaultScalableLayoutRegistry(), this, 0.1);
 	}
 	
-	private void deleteCategoryAction() {
-		if(categoryCode.getText().equals("")){
-			JOptionPane.showMessageDialog(contentPane, "Please select Category!");
+	private void deleteWiremanAction() {
+		if(id.getText().equals("")){
+			JOptionPane.showMessageDialog(contentPane, "Please select Wireman!");
 		}else{
 			int dialogButton = JOptionPane.YES_NO_OPTION;
 			int dialogResult = JOptionPane.showConfirmDialog (null, "Are you sure?","Warning",dialogButton);
 			if(dialogResult == JOptionPane.YES_OPTION){
-				
-				List<Product> productList = ProductCategoryServices.getAllProductsForCategory(Integer.parseInt(categoryCode.getText()));
-				if(productList.size()>0){
-					JOptionPane.showMessageDialog(getContentPane(), "Total "+productList.size()+" Products under this category. Please delete the products first in order to delete the category.", "Product Exists", JOptionPane.WARNING_MESSAGE);
-				}else{
-					ProductCategoryServices.deleteCategory(Integer.parseInt(categoryCode.getText()));
-					JOptionPane.showMessageDialog(contentPane, "Category deleted Sucessfully!");
-					resetCategoryTextFields();
-					fillCategoryTableData(productCategoryModel);
-				}
+					WiremanServices.deleteWireman(Integer.parseInt(id.getText()));
+					JOptionPane.showMessageDialog(contentPane, "Wireman deleted Sucessfully!");
+					resetWiremanTextFields();
+					fillWiemanTableData(wiremanModel);
 			}else{
-				resetCategoryTextFields();
+				resetWiremanTextFields();
 			}
 			
 		}
 	}
-	public void fillCategoryTableData(DefaultTableModel model){
-		List<ProductCategory> categoriesList= ProductCategoryServices.getAllCategories();
+	public void fillWiemanTableData(DefaultTableModel model){
+		List<WiremanDetails> wiremanList= WiremanServices.getAllWiremans();
 		model.setRowCount(0);
-		if(categoriesList.isEmpty()){
-			JOptionPane.showMessageDialog(contentPane, "No Product Categories found!");
+		if(wiremanList.isEmpty()){
+			JOptionPane.showMessageDialog(contentPane, "No Wireman found!");
 		}else{
-			for(ProductCategory p : categoriesList){
-				 model.addRow(new Object[]{p.getCategoryCode(), p.getCategoryName(), p.getCategoryDescription(), p.getComission()});
+			for(WiremanDetails p : wiremanList){
+				 model.addRow(new Object[]{p.getId(), p.getMobileNo(), p.getName(), p.getAddress()});
 			}
 		}
 	}
 	
-	public void fillProductTableData(DefaultTableModel model){
-		List<Product> productList= ProductServices.getAllProducts();
-		model.setRowCount(0);
-		if(productList.isEmpty()){
-			JOptionPane.showMessageDialog(contentPane, "No Product found!");
-		}else{
-			for(Product p : productList){
-				 model.addRow(new Object[]{p.getProductCode(), p.getProductName(), p.getProductCategory(),p.getQuanity(),PDFUtils.getDecimalFormat(p.getPurcasePrice()),PDFUtils.getDecimalFormat(p.getSellPrice()),p.getDiscount()});
-			}
-		}
-	}
-	public void resetCategoryTextFields(){
-		categoryCode.setText("");
-		categoryName.setText("");
-		categoryDescription.setText("");
-		//categoryComission.setText("");
+	public void resetWiremanTextFields(){
+		id.setText("");
+		mobileNumber.setText("");
+		name.setText("");
+		address.setText("");
 	}
 	
 	public UserDetails getUserDetails() {
@@ -215,26 +209,27 @@ public class ManageWiremanUI extends JInternalFrame {
 		this.userDetails = userDetails;
 	}
 
-	private void updateCategoryAction() {
-		ProductCategory productCategory = new ProductCategory();
-		if(categoryCode.getText().equals("")){
-			JOptionPane.showMessageDialog(contentPane, "Please select Category!");
+	private void updateWiremanAction() {
+		WiremanDetails wireman = new WiremanDetails();
+		if(id.getText().equals("")){
+			JOptionPane.showMessageDialog(contentPane, "Please select Wireman!");
 		}else{
-			if(PDFUtils.isMandatoryEntered(categoryName))// && AppUtils.isMandatoryEntered(categoryComission))
+			if(PDFUtils.isMandatoryEntered(mobileNumber)
+				&& PDFUtils.isMandatoryEntered(name))
 			{
-			productCategory.setCategoryCode(Integer.parseInt(categoryCode.getText()));
-			productCategory.setCategoryName(categoryName.getText());
-			productCategory.setCategoryDescription(categoryDescription.getText());
-			//productCategory.setComission(Double.parseDouble(categoryComission.getText()));
+			wireman.setId(Integer.parseInt(id.getText()));
+			wireman.setMobileNo(Long.parseLong(mobileNumber.getText()));
+			wireman.setName(name.getText());
+			wireman.setAddress(address.getText());
 			
-			StatusDTO status = ProductCategoryServices.updateCategory(productCategory);
+			StatusDTO status = WiremanServices.updateWireman(wireman);
 			if(status.getStatusCode()==0){
-				resetCategoryTextFields();
-				fillCategoryTableData(productCategoryModel);
-				JOptionPane.showMessageDialog(contentPane, "Product Category Updated!");
+				resetWiremanTextFields();
+				fillWiemanTableData(wiremanModel);
+				JOptionPane.showMessageDialog(contentPane, "Wireman Details Updated!");
 			}else{
 				if(status.getException().contains("Duplicate entry")){
-					JOptionPane.showMessageDialog(getContentPane(), "Entered Product Category Name already exists.", "Error", JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(getContentPane(), "Entered Wireman Mobile Number already exists!", "Error", JOptionPane.WARNING_MESSAGE);
 				}else{
 					JOptionPane.showMessageDialog(getContentPane(), "Exception occured ", "Error", JOptionPane.WARNING_MESSAGE);
 				}
@@ -245,24 +240,25 @@ public class ManageWiremanUI extends JInternalFrame {
 		}
 	}
 
-	private void saveCategoryAction() {
-		if(categoryCode.getText().equals("")){
-			if(PDFUtils.isMandatoryEntered(categoryName))// && AppUtils.isMandatoryEntered(categoryComission))
+	private void saveWiremanAction() {
+		if(id.getText().equals("")){
+			if(PDFUtils.isMandatoryEntered(mobileNumber)
+					&& PDFUtils.isMandatoryEntered(name))
 				{
-				ProductCategory productCategory = new ProductCategory();
-				productCategory.setCategoryName(categoryName.getText());
-				productCategory.setCategoryDescription(categoryDescription.getText());
-				//productCategory.setComission(Double.parseDouble(categoryComission.getText()));
-				StatusDTO status = ProductCategoryServices.addCategory(productCategory);
+				WiremanDetails wireman = new WiremanDetails();
+				wireman.setMobileNo(Long.parseLong(mobileNumber.getText()));
+				wireman.setName(name.getText());
+				wireman.setAddress(address.getText());
+				StatusDTO status = WiremanServices.addWireman(wireman);
 				if(status.getStatusCode()==0){
-					resetCategoryTextFields();
-					fillCategoryTableData(productCategoryModel);
-					JOptionPane.showMessageDialog(contentPane, "Product Category Added!");
+					resetWiremanTextFields();
+					fillWiemanTableData(wiremanModel);
+					JOptionPane.showMessageDialog(contentPane, "Wireman Details Added!");
 				}else{
 					if(status.getException().contains("Duplicate entry")){
-						JOptionPane.showMessageDialog(null, "Entered Product Category Name already exists.", "Error", JOptionPane.WARNING_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Entered Wireman Mobile Number already exists!", "Error", JOptionPane.WARNING_MESSAGE);
 					}else{
-						JOptionPane.showMessageDialog(null, "Exception occured ", "Error", JOptionPane.WARNING_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Error occured ", "Error", JOptionPane.WARNING_MESSAGE);
 					}
 				}
 			}else{

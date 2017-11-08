@@ -13,7 +13,7 @@ import com.shopbilling.utils.PDFUtils;
 public class BillingServices {
 	
 	private static final String UPDATE_BILL_DETAILS = "UPDATE CUSTOMER_BILL_DETAILS SET CUST_MOB_NO=?,CUST_NAME=?,BILL_TAX=?,BILL_DISCOUNT=?,BILL_DISC_AMOUNT =?," +
-			"PAYMENT_MODE=?,GRAND_TOTAL=?,NET_SALES_AMOUNT=? WHERE BILL_NUMBER=?";
+			"PAYMENT_MODE=?,GRAND_TOTAL=?,NET_SALES_AMOUNT=?,WIREMAN_MOB_NO=? WHERE BILL_NUMBER=?";
 	
 	private static final String DELETE_BILL_DETAILS = "DELETE FROM CUSTOMER_BILL_DETAILS WHERE BILL_NUMBER=?";
 	
@@ -45,7 +45,8 @@ public class BillingServices {
 				stmt.setString(6, bill.getPaymentMode());
 				stmt.setDouble(7, bill.getGrandTotal());
 				stmt.setDouble(8, bill.getNetSalesAmt());
-				stmt.setInt(9, bill.getBillNumber());
+				stmt.setLong(9, bill.getWiremanMobile());
+				stmt.setInt(10, bill.getBillNumber());
 				int i = stmt.executeUpdate();
 				if(i>0){
 					staus.setStatusCode(0);

@@ -98,6 +98,7 @@ public class MainWindow extends JFrame{
 	//Expense
 	private AddExpenseUI addExpenseUI;
 	private ViewExpensesUI viewExpensesUI;
+	private ManageWiremanUI manageWiremanUI;
 	
 	
 	private JButton btnDataBackup;
@@ -379,6 +380,22 @@ public class MainWindow extends JFrame{
 				closeAllInternalFrames();
 				addExpenseUI = new AddExpenseUI();
 				containerPanel.add(addExpenseUI);
+			}
+		});
+		
+		JMenu mntmManageWireman = new JMenu("Wireman Management");
+		mntmManageWireman.setIcon(new ImageIcon(MainWindow.class.getResource("/images/lightbulb.png")));
+		mntmManageWireman.setSelectedIcon(null);
+		mnMenu.add(mntmManageWireman);
+		
+		JMenuItem mntmManageWireman_1 = new JMenuItem("Manage Wireman");
+		mntmManageWireman.add(mntmManageWireman_1);
+		
+		mntmManageWireman_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				closeAllInternalFrames();
+				manageWiremanUI = new ManageWiremanUI();
+				containerPanel.add(manageWiremanUI);
 			}
 		});
 		
@@ -982,6 +999,9 @@ public class MainWindow extends JFrame{
 		}
 		if(profitLossStatementUI!=null){
 			containerPanel.remove(profitLossStatementUI);
+		}
+		if(manageWiremanUI!=null) {
+			containerPanel.remove(manageWiremanUI);
 		}
 	}
 

@@ -4,13 +4,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 
-import com.shopbilling.dto.Product;
-import com.shopbilling.dto.WiremanDetails;
+import javax.swing.JComboBox;
+
 import com.shopbilling.dto.StatusDTO;
+import com.shopbilling.dto.WiremanDetails;
 import com.shopbilling.utils.PDFUtils;
 
 public class WiremanServices {
@@ -39,7 +39,7 @@ public class WiremanServices {
 
 			while (rs.next()) {
 				pc = new WiremanDetails();
-				pc.setMobileNo(rs.getLong("MOBILE_NO"));
+				pc.setMobileNo(rs.getLong("MOBILE_NUMBER"));
 				pc.setId(rs.getInt("ID"));
 				pc.setName(rs.getString("NAME"));
 				pc.setAddress(rs.getString("ADDRESS"));
@@ -65,7 +65,7 @@ public class WiremanServices {
 				stmt = conn.prepareStatement(INS_WIREMAN);
 				stmt.setLong(1,wiremanDetails.getMobileNo());
 				stmt.setString(2,wiremanDetails.getName());
-				stmt.setString(2,wiremanDetails.getAddress());
+				stmt.setString(3,wiremanDetails.getAddress());
 				
 				int i = stmt.executeUpdate();
 				if(i>0){
@@ -103,7 +103,7 @@ public class WiremanServices {
 		return flag;
 	}
 	
-	public static StatusDTO updateCategory(WiremanDetails wiremanDetails) {
+	public static StatusDTO updateWireman(WiremanDetails wiremanDetails) {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		StatusDTO status = new StatusDTO();
@@ -129,6 +129,14 @@ public class WiremanServices {
 			PDFUtils.closeConnectionAndStatment(conn, stmt);
 		}
 		return status;
+	}
+	
+public static void populateDropdown(JComboBox<String> combobox,HashMap<String,Long> wiremanMap){
+		combobox.addItem("-- Select --");
+		for(WiremanDetails w :getAllWiremans()){
+			combobox.addItem(w.getName());
+			wiremanMap.put(w.getName(), w.getMobileNo());
+		}
 	}
 	
 }
