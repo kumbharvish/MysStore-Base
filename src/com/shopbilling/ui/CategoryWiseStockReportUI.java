@@ -55,7 +55,7 @@ public class CategoryWiseStockReportUI extends JInternalFrame {
 	public CategoryWiseStockReportUI() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(200, 85, 1107, 698);
-		setTitle("Product Category Wise Stock Report");
+		setTitle("Product Company Wise Stock Report");
 		getContentPane().setLayout(null);
 		
 		JPanel panel_1 = new JPanel();
@@ -78,7 +78,7 @@ public class CategoryWiseStockReportUI extends JInternalFrame {
 					}
 		 };
 		 reportModel.setColumnIdentifiers(new String[] {
-				 "Category Code", "Category Name","Stock Quantity","Stock Value Amount"}
+				 "Company Code", "Company Name","Stock Quantity","Stock Value Amount"}
 	       );
 		table.setModel(reportModel);
 		scrollPane.setViewportView(table);
@@ -126,7 +126,7 @@ public class CategoryWiseStockReportUI extends JInternalFrame {
 		rdbtnStockValueAmt.setBounds(292, 21, 160, 23);
 		getContentPane().add(rdbtnStockValueAmt);
 		
-		rdbtnCategoryName = new JRadioButton("Category Name");
+		rdbtnCategoryName = new JRadioButton("Company Name");
 		rdbtnCategoryName.setBounds(454, 21, 140, 23);
 		
 		rdbtnCategoryName.addActionListener(new ActionListener() {

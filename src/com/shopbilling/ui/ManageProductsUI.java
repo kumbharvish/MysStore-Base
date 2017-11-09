@@ -173,7 +173,7 @@ public class ManageProductsUI extends JInternalFrame {
  		JButton btnProductReset = new JButton("Reset");
  		productEntryLayout.row().grid(new JLabel("Product Code :"))	.add(productCode);
  		productEntryLayout.emptyRow();
- 		productEntryLayout.row().grid(new JLabel("Product Category *:"))	.add(productCategory);
+ 		productEntryLayout.row().grid(new JLabel("Product Company *:"))	.add(productCategory);
  		productEntryLayout.emptyRow();
  		productEntryLayout.row().grid(new JLabel("Product Name *:"))	.add(productName);
  		productEntryLayout.emptyRow();
@@ -210,7 +210,7 @@ public class ManageProductsUI extends JInternalFrame {
 					}
 		 };
 		 productmodel.setColumnIdentifiers(new String[] {
-    		   "Product Code", "Product Name", "Category", "Quantity", "Purchase Price", "Sale Price", "Discount"}
+    		   "Product Code", "Product Name", "Company", "Quantity", "Purchase Price", "Sale Price", "Discount"}
        );
 		 
 		 //Table Row Height 
@@ -404,7 +404,7 @@ public class ManageProductsUI extends JInternalFrame {
 	public void populateCategories(JComboBox<String> productCategory){
 		productCategoryMap = new HashMap<String,Integer>();
 		List<ProductCategory> categorylist = ProductCategoryServices.getAllCategories();
-		productCategory.addItem("--- SELECT CATEGORY---");
+		productCategory.addItem("--- Select Comapny ---");
 		for (ProductCategory category : categorylist){
 			productCategory.addItem(category.getCategoryName());
 			productCategoryMap.put(category.getCategoryName(),category.getCategoryCode());

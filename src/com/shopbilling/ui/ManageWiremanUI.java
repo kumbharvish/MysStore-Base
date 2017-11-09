@@ -172,10 +172,14 @@ public class ManageWiremanUI extends JInternalFrame {
 			int dialogButton = JOptionPane.YES_NO_OPTION;
 			int dialogResult = JOptionPane.showConfirmDialog (null, "Are you sure?","Warning",dialogButton);
 			if(dialogResult == JOptionPane.YES_OPTION){
+				if(WiremanServices.allowDeleteWireman(Long.parseLong(mobileNumber.getText()))) {
+					JOptionPane.showMessageDialog(contentPane,"The selected wireman can not be deleted,since there is other data related to this wireman in the system ","Error",JOptionPane.WARNING_MESSAGE);
+				}else {
 					WiremanServices.deleteWireman(Integer.parseInt(id.getText()));
 					JOptionPane.showMessageDialog(contentPane, "Wireman deleted Sucessfully!");
 					resetWiremanTextFields();
 					fillWiemanTableData(wiremanModel);
+				}
 			}else{
 				resetWiremanTextFields();
 			}

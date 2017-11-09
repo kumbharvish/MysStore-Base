@@ -88,7 +88,7 @@ public class PrintBarcodeSheetUI extends JInternalFrame {
 		label.setBorder(border);
 		panel_1.add(label);
 		
-		JLabel label_1 = new JLabel("Category Name  ");
+		JLabel label_1 = new JLabel("Company Name  ");
 		label_1.setHorizontalAlignment(SwingConstants.RIGHT);
 		label_1.setForeground(Color.GRAY);
 		label_1.setBounds(77, 149, 120, 25);

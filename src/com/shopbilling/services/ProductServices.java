@@ -415,7 +415,7 @@ public class ProductServices {
 		}
 		
 		//Get Bill Details
-		public static List<BillDetails> getBillDetails(Date fromDate,Date toDate,Long customerMobile) {
+		public static List<BillDetails> getBillDetails(Date fromDate,Date toDate,Long customerMobile,Long wiremanMobile) {
 			Connection conn = null;
 			PreparedStatement stmt = null;
 			BillDetails billDetails=null;
@@ -424,6 +424,7 @@ public class ProductServices {
 			
 			String ORDER_BY_CLAUSE = "ORDER BY CBD.BILL_DATE_TIME DESC";
 			String CUSTOMER_MOB_QEUERY = " AND CBD.CUST_MOB_NO LIKE ? ";
+			String WIREMAN_MOB_QEUERY = " AND CBD.WIREMAN_MOB_NO = ? ";
 			try {
 				if(fromDate==null){
 					fromDate = new Date(1947/01/01);
@@ -434,6 +435,9 @@ public class ProductServices {
 				if(customerMobile!=null){
 					SELECT_BILL_DETAILS.append(CUSTOMER_MOB_QEUERY);
 				}
+				if(wiremanMobile!=null){
+					SELECT_BILL_DETAILS.append(WIREMAN_MOB_QEUERY);
+				}
 					SELECT_BILL_DETAILS.append(ORDER_BY_CLAUSE);
 					conn = PDFUtils.getConnection();
 					stmt = conn.prepareStatement(SELECT_BILL_DETAILS.toString());
@@ -441,6 +445,11 @@ public class ProductServices {
 					stmt.setDate(2, toDate);
 					if(customerMobile!=null){
 						stmt.setString(3, "%"+customerMobile+"%");
+					}
+					if(wiremanMobile!=null && customerMobile!=null){
+						stmt.setLong(4, wiremanMobile);
+					}else if(wiremanMobile!=null){
+						stmt.setLong(3, wiremanMobile);
 					}
 					System.out.println("SELECT_BILL_DETAILS " +SELECT_BILL_DETAILS);
 					ResultSet rs = stmt.executeQuery();

@@ -37,8 +37,10 @@ import org.fuin.utils4swing.layout.scalable.ScalableLayoutUtils;
 import com.shopbilling.dto.BillDetails;
 import com.shopbilling.services.ButtonColumn;
 import com.shopbilling.services.ProductServices;
+import com.shopbilling.services.WiremanServices;
 import com.shopbilling.utils.PDFUtils;
 import com.toedter.calendar.JDateChooser;
+import javax.swing.JComboBox;
 
 public class SellReport extends JInternalFrame {
 	private JTable table;
@@ -64,6 +66,8 @@ public class SellReport extends JInternalFrame {
 	private Map<Integer,BillDetails> billsMap;
 	private JFrame parentFrame;
 	private JTextField tf_CustMobile;
+	private HashMap<String,Long> wiremanMap = new  HashMap<>();
+	private JComboBox cb_Wireman;
 	/**
 	 * Launch the application.
 	 */
@@ -90,7 +94,7 @@ public class SellReport extends JInternalFrame {
 		
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(null, "Report Date", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel.setBounds(10, 11, 1150, 60);
+		panel.setBounds(10, 11, 1150, 111);
 		getContentPane().add(panel);
 		panel.setLayout(null);
 		parentFrame = (JFrame)this.getTopLevelAncestor();
@@ -142,14 +146,25 @@ public class SellReport extends JInternalFrame {
 		panel.add(tf_CustMobile);
 		tf_CustMobile.setColumns(10);
 		
+		JLabel lblWireman = new JLabel("Wireman :");
+		lblWireman.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblWireman.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblWireman.setBounds(559, 72, 146, 28);
+		panel.add(lblWireman);
+		
+		cb_Wireman = new JComboBox();
+		cb_Wireman.setBounds(720, 72, 193, 28);
+		panel.add(cb_Wireman);
+		WiremanServices.populateDropdown(cb_Wireman, wiremanMap);
+		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new TitledBorder(null, "Bill Details", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_1.setBounds(10, 82, 1150, 356);
+		panel_1.setBounds(10, 133, 1150, 305);
 		getContentPane().add(panel_1);
 		panel_1.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(15, 26, 1120, 319);
+		scrollPane.setBounds(15, 26, 1120, 268);
 		panel_1.add(scrollPane);
 		
 		table = new JTable();
@@ -306,7 +321,8 @@ public class SellReport extends JInternalFrame {
 	
 	//Fill Report Table
 	private void fillReportTable(){
-		List<BillDetails> billList= ProductServices.getBillDetails(fromDateChooser.getDate()==null?null:new java.sql.Date(fromDateChooser.getDate().getTime()),toDateChooser.getDate()==null?null:new java.sql.Date(toDateChooser.getDate().getTime()),tf_CustMobile.getText().equals("")?null:Long.valueOf(tf_CustMobile.getText()));
+		List<BillDetails> billList= ProductServices.getBillDetails(fromDateChooser.getDate()==null?null:new java.sql.Date(fromDateChooser.getDate().getTime()),toDateChooser.getDate()==null?null:new java.sql.Date(toDateChooser.getDate().getTime()),
+				tf_CustMobile.getText().equals("")?null:Long.valueOf(tf_CustMobile.getText()),cb_Wireman.getSelectedIndex()==0?null:wiremanMap.get(cb_Wireman.getSelectedItem()));
 		calculateConsolidateValues(billList);
 		reportModel.setRowCount(0);
 		if(billList.isEmpty()){

@@ -71,7 +71,7 @@ public class ZeroStockProductReport extends JInternalFrame {
 					}
 		 };
 		 reportModel.setColumnIdentifiers(new String[] {
-				 "Product Code", "Product Name","Product Category","Quantity"}
+				 "Product Code", "Product Name","Product Company","Quantity"}
 	       );
 		table.setModel(reportModel);
 		scrollPane.setViewportView(table);

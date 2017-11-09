@@ -49,7 +49,7 @@ public class ProductCategoryUI extends JInternalFrame {
 	public ProductCategoryUI() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(200, 85, 1107, 698);
-		setTitle("Manage Product Categroy");
+		setTitle("Manage Product Company");
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -81,8 +81,8 @@ public class ProductCategoryUI extends JInternalFrame {
  		JButton updateButton = new JButton("Update");
  		JButton saveButton = new JButton("Add");
  		JButton resetButton = new JButton("Reset");
-		layout.row().grid(new JLabel("Category Name *:"))	.add(categoryName).grid(new JLabel(""));
-		layout.row().grid(new JLabel("Category Description :"))	.add(categoryDescription).grid(new JLabel(""));//.grid(new JLabel("Category Commission *:"))	.add(categoryComission);
+		layout.row().grid(new JLabel("Company Name *:"))	.add(categoryName).grid(new JLabel(""));
+		layout.row().grid(new JLabel("Company Description :"))	.add(categoryDescription).grid(new JLabel(""));//.grid(new JLabel("Category Commission *:"))	.add(categoryComission);
 		layout.emptyRow();
  		layout.row().right().add(saveButton).add(updateButton).add(deleteButton).add(resetButton);
  		productCategoryModel = new DefaultTableModel(){
@@ -94,7 +94,7 @@ public class ProductCategoryUI extends JInternalFrame {
 					}
 		 };
 		 productCategoryModel.setColumnIdentifiers(new String[] {
-				"Categroy Code", "Categroy Name", "Categroy Description", "Comission"
+				"Company Code", "Company Name", "Company Description", "Comission"
 			}
         );
 		 productCategoryTable = new JTable();
@@ -156,7 +156,7 @@ public class ProductCategoryUI extends JInternalFrame {
 	
 	private void deleteCategoryAction() {
 		if(categoryCode.getText().equals("")){
-			JOptionPane.showMessageDialog(contentPane, "Please select Category!");
+			JOptionPane.showMessageDialog(contentPane, "Please select Company!");
 		}else{
 			int dialogButton = JOptionPane.YES_NO_OPTION;
 			int dialogResult = JOptionPane.showConfirmDialog (null, "Are you sure?","Warning",dialogButton);
@@ -164,10 +164,10 @@ public class ProductCategoryUI extends JInternalFrame {
 				
 				List<Product> productList = ProductCategoryServices.getAllProductsForCategory(Integer.parseInt(categoryCode.getText()));
 				if(productList.size()>0){
-					JOptionPane.showMessageDialog(getContentPane(), "Total "+productList.size()+" Products under this category. Please delete the products first in order to delete the category.", "Product Exists", JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(getContentPane(), "Total "+productList.size()+" Products under this Company. Please delete the products first in order to delete the Company.", "Product Exists", JOptionPane.WARNING_MESSAGE);
 				}else{
 					ProductCategoryServices.deleteCategory(Integer.parseInt(categoryCode.getText()));
-					JOptionPane.showMessageDialog(contentPane, "Category deleted Sucessfully!");
+					JOptionPane.showMessageDialog(contentPane, "Company deleted Sucessfully!");
 					resetCategoryTextFields();
 					fillCategoryTableData(productCategoryModel);
 				}
@@ -181,7 +181,7 @@ public class ProductCategoryUI extends JInternalFrame {
 		List<ProductCategory> categoriesList= ProductCategoryServices.getAllCategories();
 		model.setRowCount(0);
 		if(categoriesList.isEmpty()){
-			JOptionPane.showMessageDialog(contentPane, "No Product Categories found!");
+			JOptionPane.showMessageDialog(contentPane, "No Product Companies found!");
 		}else{
 			for(ProductCategory p : categoriesList){
 				 model.addRow(new Object[]{p.getCategoryCode(), p.getCategoryName(), p.getCategoryDescription(), p.getComission()});
@@ -218,7 +218,7 @@ public class ProductCategoryUI extends JInternalFrame {
 	private void updateCategoryAction() {
 		ProductCategory productCategory = new ProductCategory();
 		if(categoryCode.getText().equals("")){
-			JOptionPane.showMessageDialog(contentPane, "Please select Category!");
+			JOptionPane.showMessageDialog(contentPane, "Please select Company!");
 		}else{
 			if(PDFUtils.isMandatoryEntered(categoryName))// && AppUtils.isMandatoryEntered(categoryComission))
 			{
@@ -231,10 +231,10 @@ public class ProductCategoryUI extends JInternalFrame {
 			if(status.getStatusCode()==0){
 				resetCategoryTextFields();
 				fillCategoryTableData(productCategoryModel);
-				JOptionPane.showMessageDialog(contentPane, "Product Category Updated!");
+				JOptionPane.showMessageDialog(contentPane, "Product Company Updated!");
 			}else{
 				if(status.getException().contains("Duplicate entry")){
-					JOptionPane.showMessageDialog(getContentPane(), "Entered Product Category Name already exists.", "Error", JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(getContentPane(), "Entered Product Company Name already exists.", "Error", JOptionPane.WARNING_MESSAGE);
 				}else{
 					JOptionPane.showMessageDialog(getContentPane(), "Exception occured ", "Error", JOptionPane.WARNING_MESSAGE);
 				}
@@ -257,10 +257,10 @@ public class ProductCategoryUI extends JInternalFrame {
 				if(status.getStatusCode()==0){
 					resetCategoryTextFields();
 					fillCategoryTableData(productCategoryModel);
-					JOptionPane.showMessageDialog(contentPane, "Product Category Added!");
+					JOptionPane.showMessageDialog(contentPane, "Product Company Added!");
 				}else{
 					if(status.getException().contains("Duplicate entry")){
-						JOptionPane.showMessageDialog(null, "Entered Product Category Name already exists.", "Error", JOptionPane.WARNING_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Entered Product Company Name already exists.", "Error", JOptionPane.WARNING_MESSAGE);
 					}else{
 						JOptionPane.showMessageDialog(null, "Exception occured ", "Error", JOptionPane.WARNING_MESSAGE);
 					}

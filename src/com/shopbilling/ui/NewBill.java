@@ -500,6 +500,7 @@ public class NewBill extends JInternalFrame {
 		cb_Wireman = new JComboBox();
 		cb_Wireman.setBounds(120, 303, 180, 38);
 		WiremanServices.populateDropdown(cb_Wireman,wiremanMap);
+		cb_Wireman.removeItemAt(0);
 		cb_Wireman.setRenderer(new DefaultListCellRenderer() {
 	        @Override
 	        public void paint(Graphics g) {

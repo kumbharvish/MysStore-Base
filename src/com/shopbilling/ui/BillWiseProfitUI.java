@@ -144,7 +144,7 @@ public class BillWiseProfitUI extends JInternalFrame {
 	
 	//Fill Report Table
 	private void fillReportTable(){
-		List<BillDetails> billList= ProductServices.getBillDetails(new java.sql.Date(fromDateChooser.getDate().getTime()),new java.sql.Date(toDateChooser.getDate().getTime()),null);
+		List<BillDetails> billList= ProductServices.getBillDetails(new java.sql.Date(fromDateChooser.getDate().getTime()),new java.sql.Date(toDateChooser.getDate().getTime()),null,null);
 		calculateConsolidateValues(billList);
 		reportModel.setRowCount(0);
 		if(billList.isEmpty()){

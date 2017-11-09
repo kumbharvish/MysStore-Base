@@ -71,7 +71,7 @@ public class GenerateBarCodeUI extends JInternalFrame {
 					}
 		 };
 		 reportModel.setColumnIdentifiers(new String[] {
-				 "Product Name","Stock Quantity","Category","Product Code"}
+				 "Product Name","Stock Quantity","Company","Product Code"}
 	       );
 		table.setModel(reportModel);
 		scrollPane.setViewportView(table);
@@ -137,7 +137,7 @@ public class GenerateBarCodeUI extends JInternalFrame {
 		tf_StockQty.setBorder(border);
 		panel.add(tf_StockQty);
 		
-		JLabel lblCategoryName = new JLabel("Category Name  ");
+		JLabel lblCategoryName = new JLabel("Company Name  ");
 		lblCategoryName.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblCategoryName.setForeground(Color.GRAY);
 		lblCategoryName.setBounds(21, 79, 120, 25);

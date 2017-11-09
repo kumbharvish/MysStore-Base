@@ -551,7 +551,7 @@ public class ManageCustomersUI extends JInternalFrame {
 		}else{
 			List<BillDetails> billList = CustomerHistoryServices.getBillDetails(Long.parseLong(tf_CustMob.getText()));
 			if(billList.size()>0){
-				JOptionPane.showMessageDialog(contentPane,"The selected customer can not be deleted,since there is other data related to this customer in system ","Error",JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(contentPane,"The selected customer can not be deleted,since there is other data related to this customer in the system ","Error",JOptionPane.WARNING_MESSAGE);
 			}else{
 				int dialogButton = JOptionPane.YES_NO_OPTION;
 				int dialogResult = JOptionPane.showConfirmDialog (contentPane, "Are you sure?","Warning",dialogButton);

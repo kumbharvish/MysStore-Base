@@ -208,7 +208,7 @@ public class MainWindow extends JFrame{
 		mnProductManagement.setIcon(new ImageIcon(MainWindow.class.getResource("/images/briefcase.png")));
 		mnMenu.add(mnProductManagement);
 		
-		JMenuItem mntmManageProductCategory = new JMenuItem("Manage Product Category");
+		JMenuItem mntmManageProductCategory = new JMenuItem("Manage Product Company");
 		mnProductManagement.add(mntmManageProductCategory);
 		
 		mntmManageProductCategory.addActionListener(new ActionListener() {
@@ -526,7 +526,7 @@ public class MainWindow extends JFrame{
 		mntmZeroStockProducts.setIcon(new ImageIcon(MainWindow.class.getResource("/images/trashcan_empty.png")));
 		mnReports.add(mntmZeroStockProducts);
 		
-		JMenuItem mntmProductCategoryWise = new JMenuItem("Product Category Wise Stock Report");
+		JMenuItem mntmProductCategoryWise = new JMenuItem("Product Company Wise Stock Report");
 		mntmProductCategoryWise.setIcon(new ImageIcon(MainWindow.class.getResource("/images/category.png")));
 		mnReports.add(mntmProductCategoryWise);
 		

@@ -17,6 +17,8 @@ public class WiremanServices {
 
 	private static final String GET_ALL_WIREMAN = "SELECT * FROM WIREMAN_DETAILS";
 	
+	private static final String IS_WIREMAN_DELETION_ALLOWED = "SELECT COUNT(*) AS COUNT FROM CUSTOMER_BILL_DETAILS WHERE WIREMAN_MOB_NO=?";
+	
 	private static final String INS_WIREMAN = "INSERT INTO WIREMAN_DETAILS " 
 												+ "(MOBILE_NUMBER,NAME,ADDRESS)" 
 												+ " VALUES(?,?,?)";
@@ -131,6 +133,8 @@ public class WiremanServices {
 		return status;
 	}
 	
+	
+	
 public static void populateDropdown(JComboBox<String> combobox,HashMap<String,Long> wiremanMap){
 		combobox.addItem("-- Select --");
 		for(WiremanDetails w :getAllWiremans()){
@@ -138,5 +142,30 @@ public static void populateDropdown(JComboBox<String> combobox,HashMap<String,Lo
 			wiremanMap.put(w.getName(), w.getMobileNo());
 		}
 	}
+
+public static boolean allowDeleteWireman(Long wiremanMobile) {
+	Connection conn = null;
+	PreparedStatement stmt = null;
+	int count=0;
+	try {
+		conn = PDFUtils.getConnection();
+		stmt = conn.prepareStatement(IS_WIREMAN_DELETION_ALLOWED);
+		stmt.setLong(1, wiremanMobile);
+		ResultSet rs = stmt.executeQuery();
+
+		if (rs.next()) {
+			count = rs.getInt("COUNT");
+		}
+		rs.close();
+	} catch (Exception e) {
+		e.printStackTrace();
+	} finally {
+		PDFUtils.closeConnectionAndStatment(conn, stmt);
+	}
+	if(count>0) {
+		return true;
+	}
+	return false;
+}
 	
 }

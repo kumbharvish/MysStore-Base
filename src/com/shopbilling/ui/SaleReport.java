@@ -33,8 +33,10 @@ import javax.swing.table.DefaultTableModel;
 import com.shopbilling.dto.BillDetails;
 import com.shopbilling.services.ButtonColumn;
 import com.shopbilling.services.ProductServices;
+import com.shopbilling.services.WiremanServices;
 import com.shopbilling.utils.PDFUtils;
 import com.toedter.calendar.JDateChooser;
+import javax.swing.JComboBox;
 
 public class SaleReport extends JInternalFrame {
 	private JTable table;
@@ -60,6 +62,7 @@ public class SaleReport extends JInternalFrame {
 	private Map<Integer,BillDetails> billsMap;
 	private JFrame mainFrame;
 	private JTextField tf_CustMobile;
+	private HashMap<String,Long> wiremanMap = new  HashMap<>();
 	
 	/**
 	 * Create the frame.
@@ -72,7 +75,7 @@ public class SaleReport extends JInternalFrame {
 		
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(null, "Report Date", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel.setBounds(50, 11, 1150, 60);
+		panel.setBounds(50, 11, 1150, 99);
 		getContentPane().add(panel);
 		panel.setLayout(null);
 		 mainFrame = (JFrame)this.getTopLevelAncestor();
@@ -125,9 +128,20 @@ public class SaleReport extends JInternalFrame {
 		tf_CustMobile.setBounds(697, 19, 193, 28);
 		panel.add(tf_CustMobile);
 		
+		JLabel lblSelectWireman = new JLabel("Select Wireman :");
+		lblSelectWireman.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblSelectWireman.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblSelectWireman.setBounds(536, 58, 146, 28);
+		panel.add(lblSelectWireman);
+		
+		JComboBox cb_Wireman = new JComboBox();
+		cb_Wireman.setBounds(697, 58, 193, 28);
+		panel.add(cb_Wireman);
+		WiremanServices.populateDropdown(cb_Wireman, wiremanMap);
+		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new TitledBorder(null, "Bill Details", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_1.setBounds(50, 82, 1150, 356);
+		panel_1.setBounds(50, 121, 1150, 317);
 		getContentPane().add(panel_1);
 		panel_1.setLayout(null);
 		
@@ -287,7 +301,7 @@ public class SaleReport extends JInternalFrame {
 	
 	//Fill Report Table
 	private void fillReportTable(){
-		List<BillDetails> billList= ProductServices.getBillDetails(fromDateChooser.getDate()==null?null:new java.sql.Date(fromDateChooser.getDate().getTime()),toDateChooser.getDate()==null?null:new java.sql.Date(toDateChooser.getDate().getTime()),tf_CustMobile.getText().equals("")?null:Long.valueOf(tf_CustMobile.getText()));
+		List<BillDetails> billList= ProductServices.getBillDetails(fromDateChooser.getDate()==null?null:new java.sql.Date(fromDateChooser.getDate().getTime()),toDateChooser.getDate()==null?null:new java.sql.Date(toDateChooser.getDate().getTime()),tf_CustMobile.getText().equals("")?null:Long.valueOf(tf_CustMobile.getText()),null);
 		calculateConsolidateValues(billList);
 		reportModel.setRowCount(0);
 		if(billList.isEmpty()){
@@ -334,5 +348,4 @@ public class SaleReport extends JInternalFrame {
 		lblCashPaymentValue.setText(PDFUtils.getDecimalFormat(cashPayment));
 		lblTotalAmountValue.setText("Rs. "+PDFUtils.getDecimalFormat(totalAmount)+" /-");
 	}
-	
 }
