@@ -22,6 +22,7 @@ import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -30,9 +31,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
-
-import net.java.dev.designgridlayout.DesignGridLayout;
-import net.java.dev.designgridlayout.LabelAlignment;
 
 import org.fuin.utils4swing.layout.scalable.DefaultScalableLayoutRegistry;
 import org.fuin.utils4swing.layout.scalable.ScalableLayoutUtils;
@@ -46,6 +44,9 @@ import com.shopbilling.services.ProductCategoryServices;
 import com.shopbilling.services.ProductHistoryServices;
 import com.shopbilling.services.ProductServices;
 import com.shopbilling.utils.PDFUtils;
+
+import net.java.dev.designgridlayout.DesignGridLayout;
+import net.java.dev.designgridlayout.LabelAlignment;
 
 public class ManageProductsUI extends JInternalFrame {
 
@@ -71,6 +72,7 @@ public class ManageProductsUI extends JInternalFrame {
 	private JTable productTable;
 	private HashMap<String,Integer> productCategoryMap;
 	private JFrame frame;
+	private JRadioButton isNotification;
 
 	public ManageProductsUI() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -167,6 +169,7 @@ public class ManageProductsUI extends JInternalFrame {
 		 entryDate = new JTextField();
 		 entryDate.setFont(new Font("Tahoma", Font.BOLD, 12));
 		 entryDate.setEditable(false);
+		 isNotification = new JRadioButton("Set Stock Limit Notification");
  		JButton btnProductDelete = new JButton("Delete");
  		JButton btnProductUpdate = new JButton("Update");
  		JButton btnProductSave = new JButton("Add");
@@ -197,6 +200,8 @@ public class ManageProductsUI extends JInternalFrame {
  		productEntryLayout.row().grid(new JLabel("Entry Date :"))	.add(entryDate);
  		productEntryLayout.emptyRow();
  		productEntryLayout.row().grid(new JLabel("Description :"))	.add(productDescription);
+ 		productEntryLayout.emptyRow();
+ 		productEntryLayout.row().grid().add(isNotification);
  		productEntryLayout.emptyRow();
  		productEntryLayout.row().center().add(btnProductSave).add(btnProductUpdate).add(btnProductDelete).add(btnProductReset);
  		
@@ -399,6 +404,7 @@ public class ManageProductsUI extends JInternalFrame {
 		productCategory.setSelectedIndex(0);
 		productBarCode.setText("");
 		quantity.setEnabled(true);
+		isNotification.setSelected(false);
 	}
 	//Populate categories into dropdown
 	public void populateCategories(JComboBox<String> productCategory){
@@ -486,6 +492,7 @@ public class ManageProductsUI extends JInternalFrame {
 					productToUpdate.setSellPrice(Double.parseDouble(sellingPrice.getText()));
 					productToUpdate.setEnterBy(userDetails.getFirstName()+" "+userDetails.getLastName());
 					productToUpdate.setLastUpdateDate(new java.sql.Date(System.currentTimeMillis()));
+					productToUpdate.setStockNotification((isNotification.isSelected()?"Y":"N"));
 					if(productBarCode.getText().equals("")){
 						productToUpdate.setProductBarCode(Long.valueOf(0));
 					}else{
@@ -567,6 +574,7 @@ public class ManageProductsUI extends JInternalFrame {
 				productToSave.setEnterBy(userDetails.getFirstName()+" "+userDetails.getLastName());
 				productToSave.setEntryDate(new java.sql.Date(System.currentTimeMillis()));
 				productToSave.setLastUpdateDate(new java.sql.Date(System.currentTimeMillis()));
+				productToSave.setStockNotification((isNotification.isSelected()?"Y":"N"));
 				if(productBarCode.getText().equals("")){
 					productToSave.setProductBarCode(Long.valueOf(0));
 				}else{
@@ -623,6 +631,7 @@ public class ManageProductsUI extends JInternalFrame {
 		enterBy.setText(product.getEnterBy());
 		entryDate.setText(product.getEntryDate().toString());
 		productCategory.setSelectedItem(product.getProductCategory());
+		isNotification.setSelected(product.getStockNotification()!=null&&product.getStockNotification().equals("Y")?true:false);
 		
 	}
 	

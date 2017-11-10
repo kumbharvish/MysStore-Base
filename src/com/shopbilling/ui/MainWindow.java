@@ -10,6 +10,7 @@ import java.awt.SystemColor;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -31,9 +32,11 @@ import javax.swing.border.TitledBorder;
 
 import com.shopbilling.constants.AppConstants;
 import com.shopbilling.dto.MyStoreDetails;
+import com.shopbilling.dto.Product;
 import com.shopbilling.dto.UserDetails;
 import com.shopbilling.services.DBBackupService;
 import com.shopbilling.services.MyStoreServices;
+import com.shopbilling.services.ProductServices;
 import com.shopbilling.utils.PDFUtils;
 
 public class MainWindow extends JFrame{
@@ -834,7 +837,7 @@ public class MainWindow extends JFrame{
 		contentPane.add(myStoreNamelbl);
 		
 		//Create Database Backup
-		new Thread(new MailTask()).start();
+		new Thread(new MailTask(this)).start();
 		// Add Opening Stock Value Amount Entry
 		//ReportServices.doRecurrsiveInsertOpeningAmount();
 		
@@ -848,9 +851,17 @@ public class MainWindow extends JFrame{
 	}
 	
 	class MailTask implements Runnable{
+		MainWindow mainWindow;
+		MailTask(MainWindow mainWindow){
+			this.mainWindow = mainWindow;
+		}
 		@Override
 		public void run() {
-			DBBackupService.createDBDumpSendOnMail();			
+			DBBackupService.createDBDumpSendOnMail();
+			List<Product> productList = ProductServices.getAllRunningProductsStock();
+			if(productList.size()>0) {
+				new ShowStockNotification(mainWindow, productList).setVisible(true);
+			}
 		}
 		
 	}

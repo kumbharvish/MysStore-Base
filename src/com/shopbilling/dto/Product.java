@@ -53,6 +53,8 @@ public class Product {
 	private int supplierId;
 	
 	private Timestamp timeStamp;
+	
+	private String stockNotification;
 
 	public int getProductCode() {
 		return productCode;
@@ -325,6 +327,14 @@ public class Product {
 				+ ", categoryCode=" + categoryCode + ", supplierName="
 				+ supplierName + ", supplierId=" + supplierId + ", timeStamp="
 				+ timeStamp + "]";
+	}
+
+	public String getStockNotification() {
+		return stockNotification;
+	}
+
+	public void setStockNotification(String stockNotification) {
+		this.stockNotification = stockNotification;
 	}
 	 
 }

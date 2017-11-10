@@ -104,5 +104,7 @@ public class AppConstants {
 
 	public static final String PROFIT = "Sales Profit";
 	
+	public static final String STOCK_LIMIT_NOTIFICATION_QTY = "STOCK_LIMIT_NOTIFICATION_QTY";
+	
 	
 }

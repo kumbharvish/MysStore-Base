@@ -87,7 +87,7 @@ public class DBBackupService {
 	            		}
 	        		}
 	        	}else{
-	        		JOptionPane.showMessageDialog(null, "Data Backup Successfully Completed !", "Data Backup", JOptionPane.INFORMATION_MESSAGE);
+	        		//JOptionPane.showMessageDialog(null, "Data Backup Successfully Completed !", "Data Backup", JOptionPane.INFORMATION_MESSAGE);
 	        	}
 	        } else {
 	        	JOptionPane.showMessageDialog(null, "Data Backup Failed !", "Data Backup", JOptionPane.WARNING_MESSAGE);
