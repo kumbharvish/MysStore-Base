@@ -102,6 +102,7 @@ public class MainWindow extends JFrame{
 	private AddExpenseUI addExpenseUI;
 	private ViewExpensesUI viewExpensesUI;
 	private ManageWiremanUI manageWiremanUI;
+	private StockLimitEnabledReport stockLimitEnabledReport;
 	
 	
 	private JButton btnDataBackup;
@@ -533,6 +534,18 @@ public class MainWindow extends JFrame{
 		mntmProductCategoryWise.setIcon(new ImageIcon(MainWindow.class.getResource("/images/category.png")));
 		mnReports.add(mntmProductCategoryWise);
 		
+		JMenuItem mntmNewMenuItem = new JMenuItem("Stock Limit Enabled Product Report");
+		mntmNewMenuItem.setIcon(new ImageIcon(MainWindow.class.getResource("/images/sand.png")));
+		mnReports.add(mntmNewMenuItem);
+		
+		mntmNewMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				closeAllInternalFrames();
+				stockLimitEnabledReport = new StockLimitEnabledReport();
+				containerPanel.add(stockLimitEnabledReport);
+			}
+		});
+		
 		JMenuItem mntmSalesReport = new JMenuItem("Sales Report");
 		mntmSalesReport.setIcon(new ImageIcon(MainWindow.class.getResource("/images/report_check.png")));
 		mnReports.add(mntmSalesReport);
@@ -837,7 +850,8 @@ public class MainWindow extends JFrame{
 		contentPane.add(myStoreNamelbl);
 		
 		//Create Database Backup
-		new Thread(new MailTask(this)).start();
+		new Thread(new StockLimitTask(this)).start();
+		new Thread(new MailTask()).start();
 		// Add Opening Stock Value Amount Entry
 		//ReportServices.doRecurrsiveInsertOpeningAmount();
 		
@@ -851,13 +865,20 @@ public class MainWindow extends JFrame{
 	}
 	
 	class MailTask implements Runnable{
+		@Override
+		public void run() {
+			DBBackupService.createDBDumpSendOnMail();
+		}
+		
+	}
+	
+	class StockLimitTask implements Runnable{
 		MainWindow mainWindow;
-		MailTask(MainWindow mainWindow){
+		StockLimitTask(MainWindow mainWindow){
 			this.mainWindow = mainWindow;
 		}
 		@Override
 		public void run() {
-			DBBackupService.createDBDumpSendOnMail();
 			List<Product> productList = ProductServices.getAllRunningProductsStock();
 			if(productList.size()>0) {
 				new ShowStockNotification(mainWindow, productList).setVisible(true);
@@ -1013,6 +1034,9 @@ public class MainWindow extends JFrame{
 		}
 		if(manageWiremanUI!=null) {
 			containerPanel.remove(manageWiremanUI);
+		}
+		if(stockLimitEnabledReport!=null) {
+			containerPanel.remove(stockLimitEnabledReport);
 		}
 	}
 

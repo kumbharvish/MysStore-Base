@@ -22,6 +22,8 @@ public class AppConstants {
 	
 	public static final String ZERO_STOCK_PRODUCT_REPORT_JRXML = "Zero_Stock_Product_Report.jasper";
 	
+	public static final String STOCK_LIMIT_ENABLED_PRODUCT_REPORT_JRXML = "Stock_Limit_Enabled_Product_Report.jasper";
+	
 	public static final String SALES_REPORT_JASPER = "Sales_Report.jasper";
 	
 	public static final String SALES_RETURN_REPORT_JASPER = "Sales_Return_Report.jasper";

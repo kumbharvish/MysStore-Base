@@ -246,7 +246,7 @@ public class ExcelUtils {
 					 
 					    Cell cellProductProfitAmt = row.createCell(3);
 					    cellProductProfitAmt.setCellStyle(cellStyle);
-					    cellProductProfitAmt.setCellValue("Product Category");
+					    cellProductProfitAmt.setCellValue("Product Company");
 					    
 					    Cell cellStockQty = row.createCell(4);
 					    cellStockQty.setCellStyle(cellStyle);

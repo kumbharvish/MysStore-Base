@@ -105,6 +105,7 @@ public class NewBill extends JInternalFrame {
 	private double netSalesAmt=0;
 	private double billPurchaseAmt=0;
 	private double discountAmt=0;
+	private double diffDiscountAmt=0;
 	//Bill Customer 
 	private Customer customer;
 	private JTextField tf_DiscountAmt;
@@ -273,7 +274,7 @@ public class NewBill extends JInternalFrame {
 			public void keyReleased(KeyEvent e) {
 				if(e.getKeyCode()==KeyEvent.VK_ENTER){
 					if(!itemName.getText().equals("")){
-						quantity.requestFocus();
+						rate.requestFocus();
 						setProductDetails(itemName.getText());
 					}
 					
@@ -319,11 +320,11 @@ public class NewBill extends JInternalFrame {
 		MRP.setDisabledTextColor(Color.BLUE);
 		MRP.setBorder(border);
 		rate = new JTextField();
-		rate.setEnabled(false);
+		rate.setEnabled(true);
 		rate.setBounds(508, 27, 102, 27);
 		rate.setColumns(10);
 		rate.setFont(font);
-		rate.setDisabledTextColor(Color.BLUE);
+		rate.setForeground(Color.BLUE);
 		rate.setBorder(border);
 		table = new JTable();
 		table.setFont(new Font("Tahoma", Font.BOLD, 13));
@@ -635,6 +636,7 @@ public class NewBill extends JInternalFrame {
 			    	  resetItemFields();
 			      }
 			   }
+			   
 			
 
 			@Override
@@ -648,6 +650,18 @@ public class NewBill extends JInternalFrame {
 				}
 				
 			}
+			});
+		//Rate Field
+		rate.addKeyListener(new KeyAdapter() {
+			   public void keyTyped(KeyEvent e) {
+			      char c = e.getKeyChar();
+			      if ( ((c < '0') || (c > '9')) && (c != KeyEvent.VK_BACK_SPACE)) {
+			         e.consume();  // ignore event
+			      }
+			      if(c=='\n'){
+			    	  quantity.requestFocus();
+			      }
+			   }
 			});
 		
 		tf_Discount.addKeyListener(new KeyAdapter() {
@@ -864,10 +878,14 @@ public class NewBill extends JInternalFrame {
 			if(!productsInTable.contains(product.getProductCode())){
 				if(product.getQuanity()>=Integer.valueOf(quantity.getText())){
 					productsInTable.add(product.getProductCode());
-					billPurchaseAmt+=product.getPurcasePrice()*Integer.valueOf(quantity.getText());
+					int qty = Integer.valueOf(quantity.getText());
+					billPurchaseAmt+=product.getPurcasePrice()*qty;
 					System.out.println("Add Bill Purchase Amt : "+billPurchaseAmt);
+					diffDiscountAmt+=(product.getProductMRP()*qty)- (Double.valueOf(rate.getText())*qty);
+					System.out.println("Difference Discount Amt : "+diffDiscountAmt);
+					discountAmt = diffDiscountAmt;
 					//Add row to table
-					productModel.addRow(new Object[]{product.getProductCode(), product.getProductName(), PDFUtils.getDecimalFormat(product.getProductMRP()), PDFUtils.getDecimalFormat(product.getSellPrice()),quantity.getText(),amount.getText(),product.getPurcasePrice()});
+					productModel.addRow(new Object[]{product.getProductCode(), product.getProductName(), PDFUtils.getDecimalFormat(product.getProductMRP()), PDFUtils.getDecimalFormat(Double.parseDouble(rate.getText())),quantity.getText(),amount.getText(),product.getPurcasePrice()});
 					setPaymentFields(Integer.valueOf(quantity.getText()),Double.valueOf(amount.getText()),productModel.getRowCount());
 					setGrossAmt();
 					setNetSaleAmount();
@@ -907,6 +925,7 @@ public class NewBill extends JInternalFrame {
 		}else{
 			tf_DiscountAmt.setText("0.00");	
 		}
+		//tf_DiscountAmt.setText(PDFUtils.getDecimalFormat(diffDiscountAmt));
 	}
 
 	private void setGrossAmt() {
@@ -1011,6 +1030,7 @@ public class NewBill extends JInternalFrame {
 		discountAmt=0;
 		netSalesAmt=0;
 		billPurchaseAmt=0;
+		diffDiscountAmt=0;
 		productsInTable.clear();
 		if(itemList!=null)
 		itemList.clear();

@@ -108,6 +108,28 @@ public class ExcelServices {
 		    return isSuccess;
 		}
 	 
+	//Zero Stock Products Report
+		 public static boolean writeStockLimitEnabledProductsExcel(List<Product> productList){
+			    Workbook workbook = new HSSFWorkbook();
+			    Sheet sheet = workbook.createSheet();
+			    boolean isSuccess=true;
+			    try{
+			    ExcelUtils.createHeaderRowZeroStock(sheet);
+			    int rowCount = 0;
+			 
+			    for (Product p : productList) {
+			        Row row = sheet.createRow(++rowCount);
+				    ExcelUtils.createZerotStockRow(p, row);
+			    }
+			    ExcelUtils.createExcelFile(workbook,"Stock_Limit_Enabled_Products_Report");
+			   }catch(Exception e){
+				   isSuccess=false;
+				   e.printStackTrace();
+				   logger.error("Excel Export Exception Stock_Limit_Enabled_Products_Report:",e);
+			   }
+			    return isSuccess;
+			}
+	 
 	//Category Wise Stock Report
 	 public static boolean writeCategoryWiseStockExcel(List<ProductCategory> productCategoryList){
 		    Workbook workbook = new HSSFWorkbook();
