@@ -96,6 +96,7 @@ public class NewBill extends JInternalFrame {
 	JButton btnSaveBill;
 	JButton btnReset;
 	JButton btnCashHelp;
+	JButton btnEdit;
 	//
 	private int noOfItems = 0;
 	private int totalQty = 0;
@@ -386,27 +387,65 @@ public class NewBill extends JInternalFrame {
 		btnSaveBill = new JButton("Save");
 		btnSaveBill.setIcon(new ImageIcon(NewBill.class.getResource("/images/save.png")));
 		btnSaveBill.setFont(new Font("Dialog", Font.BOLD, 12));
-		btnSaveBill.setBounds(43, 388, 102, 51);
+		btnSaveBill.setBounds(27, 388, 113, 51);
 		itemDetailsPanel.add(btnSaveBill);
 		
 		btnPrint = new JButton("Print");
 		btnPrint.setIcon(new ImageIcon(NewBill.class.getResource("/images/printer_picture.png")));
-		btnPrint.setBounds(239, 388, 102, 51);
+		btnPrint.setBounds(168, 388, 102, 51);
 		btnPrint.setEnabled(false);
 		btnPrint.setFont(new Font("Dialog", Font.BOLD, 12));
 		itemDetailsPanel.add(btnPrint);
 		
 		btnReset = new JButton("New Bill");
 		btnReset.setIcon(new ImageIcon(NewBill.class.getResource("/images/document_new.png")));
-		btnReset.setBounds(420, 388, 127, 51);
+		btnReset.setBounds(474, 388, 127, 51);
 		btnReset.setFont(new Font("Dialog", Font.BOLD, 12));
 		itemDetailsPanel.add(btnReset);
 		
 		btnCashHelp = new JButton("Cash Help");
 		btnCashHelp.setIcon(new ImageIcon(NewBill.class.getResource("/images/dollars (1).png")));
-		btnCashHelp.setBounds(625, 388, 145, 51);
+		btnCashHelp.setBounds(639, 388, 145, 51);
 		btnCashHelp.setFont(new Font("Dialog", Font.BOLD, 12));
 		itemDetailsPanel.add(btnCashHelp);
+		
+		btnEdit = new JButton("Edit Item");
+		btnEdit.setIcon(new ImageIcon(NewBill.class.getResource("/images/ic_arrow_round_change.png")));
+		btnEdit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+					int row = table.getSelectedRow();
+					if(row==-1){
+						JOptionPane.showMessageDialog(getContentPane(), "Please select item to change quantity");
+					}else{
+						String itemNotmp = table.getModel().getValueAt(row, 0).toString();
+						String itemNametmp = table.getModel().getValueAt(row, 1).toString();
+						String itemMRPtmp = table.getModel().getValueAt(row, 2).toString();
+						String itemRatetmp = table.getModel().getValueAt(row, 3).toString();
+						String itemQtytmp = table.getModel().getValueAt(row, 4).toString();
+						String itemAmounttmp = table.getModel().getValueAt(row, 5).toString();
+						itemNo.setText(itemNotmp);
+						itemName.setText(itemNametmp);
+						MRP.setText(itemMRPtmp);
+						quantity.setText(itemQtytmp);
+						amount.setText(itemAmounttmp);
+						rate.setText(itemRatetmp);
+						int removeProduct = Integer.valueOf(table.getModel().getValueAt(row, 0).toString());
+						double removeAmt = Double.valueOf(table.getModel().getValueAt(row, 5).toString());
+						int removeQty = Integer.valueOf(table.getModel().getValueAt(row, 4).toString());
+						diffDiscountAmt-=(Double.parseDouble(itemMRPtmp)*Integer.parseInt(itemQtytmp))- (Double.parseDouble(itemRatetmp)*Integer.parseInt(itemQtytmp));
+						
+						PDFUtils.removeItemFromList(productsInTable,removeProduct);
+						billPurchaseAmt-=(Double.valueOf(table.getModel().getValueAt(row, 6).toString()))*removeQty;
+						productModel.removeRow(row);
+						setPaymentFields(-removeQty, -removeAmt, productModel.getRowCount());
+						quantity.requestFocus();
+						
+					}
+			}
+		});
+		btnEdit.setFont(new Font("Dialog", Font.BOLD, 12));
+		btnEdit.setBounds(305, 388, 127, 51);
+		itemDetailsPanel.add(btnEdit);
 		getContentPane().add(paymentDetails);
 		paymentDetails.setLayout(null);
 		
@@ -793,7 +832,9 @@ public class NewBill extends JInternalFrame {
 					productsInTable.add(product.getProductCode());
 					billPurchaseAmt+=product.getPurcasePrice()*Integer.valueOf(quantity.getText());
 					//Add row to table
-					productModel.addRow(new Object[]{product.getProductCode(), product.getProductName(), PDFUtils.getDecimalFormat(product.getProductMRP()), PDFUtils.getDecimalFormat(product.getSellPrice()),quantity.getText(),amount.getText(),product.getPurcasePrice()});
+					if(!updateRow(product.getProductCode())) {
+						productModel.addRow(new Object[]{product.getProductCode(), product.getProductName(), PDFUtils.getDecimalFormat(product.getProductMRP()), PDFUtils.getDecimalFormat(product.getSellPrice()),quantity.getText(),amount.getText(),product.getPurcasePrice()});
+					}
 					setPaymentFields(Integer.valueOf(quantity.getText()),Double.valueOf(amount.getText()),productModel.getRowCount());
 					setGrossAmt();
 					setNetSaleAmount();
@@ -802,6 +843,22 @@ public class NewBill extends JInternalFrame {
 					JOptionPane.showMessageDialog(getContentPane(),"Product :  "+product.getProductName()+"  Available Stock is : "+product.getQuanity(),"Product Not Available",JOptionPane.WARNING_MESSAGE);
 				}
 		}
+	}
+	
+	private boolean updateRow(Integer productCode) {
+		boolean isUpdated = false;
+	    for (int i = 0; i < productModel.getRowCount(); i++) {
+	    	Integer code = (Integer)productModel.getValueAt(i, 0);
+	        if (code.equals(productCode)) {
+	        	int qty = Integer.parseInt((String)productModel.getValueAt(i, 4));
+	        	double rate = Double.parseDouble((String)productModel.getValueAt(i, 3));
+	        	productModel.setValueAt(String.valueOf(qty+1), i, 4);
+	        	productModel.setValueAt(PDFUtils.getAmountFormat((qty+1)*rate), i, 5);
+	        	
+	        	isUpdated = true;
+	        }
+	    }
+	    return isUpdated;
 	}
 
 	protected void setNewFoucus() {
@@ -883,7 +940,6 @@ public class NewBill extends JInternalFrame {
 					System.out.println("Add Bill Purchase Amt : "+billPurchaseAmt);
 					diffDiscountAmt+=(product.getProductMRP()*qty)- (Double.valueOf(rate.getText())*qty);
 					System.out.println("Difference Discount Amt : "+diffDiscountAmt);
-					discountAmt = diffDiscountAmt;
 					//Add row to table
 					productModel.addRow(new Object[]{product.getProductCode(), product.getProductName(), PDFUtils.getDecimalFormat(product.getProductMRP()), PDFUtils.getDecimalFormat(Double.parseDouble(rate.getText())),quantity.getText(),amount.getText(),product.getPurcasePrice()});
 					setPaymentFields(Integer.valueOf(quantity.getText()),Double.valueOf(amount.getText()),productModel.getRowCount());
@@ -925,7 +981,6 @@ public class NewBill extends JInternalFrame {
 		}else{
 			tf_DiscountAmt.setText("0.00");	
 		}
-		//tf_DiscountAmt.setText(PDFUtils.getDecimalFormat(diffDiscountAmt));
 	}
 
 	private void setGrossAmt() {
@@ -933,7 +988,8 @@ public class NewBill extends JInternalFrame {
 			Double disc = Double.parseDouble(tf_Discount.getText());
 			double tempDisc = totalAmt;
 			tempDisc= tempDisc-(totalAmt/100)*disc;
-			discountAmt=(totalAmt/100)*disc;
+			double discountAmtTemp=(totalAmt/100)*disc;
+			discountAmt = diffDiscountAmt+discountAmtTemp;
 			netSalesAmt = tempDisc;
 			grossAmt = tempDisc;
 			System.out.println(grossAmt);
@@ -944,7 +1000,8 @@ public class NewBill extends JInternalFrame {
 		}else{
 			netSalesAmt = totalAmt;
 			grossAmt = totalAmt;
-			discountAmt=0.0;
+			double discountAmtTemp=0.0;
+			discountAmt = diffDiscountAmt+discountAmtTemp;
 			tf_GrossAmt.setText(PDFUtils.getDecimalFormat(grossAmt));
 			tf_DiscountAmt.setText(PDFUtils.getDecimalFormat(discountAmt));
 			tf_NetSalesAmt.setText(PDFUtils.getDecimalFormat((PDFUtils.getDecimalRoundUp(netSalesAmt))));
@@ -1035,6 +1092,7 @@ public class NewBill extends JInternalFrame {
 		if(itemList!=null)
 		itemList.clear();
 		btnSaveBill.setEnabled(true);
+		btnEdit.setEnabled(true);
 		btnPrint.setEnabled(false);
 		productMap = getProductMap();
 		productMapWithBarcode = getProductMapWithBarCode();
@@ -1054,6 +1112,7 @@ public class NewBill extends JInternalFrame {
 		mouseListnerFlag = false;
 		//billDate.setEnabled(false);
 		tf_barCode.setEnabled(false);
+		btnEdit.setEnabled(false);
 	}
 	private void enableForNewBill(){
 		customerMobileNo.setEnabled(true);
@@ -1069,6 +1128,7 @@ public class NewBill extends JInternalFrame {
 		mouseListnerFlag=true;
 		//billDate.setEnabled(true);
 		tf_barCode.setEnabled(true);
+		btnEdit.setEnabled(true);
 	}
 	
 	public List<String> getCustomerNameList(){
