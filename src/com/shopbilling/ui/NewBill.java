@@ -762,7 +762,9 @@ public class NewBill extends JInternalFrame {
 					productsInTable.add(product.getProductCode());
 					billPurchaseAmt+=product.getPurcasePrice()*Integer.valueOf(quantity.getText());
 					//Add row to table
-					productModel.addRow(new Object[]{product.getProductCode(), product.getProductName(), PDFUtils.getDecimalFormat(product.getProductMRP()), PDFUtils.getDecimalFormat(product.getSellPrice()),quantity.getText(),amount.getText(),product.getPurcasePrice()});
+					if(!updateRow(product.getProductCode())) {
+						productModel.addRow(new Object[]{product.getProductCode(), product.getProductName(), PDFUtils.getDecimalFormat(product.getProductMRP()), PDFUtils.getDecimalFormat(product.getSellPrice()),quantity.getText(),amount.getText(),product.getPurcasePrice()});
+					}
 					setPaymentFields(Integer.valueOf(quantity.getText()),Double.valueOf(amount.getText()),productModel.getRowCount());
 					setGrossAmt();
 					setNetSaleAmount();
@@ -772,7 +774,21 @@ public class NewBill extends JInternalFrame {
 				}
 		}
 	}
-
+	private boolean updateRow(Integer productCode) {
+		boolean isUpdated = false;
+	    for (int i = 0; i < productModel.getRowCount(); i++) {
+	    	Integer code = (Integer)productModel.getValueAt(i, 0);
+	        if (code.equals(productCode)) {
+	        	int qty = Integer.parseInt((String)productModel.getValueAt(i, 4));
+	        	double rate = Double.parseDouble((String)productModel.getValueAt(i, 3));
+	        	productModel.setValueAt(String.valueOf(qty+1), i, 4);
+	        	productModel.setValueAt(PDFUtils.getAmountFormat((qty+1)*rate), i, 5);
+	        	
+	        	isUpdated = true;
+	        }
+	    }
+	    return isUpdated;
+	}
 	protected void setNewFoucus() {
 		if(cb_newFocustTo.getSelectedItem().equals(AppConstants.ITEM_NAME)){
 			itemDetailsPanel.requestFocus();
