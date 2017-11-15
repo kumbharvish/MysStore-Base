@@ -30,6 +30,8 @@ public class AppConstants {
 	
 	public static final String BILL_PRINT_JASPER = "Bill_Print.jasper";
 	
+	public static final String BILL_PRINT_A4_JASPER = "Bill_Print_A4.jasper";
+	
 	public static final String BARCODE_65_JASPER = "Barcode_65.jasper";
 	
 	public static final String BARCODE_30_JASPER = "Barcode_30.jasper";

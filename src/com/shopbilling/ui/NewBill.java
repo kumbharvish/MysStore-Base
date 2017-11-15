@@ -793,7 +793,7 @@ public class NewBill extends JInternalFrame {
 			public void actionPerformed(ActionEvent e) {
 				//PrintServices.createPDF(bill);
 				JOptionPane.showMessageDialog(getContentPane(), "Printing !");
-				JasperUtils.createPDFWithJasper(JasperServices.createDataForBill(bill),AppConstants.BILL_PRINT_JASPER);
+				JasperUtils.createPDFWithJasper(JasperServices.createDataForBill(bill),AppConstants.BILL_PRINT_A4_JASPER);
 			}
 		});
 		//Cash Action

@@ -562,7 +562,7 @@ public class ViewCustomerBill extends JDialog {
 	//Print Bill
 	protected void printBill(BillDetails bill) {
 		JOptionPane.showMessageDialog(getContentPane(), "Printing !");
-		JasperUtils.createPDFWithJasper(JasperServices.createDataForBill(bill),AppConstants.BILL_PRINT_JASPER);
+		JasperUtils.createPDFWithJasper(JasperServices.createDataForBill(bill),AppConstants.BILL_PRINT_A4_JASPER);
 	}
 	
 	private List<Product> getProductList(List<ItemDetails> itemList, int billNo){

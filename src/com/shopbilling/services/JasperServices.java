@@ -24,6 +24,7 @@ public class JasperServices {
              Map<String,Object> map = new HashMap<String, Object>();
              map.put("Name", item.getItemName());
              map.put("Qty", String.valueOf(item.getQuantity()));
+             map.put("MRP", PDFUtils.getDecimalFormat(item.getMRP()));
              map.put("Rate", PDFUtils.getDecimalFormat(item.getRate()));
              map.put("Amount", PDFUtils.getDecimalFormat(item.getAmount()));
              map.put("BillNo",String.valueOf(bill.getBillNumber()));
@@ -31,6 +32,9 @@ public class JasperServices {
              map.put("NoOfItems", String.valueOf(bill.getNoOfItems()));
              map.put("TotalAmount", PDFUtils.getDecimalFormat(bill.getTotalAmount()));
              map.put("NetSalesAmount", PDFUtils.getDecimalFormat(bill.getNetSalesAmt()));
+             map.put("DiscountAmount", PDFUtils.getDecimalFormat(bill.getDiscountAmt()));
+             map.put("CustMobile", String.valueOf(bill.getCustomerMobileNo()));
+             map.put("CustName", bill.getCustomerName());
              dataSourceMaps.add(map);
          }  
          return dataSourceMaps;
