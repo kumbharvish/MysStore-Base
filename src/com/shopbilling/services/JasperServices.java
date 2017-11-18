@@ -35,6 +35,7 @@ public class JasperServices {
              map.put("DiscountAmount", PDFUtils.getDecimalFormat(bill.getDiscountAmt()));
              map.put("CustMobile", String.valueOf(bill.getCustomerMobileNo()));
              map.put("CustName", bill.getCustomerName());
+             map.put("DiscountPer", String.valueOf(bill.getDiscount()));
              dataSourceMaps.add(map);
          }  
          return dataSourceMaps;

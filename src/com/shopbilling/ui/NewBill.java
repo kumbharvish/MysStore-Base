@@ -106,7 +106,7 @@ public class NewBill extends JInternalFrame {
 	private double netSalesAmt=0;
 	private double billPurchaseAmt=0;
 	private double discountAmt=0;
-	private double diffDiscountAmt=0;
+	//private double diffDiscountAmt=0;
 	//Bill Customer 
 	private Customer customer;
 	private JTextField tf_DiscountAmt;
@@ -432,7 +432,7 @@ public class NewBill extends JInternalFrame {
 						int removeProduct = Integer.valueOf(table.getModel().getValueAt(row, 0).toString());
 						double removeAmt = Double.valueOf(table.getModel().getValueAt(row, 5).toString());
 						int removeQty = Integer.valueOf(table.getModel().getValueAt(row, 4).toString());
-						diffDiscountAmt-=(Double.parseDouble(itemMRPtmp)*Integer.parseInt(itemQtytmp))- (Double.parseDouble(itemRatetmp)*Integer.parseInt(itemQtytmp));
+						//diffDiscountAmt-=(Double.parseDouble(itemMRPtmp)*Integer.parseInt(itemQtytmp))- (Double.parseDouble(itemRatetmp)*Integer.parseInt(itemQtytmp));
 						
 						PDFUtils.removeItemFromList(productsInTable,removeProduct);
 						billPurchaseAmt-=(Double.valueOf(table.getModel().getValueAt(row, 6).toString()))*removeQty;
@@ -938,8 +938,8 @@ public class NewBill extends JInternalFrame {
 					int qty = Integer.valueOf(quantity.getText());
 					billPurchaseAmt+=product.getPurcasePrice()*qty;
 					System.out.println("Add Bill Purchase Amt : "+billPurchaseAmt);
-					diffDiscountAmt+=(product.getProductMRP()*qty)- (Double.valueOf(rate.getText())*qty);
-					System.out.println("Difference Discount Amt : "+diffDiscountAmt);
+					//diffDiscountAmt+=(product.getProductMRP()*qty)- (Double.valueOf(rate.getText())*qty);
+					//System.out.println("Difference Discount Amt : "+diffDiscountAmt);
 					//Add row to table
 					productModel.addRow(new Object[]{product.getProductCode(), product.getProductName(), PDFUtils.getDecimalFormat(product.getProductMRP()), PDFUtils.getDecimalFormat(Double.parseDouble(rate.getText())),quantity.getText(),amount.getText(),product.getPurcasePrice()});
 					setPaymentFields(Integer.valueOf(quantity.getText()),Double.valueOf(amount.getText()),productModel.getRowCount());
@@ -988,8 +988,9 @@ public class NewBill extends JInternalFrame {
 			Double disc = Double.parseDouble(tf_Discount.getText());
 			double tempDisc = totalAmt;
 			tempDisc= tempDisc-(totalAmt/100)*disc;
-			double discountAmtTemp=(totalAmt/100)*disc;
-			discountAmt = diffDiscountAmt+discountAmtTemp;
+			discountAmt=(totalAmt/100)*disc;
+			//double discountAmtTemp=(totalAmt/100)*disc;
+			//discountAmt = diffDiscountAmt+discountAmtTemp;
 			netSalesAmt = tempDisc;
 			grossAmt = tempDisc;
 			System.out.println(grossAmt);
@@ -1000,8 +1001,9 @@ public class NewBill extends JInternalFrame {
 		}else{
 			netSalesAmt = totalAmt;
 			grossAmt = totalAmt;
-			double discountAmtTemp=0.0;
-			discountAmt = diffDiscountAmt+discountAmtTemp;
+			discountAmt=0.0;
+			//double discountAmtTemp=0.0;
+			//discountAmt = diffDiscountAmt+discountAmtTemp;
 			tf_GrossAmt.setText(PDFUtils.getDecimalFormat(grossAmt));
 			tf_DiscountAmt.setText(PDFUtils.getDecimalFormat(discountAmt));
 			tf_NetSalesAmt.setText(PDFUtils.getDecimalFormat((PDFUtils.getDecimalRoundUp(netSalesAmt))));
@@ -1087,7 +1089,7 @@ public class NewBill extends JInternalFrame {
 		discountAmt=0;
 		netSalesAmt=0;
 		billPurchaseAmt=0;
-		diffDiscountAmt=0;
+		//diffDiscountAmt=0;
 		productsInTable.clear();
 		if(itemList!=null)
 		itemList.clear();
