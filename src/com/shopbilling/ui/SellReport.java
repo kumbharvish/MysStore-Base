@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -35,8 +36,11 @@ import org.fuin.utils4swing.layout.scalable.DefaultScalableLayoutRegistry;
 import org.fuin.utils4swing.layout.scalable.ScalableLayoutUtils;
 
 import com.shopbilling.dto.BillDetails;
+import com.shopbilling.dto.Customer;
+import com.shopbilling.services.AutoSuggestTable;
 import com.shopbilling.services.ButtonColumn;
 import com.shopbilling.services.ProductServices;
+import com.shopbilling.services.UserServices;
 import com.shopbilling.utils.PDFUtils;
 import com.toedter.calendar.JDateChooser;
 
@@ -52,6 +56,7 @@ public class SellReport extends JInternalFrame {
 	private double pendingPayment=0;
 	private double cashPayment=0;
 	private double totalAmount=0;
+	private HashMap<String,Customer> customerMap;
 	//
 	private JLabel lblTotalCustomerCountvalue;
 	private JLabel lblTotalNoOfValue;
@@ -131,14 +136,16 @@ public class SellReport extends JInternalFrame {
 		toDateChooser.setDate(new Date());
 		panel.add(toDateChooser);
 		
-		JLabel lblCustomerMobile = new JLabel("Customer Mobile :");
+		JLabel lblCustomerMobile = new JLabel("Customer :");
 		lblCustomerMobile.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblCustomerMobile.setFont(new Font("Tahoma", Font.BOLD, 14));
-		lblCustomerMobile.setBounds(559, 19, 146, 28);
+		lblCustomerMobile.setBounds(559, 19, 108, 28);
 		panel.add(lblCustomerMobile);
 		
-		tf_CustMobile = new JTextField();
-		tf_CustMobile.setBounds(720, 19, 193, 28);
+		tf_CustMobile = new AutoSuggestTable<>(getCustomerNameList());
+		tf_CustMobile.setFont(new Font("Tahoma", Font.BOLD, 12));
+		tf_CustMobile.setBorder(new LineBorder(Color.black, 1));
+		tf_CustMobile.setBounds(677, 19, 236, 28);
 		panel.add(tf_CustMobile);
 		tf_CustMobile.setColumns(10);
 		
@@ -155,14 +162,14 @@ public class SellReport extends JInternalFrame {
 		table = new JTable();
 		reportModel = new DefaultTableModel(){
 			 boolean[] columnEditables = new boolean[] {
-					 false, false, false, false,false,false,false,false,true
+					 false, false,false,false, false,false,false,false,false,true
 					};
 					public boolean isCellEditable(int row, int column) {
 						return columnEditables[column];
 					}
 		 };
 		 reportModel.setColumnIdentifiers(new String[] {
-				 "Bill Number", "Customer Mobile", "No of Items", "Quantity", "Pay Mode","Bill Date","Discount Amt","Net Sales Amount","Bill Details"}
+				 "Bill Number", "Customer Mobile","Customer Name", "No of Items", "Quantity", "Pay Mode","Bill Date","Discount Amt","Net Sales Amount","Bill Details"}
 	       );
 		table.setModel(reportModel);
 		
@@ -188,7 +195,7 @@ public class SellReport extends JInternalFrame {
 		     }
 		 };
 
-		 ButtonColumn buttonColumn = new ButtonColumn(table, viewBillAction, 8);
+		 ButtonColumn buttonColumn = new ButtonColumn(table, viewBillAction, 9);
 		 buttonColumn.setMnemonic(KeyEvent.VK_D);
 		 
 		 JPanel panel_2 = new JPanel();
@@ -293,12 +300,13 @@ public class SellReport extends JInternalFrame {
 		 
 		 //table.getColumnModel().getColumn(0).setPreferredWidth(110);
 		 table.getColumnModel().getColumn(1).setPreferredWidth(130);
+		 table.getColumnModel().getColumn(2).setPreferredWidth(150);
 		// table.getColumnModel().getColumn(2).setPreferredWidth(120);
 		 //table.getColumnModel().getColumn(3).setPreferredWidth(100);
 		// table.getColumnModel().getColumn(4).setPreferredWidth(100);
-		 table.getColumnModel().getColumn(5).setPreferredWidth(170);
-		 table.getColumnModel().getColumn(6).setPreferredWidth(100);
-		 table.getColumnModel().getColumn(7).setPreferredWidth(150);
+		 table.getColumnModel().getColumn(6).setPreferredWidth(170);
+		 table.getColumnModel().getColumn(7).setPreferredWidth(100);
+		 table.getColumnModel().getColumn(8).setPreferredWidth(130);
 		 //table.getColumnModel().getColumn(8).setPreferredWidth(120);
 
 		 ScalableLayoutUtils.installScalableLayoutAndKeys(new DefaultScalableLayoutRegistry(), this, 0.1);
@@ -306,7 +314,7 @@ public class SellReport extends JInternalFrame {
 	
 	//Fill Report Table
 	private void fillReportTable(){
-		List<BillDetails> billList= ProductServices.getBillDetails(fromDateChooser.getDate()==null?null:new java.sql.Date(fromDateChooser.getDate().getTime()),toDateChooser.getDate()==null?null:new java.sql.Date(toDateChooser.getDate().getTime()),tf_CustMobile.getText().equals("")?null:Long.valueOf(tf_CustMobile.getText()));
+		List<BillDetails> billList= ProductServices.getBillDetails(fromDateChooser.getDate()==null?null:new java.sql.Date(fromDateChooser.getDate().getTime()),toDateChooser.getDate()==null?null:new java.sql.Date(toDateChooser.getDate().getTime()),tf_CustMobile.getText().equals("")?null:customerMap.get(tf_CustMobile.getText()).getCustMobileNumber());
 		calculateConsolidateValues(billList);
 		reportModel.setRowCount(0);
 		if(billList.isEmpty()){
@@ -314,7 +322,7 @@ public class SellReport extends JInternalFrame {
 		}else{
 			for(BillDetails b : billList){
 				
-				reportModel.addRow(new Object[]{b.getBillNumber(),b.getCustomerMobileNo(),b.getNoOfItems(),b.getTotalQuanity(),b.getPaymentMode(),sdf.format(b.getTimestamp()),PDFUtils.getDecimalFormat(b.getDiscountAmt()),PDFUtils.getDecimalFormat(b.getNetSalesAmt()),"View Bill"});
+				reportModel.addRow(new Object[]{b.getBillNumber(),b.getCustomerMobileNo(),b.getCustomerName(),b.getNoOfItems(),b.getTotalQuanity(),b.getPaymentMode(),sdf.format(b.getTimestamp()),PDFUtils.getDecimalFormat(b.getDiscountAmt()),PDFUtils.getDecimalFormat(b.getNetSalesAmt()),"View Bill"});
 			}
 		}
 	}
@@ -352,5 +360,16 @@ public class SellReport extends JInternalFrame {
 		lblPendingPaymentValue.setText(PDFUtils.getDecimalFormat(pendingPayment));
 		lblCashPaymentValue.setText(PDFUtils.getDecimalFormat(cashPayment));
 		lblTotalAmountValue.setText("Rs. "+PDFUtils.getDecimalFormat(totalAmount)+" /-");
+	}
+	
+	public List<String> getCustomerNameList(){
+		
+		List<String> customerNameList = new ArrayList<String>();
+		customerMap = new HashMap<String, Customer>();
+		for(Customer cust :UserServices.getAllCustomers()){
+			customerNameList.add(cust.getCustName()+" : "+cust.getCustMobileNumber());
+			customerMap.put(cust.getCustName()+" : "+cust.getCustMobileNumber(),cust);
+		}
+		return customerNameList;
 	}
 }

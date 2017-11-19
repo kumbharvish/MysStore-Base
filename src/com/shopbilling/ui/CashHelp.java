@@ -111,5 +111,6 @@ public class CashHelp extends JDialog {
 		});
 		btnOk.setBounds(149, 268, 89, 38);
 		contentPane.add(btnOk);
+		contentPane.getRootPane().setDefaultButton(btnOk);
 	}
 }
