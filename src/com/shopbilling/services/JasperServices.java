@@ -3,6 +3,7 @@ package com.shopbilling.services;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -19,9 +20,14 @@ public class JasperServices {
 	
 	//Create Bill 
 	public static List<Map<String,?>> createDataForBill(BillDetails bill){
-		 List<Map<String,?>> dataSourceMaps = new ArrayList<Map<String, ?>> ();
+		 List<Map<String,?>> dataSourceMaps = new LinkedList<Map<String, ?>> ();
+		 int srNo =1;
+		 int validItemCount=24;
+		 int itemCount = bill.getItemDetails().size();
+		 int emptyLoopCount = validItemCount - itemCount;
          for (ItemDetails item : bill.getItemDetails()) {
              Map<String,Object> map = new HashMap<String, Object>();
+             map.put("SrNo", String.valueOf(srNo));
              map.put("Name", item.getItemName());
              map.put("Qty", String.valueOf(item.getQuantity()));
              map.put("MRP", PDFUtils.getDecimalFormat(item.getMRP()));
@@ -37,7 +43,28 @@ public class JasperServices {
              map.put("CustName", bill.getCustomerName());
              map.put("DiscountPer", String.valueOf(bill.getDiscount()));
              dataSourceMaps.add(map);
-         }  
+             srNo++;
+         } 
+         
+         for(int i=0;i<emptyLoopCount;i++) {
+        	 Map<String,Object> map = new HashMap<String, Object>();
+        	 map.put("SrNo", "");
+             map.put("Name", "");
+             map.put("Qty", "");
+             map.put("MRP", "");
+             map.put("Rate", "");
+             map.put("Amount", "");
+             map.put("BillNo",String.valueOf(bill.getBillNumber()));
+             map.put("TotalQty", String.valueOf(bill.getTotalQuanity()));
+             map.put("NoOfItems", String.valueOf(bill.getNoOfItems()));
+             map.put("TotalAmount", PDFUtils.getDecimalFormat(bill.getTotalAmount()));
+             map.put("NetSalesAmount", PDFUtils.getDecimalFormat(bill.getNetSalesAmt()));
+             map.put("DiscountAmount", PDFUtils.getDecimalFormat(bill.getDiscountAmt()));
+             map.put("CustMobile", String.valueOf(bill.getCustomerMobileNo()));
+             map.put("CustName", bill.getCustomerName());
+             map.put("DiscountPer", String.valueOf(bill.getDiscount()));
+             dataSourceMaps.add(map);
+         }
          return dataSourceMaps;
 	}
 	//Product Profit Report
