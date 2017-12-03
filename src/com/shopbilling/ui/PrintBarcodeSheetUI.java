@@ -51,7 +51,7 @@ public class PrintBarcodeSheetUI extends JInternalFrame {
 	private JTextField tf_Mrp;
 	private JRadioButton rdbtnStickers_65;
 	private JRadioButton rdbtnStickers_24;
-	//private JRadioButton rdbtnStickers_30;
+	private JRadioButton rdbtnStickers_40;
 	/**
 	 * Create the frame.
 	 */
@@ -189,14 +189,14 @@ public class PrintBarcodeSheetUI extends JInternalFrame {
 		panel_1.add(rdbtnStickers_65);
 		
 		rdbtnStickers_24 = new JRadioButton("24 Stickers");
-		rdbtnStickers_24.setBounds(264, 281, 108, 23);
+		rdbtnStickers_24.setBounds(374, 281, 101, 23);
 		panel_1.add(rdbtnStickers_24);
 		
-		/*rdbtnStickers_30 = new JRadioButton("30 Stickers");
-		rdbtnStickers_30.setBounds(374, 281, 101, 23);
-		panel_1.add(rdbtnStickers_30);*/
+		rdbtnStickers_40 = new JRadioButton("40 Stickers");
+		rdbtnStickers_40.setBounds(264, 281, 108, 23);
+		panel_1.add(rdbtnStickers_40);
 		bg.add(rdbtnStickers_65);
-		//bg.add(rdbtnStickers_30);
+		bg.add(rdbtnStickers_40);
 		bg.add(rdbtnStickers_24);
 		
 		autoSuggestTable.addKeyListener(new KeyAdapter() {
@@ -261,10 +261,10 @@ public class PrintBarcodeSheetUI extends JInternalFrame {
 				}else if (rdbtnStickers_24.isSelected()) {
 					JrxmlName = AppConstants.BARCODE_24_JASPER;
 					barcodeList = createDataSource(barcode,24);
-				}/*else if(rdbtnStickers_30.isSelected()) {
-					JrxmlName = AppConstants.BARCODE_30_JASPER;
-					barcodeList = createDataSource(barcode,30);
-				}*/
+				}else if(rdbtnStickers_40.isSelected()) {
+					JrxmlName = AppConstants.BARCODE_40_JASPER;
+					barcodeList = createDataSource(barcode,40);
+				}
 				
 				boolean isSuccess = JasperUtils.createPDFForBarcode(JasperServices.createDataForBarcode(barcodeList), JrxmlName, fileName);
 				if(!isSuccess) {

@@ -30,7 +30,7 @@ public class AppConstants {
 	
 	public static final String BARCODE_65_JASPER = "Barcode_65.jasper";
 	
-	public static final String BARCODE_30_JASPER = "Barcode_30.jasper";
+	public static final String BARCODE_40_JASPER = "Barcode_40.jasper";
 	
 	public static final String BARCODE_24_JASPER = "Barcode_24.jasper";
 	
