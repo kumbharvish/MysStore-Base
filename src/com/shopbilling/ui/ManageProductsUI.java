@@ -31,9 +31,6 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
-import net.java.dev.designgridlayout.DesignGridLayout;
-import net.java.dev.designgridlayout.LabelAlignment;
-
 import org.fuin.utils4swing.layout.scalable.DefaultScalableLayoutRegistry;
 import org.fuin.utils4swing.layout.scalable.ScalableLayoutUtils;
 
@@ -41,11 +38,16 @@ import com.shopbilling.constants.AppConstants;
 import com.shopbilling.dto.Product;
 import com.shopbilling.dto.ProductCategory;
 import com.shopbilling.dto.StatusDTO;
+import com.shopbilling.dto.Supplier;
 import com.shopbilling.dto.UserDetails;
 import com.shopbilling.services.ProductCategoryServices;
 import com.shopbilling.services.ProductHistoryServices;
 import com.shopbilling.services.ProductServices;
+import com.shopbilling.services.SupplierServices;
 import com.shopbilling.utils.PDFUtils;
+
+import net.java.dev.designgridlayout.DesignGridLayout;
+import net.java.dev.designgridlayout.LabelAlignment;
 
 public class ManageProductsUI extends JInternalFrame {
 
@@ -56,6 +58,7 @@ public class ManageProductsUI extends JInternalFrame {
 	JTextField productDescription; 
 	JTextField quantity ;
 	JComboBox<String> productCategory;
+	JComboBox<String> cb_suppliers;
 	JComboBox<String> measure;
 	JTextField purchasePrice ;
 	JTextField purchaseRate ;
@@ -70,6 +73,7 @@ public class ManageProductsUI extends JInternalFrame {
 	private JTextField tf_searchProduct;
 	private JTable productTable;
 	private HashMap<String,Integer> productCategoryMap;
+	private HashMap<String,Integer> productSupplierMap;
 	private JFrame frame;
 
 	public ManageProductsUI() {
@@ -133,6 +137,8 @@ public class ManageProductsUI extends JInternalFrame {
 		 quantity.setFont(new Font("Tahoma", Font.BOLD, 12));
 		 quantity.setDisabledTextColor(Color.BLACK);
 		 productCategory = new JComboBox<String>();
+		 cb_suppliers = new JComboBox<>();
+		 populateSuppliers(cb_suppliers);
 		 //Fill category in dropdown
 		 populateCategories(productCategory);
 		 measure = new JComboBox<String>();
@@ -191,6 +197,8 @@ public class ManageProductsUI extends JInternalFrame {
  		productEntryLayout.emptyRow();
  		//productEntryLayout.row().grid(new JLabel("Last Update :"))	.add(lastUpdate);
  		productEntryLayout.row().grid(new JLabel("Bar Code :"))	.add(productBarCode);
+ 		productEntryLayout.emptyRow();
+ 		productEntryLayout.row().grid(new JLabel("Supplier :"))	.add(cb_suppliers);
  		productEntryLayout.emptyRow();
  		productEntryLayout.row().grid(new JLabel("Entered By :"))	.add(enterBy);
  		productEntryLayout.emptyRow();
@@ -371,6 +379,16 @@ public class ManageProductsUI extends JInternalFrame {
 				
 	}
 	
+	private void populateSuppliers(JComboBox<String> cb_suppliers2) {
+		productSupplierMap = new HashMap<String,Integer>();
+		cb_suppliers2.addItem("--- SELECT SUPPLIER---");
+		List<Supplier> supplierList = SupplierServices.getAllSuppliers();
+		for(Supplier s: supplierList) {
+			cb_suppliers2.addItem(s.getSupplierName());
+			productSupplierMap.put(s.getSupplierName(), s.getSupplierID());
+		}
+	}
+
 	public void fillProductTableData(DefaultTableModel model){
 		List<Product> productList= ProductServices.getAllProducts();
 		model.setRowCount(0);
@@ -399,6 +417,7 @@ public class ManageProductsUI extends JInternalFrame {
 		productCategory.setSelectedIndex(0);
 		productBarCode.setText("");
 		quantity.setEnabled(true);
+		cb_suppliers.setSelectedIndex(0);
 	}
 	//Populate categories into dropdown
 	public void populateCategories(JComboBox<String> productCategory){
@@ -457,7 +476,8 @@ public class ManageProductsUI extends JInternalFrame {
 		}else{
 			if(PDFUtils.isMandatoryEntered(productName) && PDFUtils.isMandatoryEntered(quantity)
 					&& PDFUtils.isMandatoryEntered(purchaseRate)&&PDFUtils.isMandatoryEntered(productTax)  
-					&& PDFUtils.isMandatoryEntered(sellingPrice) && PDFUtils.isMandatorySelected(productCategory)){
+					&& PDFUtils.isMandatoryEntered(sellingPrice) && PDFUtils.isMandatorySelected(productCategory)
+					&& PDFUtils.isMandatorySelected(cb_suppliers)){
 					Product productToUpdate = new Product();
 					productToUpdate.setProductCode(Integer.valueOf(productCode.getText()));
 					productToUpdate.setProductName(productName.getText());
@@ -466,6 +486,7 @@ public class ManageProductsUI extends JInternalFrame {
 					productToUpdate.setQuanity(Integer.valueOf(quantity.getText()));
 					//productToUpdate.setProductCategory((String)productCategory.getSelectedItem());
 					productToUpdate.setCategoryCode(productCategoryMap.get((String)productCategory.getSelectedItem()));
+					productToUpdate.setSupplierId(productSupplierMap.get((String)cb_suppliers.getSelectedItem()));
 					productToUpdate.setDiscount(0);
 					/*if(discount.getText().equals("")){
 						productToUpdate.setDiscount(0);
@@ -537,7 +558,8 @@ public class ManageProductsUI extends JInternalFrame {
 		if(productCode.getText().equals("")){
 			if(PDFUtils.isMandatoryEntered(productName) && PDFUtils.isMandatoryEntered(quantity)
 				&& PDFUtils.isMandatoryEntered(purchasePrice) 
-				&& PDFUtils.isMandatoryEntered(sellingPrice)&& PDFUtils.isMandatorySelected(productCategory)){
+				&& PDFUtils.isMandatoryEntered(sellingPrice)&& PDFUtils.isMandatorySelected(productCategory)
+				&& PDFUtils.isMandatorySelected(cb_suppliers)){
 				Product productToSave = new Product();
 				productToSave.setProductCode(PDFUtils.getRandomCode());
 				productToSave.setProductName(productName.getText());
@@ -546,6 +568,7 @@ public class ManageProductsUI extends JInternalFrame {
 				productToSave.setQuanity(Integer.valueOf(quantity.getText()));
 				//productToSave.setProductCategory((String)productCategory.getSelectedItem());
 				productToSave.setCategoryCode(productCategoryMap.get((String)productCategory.getSelectedItem()));
+				productToSave.setSupplierId(productSupplierMap.get((String)cb_suppliers.getSelectedItem()));
 				productToSave.setDiscount(0);
 				/*if(discount.getText().equals("")){
 					productToSave.setDiscount(0);
@@ -623,6 +646,7 @@ public class ManageProductsUI extends JInternalFrame {
 		enterBy.setText(product.getEnterBy());
 		entryDate.setText(product.getEntryDate().toString());
 		productCategory.setSelectedItem(product.getProductCategory());
+		cb_suppliers.setSelectedItem(product.getSupplierName());
 		
 	}
 	

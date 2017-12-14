@@ -21,8 +21,8 @@ public class ProductServices {
 
 	private static final String GET_ALL_PRODUCTS = "SELECT  PD.PRODUCT_ID,PD.PRODUCT_NAME,PD.MEASURE,PD.QUANTITY,PD.PURCHASE_PRICE,PD.SELL_PRICE," +
 												"PD.PRODUCT_MRP,PD.DISCOUNT,PD.ENTRY_DATE,PD.LAST_UPDATE_DATE,PD.DESCRIPTION,PD.ENTER_BY," +
-												"PD.PURCHASE_RATE,PD.PRODUCT_TAX,PD.BAR_CODE,PCD.CATEGORY_NAME " +
-												"FROM PRODUCT_DETAILS PD,PRODUCT_CATEGORY_DETAILS PCD WHERE PD.CATEGORY_ID = PCD.CATEGORY_ID;";
+												"PD.PURCHASE_RATE,PD.PRODUCT_TAX,PD.BAR_CODE,PCD.CATEGORY_NAME,SD.SUPPLIER_NAME " +
+												"FROM PRODUCT_DETAILS PD,PRODUCT_CATEGORY_DETAILS PCD,SUPPLIER_DETAILS SD WHERE PD.CATEGORY_ID = PCD.CATEGORY_ID AND PD.SUPPLIER_ID=SD.SUPPLIER_ID;";
 	
 	private static final String GET_ALL_PRODUCTS_WITH_NO_BARCODE = "SELECT  PD.PRODUCT_ID,PD.PRODUCT_NAME,PD.MEASURE,PD.QUANTITY,PD.PURCHASE_PRICE,PD.SELL_PRICE," +
 																"PD.PRODUCT_MRP,PD.DISCOUNT,PD.ENTRY_DATE,PD.LAST_UPDATE_DATE,PD.DESCRIPTION,PD.ENTER_BY," +
@@ -35,20 +35,20 @@ public class ProductServices {
 												"FROM PRODUCT_DETAILS PD,PRODUCT_CATEGORY_DETAILS PCD WHERE PD.CATEGORY_ID = PCD.CATEGORY_ID AND CONCAT(PD.SELL_PRICE,PD.PRODUCT_NAME,PCD.CATEGORY_NAME) LIKE ?;";
 	
 	private static final String INS_PRODUCT = "INSERT INTO PRODUCT_DETAILS (PRODUCT_ID,PRODUCT_NAME,MEASURE,QUANTITY,PURCHASE_PRICE," +
-											  "SELL_PRICE,PRODUCT_MRP,DISCOUNT,ENTRY_DATE,LAST_UPDATE_DATE,DESCRIPTION,ENTER_BY,CATEGORY_ID,PURCHASE_RATE,PRODUCT_TAX,BAR_CODE)" +
-											  " VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+											  "SELL_PRICE,PRODUCT_MRP,DISCOUNT,ENTRY_DATE,LAST_UPDATE_DATE,DESCRIPTION,ENTER_BY,CATEGORY_ID,PURCHASE_RATE,PRODUCT_TAX,BAR_CODE,SUPPLIER_ID)" +
+											  " VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	
 	private static final String DELETE_PRODUCT = "DELETE FROM PRODUCT_DETAILS WHERE PRODUCT_ID=?";
 	
 	private static final String SELECT_PRODUCT = "SELECT  PD.PRODUCT_ID,PD.PRODUCT_NAME,PD.MEASURE,PD.QUANTITY,PD.PURCHASE_PRICE,PD.SELL_PRICE," +
 												"PD.PRODUCT_MRP,PD.DISCOUNT,PD.ENTRY_DATE,PD.LAST_UPDATE_DATE,PD.DESCRIPTION,PD.ENTER_BY," +
-												"PD.PURCHASE_RATE,PD.PRODUCT_TAX,PD.BAR_CODE,PCD.CATEGORY_NAME " +
-												"FROM PRODUCT_DETAILS PD,PRODUCT_CATEGORY_DETAILS PCD WHERE PD.CATEGORY_ID = PCD.CATEGORY_ID AND PRODUCT_ID=?;";
+												"PD.PURCHASE_RATE,PD.PRODUCT_TAX,PD.BAR_CODE,PCD.CATEGORY_NAME,PD.SUPPLIER_ID,SD.SUPPLIER_NAME " +
+												"FROM PRODUCT_DETAILS PD,PRODUCT_CATEGORY_DETAILS PCD,SUPPLIER_DETAILS SD WHERE PD.CATEGORY_ID = PCD.CATEGORY_ID AND PD.SUPPLIER_ID=SD.SUPPLIER_ID AND PRODUCT_ID=?;";
 
 	
 	private static final String UPDATE_PRODUCT ="UPDATE PRODUCT_DETAILS SET PRODUCT_NAME=?,MEASURE=?,QUANTITY=?,PURCHASE_PRICE=?," +
 												"SELL_PRICE=?,PRODUCT_MRP=?,DISCOUNT=?,LAST_UPDATE_DATE=?,DESCRIPTION=?," +
-												"ENTER_BY=?,CATEGORY_ID=?,PURCHASE_RATE=?,PRODUCT_TAX=?,BAR_CODE=? WHERE PRODUCT_ID=?";
+												"ENTER_BY=?,CATEGORY_ID=?,PURCHASE_RATE=?,PRODUCT_TAX=?,BAR_CODE=?,SUPPLIER_ID=? WHERE PRODUCT_ID=?";
 	
 	private static final String UPDATE_PRODUCT_PURCHASE_HISTORY ="UPDATE PRODUCT_DETAILS SET PURCHASE_PRICE=?,LAST_UPDATE_DATE=?,PURCHASE_RATE=?,PRODUCT_TAX=? WHERE PRODUCT_ID=?";
 	
@@ -111,7 +111,7 @@ public class ProductServices {
 				pc.setEnterBy(rs.getString("ENTER_BY"));
 				pc.setProductCategory(rs.getString("CATEGORY_NAME"));
 				pc.setProductBarCode(rs.getLong("BAR_CODE"));
-
+				pc.setSupplierName("SUPPLIER_NAME");
 				productList.add(pc);
 				Comparator<Product> cp = Product.getComparator(Product.SortParameter.CATEGORY_NAME_ASCENDING); 
 				Collections.sort(productList,cp);
@@ -154,6 +154,8 @@ public class ProductServices {
 				pc.setPurcaseRate(rs.getDouble("PURCHASE_RATE"));
 				pc.setProductTax(rs.getDouble("PRODUCT_TAX"));
 				pc.setProductBarCode(rs.getLong("BAR_CODE"));
+				pc.setSupplierId(rs.getInt("SUPPLIER_ID"));
+				pc.setSupplierName(rs.getString("SUPPLIER_NAME"));
 			}
 			rs.close();
 		} catch (Exception e) {
@@ -189,6 +191,7 @@ public class ProductServices {
 				stmt.setDouble(14,product.getPurcaseRate());
 				stmt.setDouble(15,product.getProductTax());
 				stmt.setLong(16,product.getProductBarCode());
+				stmt.setInt(17, product.getSupplierId());
 
 				
 				int i = stmt.executeUpdate();
@@ -250,7 +253,8 @@ public class ProductServices {
 				stmt.setDouble(12,product.getPurcaseRate());
 				stmt.setDouble(13,product.getProductTax());
 				stmt.setLong(14, product.getProductBarCode());
-				stmt.setInt(15, product.getProductCode());
+				stmt.setLong(15, product.getSupplierId());
+				stmt.setInt(16, product.getProductCode());
 				
 				int i = stmt.executeUpdate();
 				if(i>0){
