@@ -34,6 +34,10 @@ public class BillDetails {
 	private double netSalesAmt;
 	
 	private double purchaseAmt;
+	
+	private long salesmanMobile;
+	
+	private double roundUpAmt;
 
 	public int getBillNumber() {
 		return billNumber;
@@ -153,6 +157,22 @@ public class BillDetails {
 
 	public void setGrandTotal(double grandTotal) {
 		this.grandTotal = grandTotal;
+	}
+
+	public long getSalesmanMobile() {
+		return salesmanMobile;
+	}
+
+	public void setSalesmanMobile(long salesmanMobile) {
+		this.salesmanMobile = salesmanMobile;
+	}
+
+	public double getRoundUpAmt() {
+		return roundUpAmt;
+	}
+
+	public void setRoundUpAmt(double roundUpAmt) {
+		this.roundUpAmt = roundUpAmt;
 	}
 
 		

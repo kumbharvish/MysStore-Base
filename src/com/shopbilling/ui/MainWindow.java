@@ -59,6 +59,7 @@ public class MainWindow extends JFrame{
 	private StockEntryWiseProfitUI stockEntryWiseProfit;
 	private CustomerWiseProfitUI customerWiseProfit;
 	private ProductWiseSalesAnalysis productWiseSalesAnalysis;
+	private SupplierWiseSalesAnalysis supplierWiseSalesAnalysis;
 	private ProductWiseProfitUI productWiseProfit;
 	private ProductProfitReportUI productProfitReport;
 	private SalesStockReportUI salesStockReport;
@@ -98,6 +99,7 @@ public class MainWindow extends JFrame{
 	//Expense
 	private AddExpenseUI addExpenseUI;
 	private ViewExpensesUI viewExpensesUI;
+	private ManageSalesmanUI manageSalesmanUI;
 	
 	
 	private JButton btnDataBackup;
@@ -382,6 +384,21 @@ public class MainWindow extends JFrame{
 			}
 		});
 		
+		JMenu mnSalesManagement = new JMenu("Salesman Management");
+		mnSalesManagement.setIcon(new ImageIcon(MainWindow.class.getResource("/images/user (1).png")));
+		mnMenu.add(mnSalesManagement);
+		
+		JMenuItem mntmManageSalesman = new JMenuItem("Manage Salesman");
+		mnSalesManagement.add(mntmManageSalesman);
+		
+		mntmManageSalesman.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				closeAllInternalFrames();
+				manageSalesmanUI = new ManageSalesmanUI();
+				containerPanel.add(manageSalesmanUI);
+			}
+		});
+		
 		JMenu mnSettings = new JMenu("Settings");
 		mnSettings.setIcon(new ImageIcon(MainWindow.class.getResource("/images/advancedsettings (1).png")));
 		mnMenu.add(mnSettings);
@@ -456,6 +473,18 @@ public class MainWindow extends JFrame{
 		JMenuItem mntmProductWiseSales = new JMenuItem("Product Wise Sales");
 		mntmProductWiseSales.setIcon(new ImageIcon(MainWindow.class.getResource("/images/product_193 (2).png")));
 		mnBusinessAnalysis.add(mntmProductWiseSales);
+		
+		JMenuItem mntmSupplierWiseSales = new JMenuItem("Supplier Wise Sales");
+		mntmSupplierWiseSales.setIcon(new ImageIcon(MainWindow.class.getResource("/images/report_go.png")));
+		mnBusinessAnalysis.add(mntmSupplierWiseSales);
+		
+		mntmSupplierWiseSales.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				closeAllInternalFrames();
+				supplierWiseSalesAnalysis = new SupplierWiseSalesAnalysis();
+				containerPanel.add(supplierWiseSalesAnalysis);
+			}
+		});
 		
 		mntmProductWiseSales.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -974,6 +1003,12 @@ public class MainWindow extends JFrame{
 		}
 		if(profitLossStatementUI!=null){
 			containerPanel.remove(profitLossStatementUI);
+		}
+		if(manageSalesmanUI!=null) {
+			containerPanel.remove(manageSalesmanUI);
+		}
+		if(supplierWiseSalesAnalysis!=null) {
+			containerPanel.remove(supplierWiseSalesAnalysis);
 		}
 	}
 

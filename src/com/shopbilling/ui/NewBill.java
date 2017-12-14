@@ -56,6 +56,7 @@ import com.shopbilling.services.AutoSuggestTable;
 import com.shopbilling.services.JasperServices;
 import com.shopbilling.services.ProductHistoryServices;
 import com.shopbilling.services.ProductServices;
+import com.shopbilling.services.SalesmanServices;
 import com.shopbilling.services.UserServices;
 import com.shopbilling.utils.JasperUtils;
 import com.shopbilling.utils.PDFUtils;
@@ -118,7 +119,9 @@ public class NewBill extends JInternalFrame {
 	private String custName;
 	private JLabel custNamelbl;
 	private JFrame mainFrame;
-
+	private JTextField tf_RoundUp;
+	private HashMap<String,Long> salesmanMap = new HashMap<>();
+	private JComboBox cb_salesman;
 	/**
 	 * Create the frame.
 	 */
@@ -326,14 +329,14 @@ public class NewBill extends JInternalFrame {
 		table.setFont(new Font("Tahoma", Font.BOLD, 13));
 		productModel = new DefaultTableModel(){
 			 boolean[] columnEditables = new boolean[] {
-					 false, false, false, false,false,false,false
+					 false, false, false, false,false,false,false,false
 					};
 					public boolean isCellEditable(int row, int column) {
 						return columnEditables[column];
 					}
 		 };
 		 productModel.setColumnIdentifiers(new String[] {
-				 "Item No", "Item Name", "MRP", "Rate", "Qty", "Amount","Purchase Price"}
+				 "Item No", "Item Name", "MRP", "Rate", "Qty", "Amount","Purchase Price","SupplierId"}
 	       );
 		table.setModel(productModel);
 		table.setFont(new Font("Tahoma", Font.BOLD, 13));
@@ -353,6 +356,9 @@ public class NewBill extends JInternalFrame {
 		 table.getColumnModel().getColumn(6).setMinWidth(0);
 		 table.getColumnModel().getColumn(6).setMaxWidth(0);
 		 table.getColumnModel().getColumn(6).setWidth(0);
+		 table.getColumnModel().getColumn(7).setMinWidth(0);
+		 table.getColumnModel().getColumn(7).setMaxWidth(0);
+		 table.getColumnModel().getColumn(7).setWidth(0);
 		itemDetailsPanel.setLayout(null);
 		itemDetailsPanel.add(scrollPane);
 		itemDetailsPanel.add(itemNo);
@@ -445,13 +451,13 @@ public class NewBill extends JInternalFrame {
 		tf_TotalAmount.setFont(amtFont);
 		tf_TotalAmount.setText("0.00");
 		
-		JLabel lblTax = new JLabel("TAX (%)");
-		lblTax.setBounds(20, 303, 91, 35);
+		JLabel lblTax = new JLabel("Round Up");
+		lblTax.setBounds(20, 325, 91, 35);
 		paymentDetails.add(lblTax);
 		
 		tf_TAX = new JTextField();
-		tf_TAX.setColumns(10);
-		tf_TAX.setBounds(120, 303, 180, 38);
+		/*tf_TAX.setColumns(10);
+		tf_TAX.setBounds(120, 322, 180, 38);
 		tf_TAX.setText("0.00");
 		paymentDetails.add(tf_TAX);
 		tf_TAX.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -461,8 +467,15 @@ public class NewBill extends JInternalFrame {
 			tf_TAX.setEditable(true);
 		}else{
 			tf_TAX.setEditable(false);
-		}
-			
+		}*/
+		tf_RoundUp = new JTextField();
+		tf_RoundUp.setColumns(10);
+		tf_RoundUp.setBounds(120, 325, 180, 38);
+		paymentDetails.add(tf_RoundUp);
+		tf_RoundUp.setHorizontalAlignment(SwingConstants.RIGHT);
+		tf_RoundUp.setFont(amtFont);
+		tf_RoundUp.setDisabledTextColor(Color.BLACK);
+		
 		
 		JLabel lblGrossAmount = new JLabel("Grand Total");
 		lblGrossAmount.setBounds(20, 225, 91, 35);
@@ -482,7 +495,7 @@ public class NewBill extends JInternalFrame {
 		paymentDetails.add(lblPaymentMode);
 		
 		cb_PaymentMode = new JComboBox();
-		cb_PaymentMode.setBounds(120, 264, 180, 38);
+		cb_PaymentMode.setBounds(120, 264, 180, 28);
 		PDFUtils.populateDropdown(cb_PaymentMode,"PAYMENT_MODE");
 		cb_PaymentMode.setRenderer(new DefaultListCellRenderer() {
 	        @Override
@@ -508,7 +521,7 @@ public class NewBill extends JInternalFrame {
 		
 		JLabel lblNetSa = new JLabel("Net Sales Amount");
 		lblNetSa.setFont(new Font("Tahoma", Font.BOLD, 16));
-		lblNetSa.setBounds(20, 345, 212, 20);
+		lblNetSa.setBounds(30, 361, 212, 20);
 		paymentDetails.add(lblNetSa);
 		
 		tf_NetSalesAmt = new JTextField();
@@ -516,7 +529,7 @@ public class NewBill extends JInternalFrame {
 		tf_NetSalesAmt.setForeground(Color.WHITE);
 		tf_NetSalesAmt.setBackground(Color.GRAY);
 		tf_NetSalesAmt.setColumns(10);
-		tf_NetSalesAmt.setBounds(69, 376, 231, 38);
+		tf_NetSalesAmt.setBounds(79, 392, 231, 38);
 		paymentDetails.add(tf_NetSalesAmt);
 		tf_NetSalesAmt.setHorizontalAlignment(SwingConstants.RIGHT);
 		tf_NetSalesAmt.setFont(new Font("Dialog", Font.BOLD, 30));
@@ -536,10 +549,25 @@ public class NewBill extends JInternalFrame {
 		paymentDetails.add(tf_DiscountAmt);
 		
 		rupeeLabel = new JLabel("New label");
-		rupeeLabel.setBounds(10, 376, 49, 47);
+		rupeeLabel.setBounds(20, 392, 49, 47);
 		paymentDetails.add(rupeeLabel);
 		rupeeLabel.setIcon(new ImageIcon(NewBill.class.getResource("/images/Rupee-64.png")));
 		
+		JLabel lblSalesman = new JLabel("Salesman");
+		lblSalesman.setBounds(20, 294, 91, 35);
+		paymentDetails.add(lblSalesman);
+		
+		cb_salesman = new JComboBox();
+		cb_salesman.setBounds(120, 294, 180, 28);
+		paymentDetails.add(cb_salesman);
+		SalesmanServices.populateDropdown(cb_salesman,salesmanMap);
+		cb_salesman.setRenderer(new DefaultListCellRenderer() {
+	        @Override
+	        public void paint(Graphics g) {
+	            setForeground(Color.BLACK);
+	            super.paint(g);
+	        }
+	    });
 		JPanel panel = new JPanel();
 		panel.setBorder(new LineBorder(SystemColor.inactiveCaption));
 		panel.setBounds(827, 15, 330, 51);
@@ -646,6 +674,14 @@ public class NewBill extends JInternalFrame {
 				setNetSaleAmount();
 			}
 			});
+		
+		tf_RoundUp.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				roundUpAmount();
+			}
+			});
+		
 		//Save Button Action
 		btnSaveBill.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -763,7 +799,7 @@ public class NewBill extends JInternalFrame {
 					billPurchaseAmt+=product.getPurcasePrice()*Integer.valueOf(quantity.getText());
 					//Add row to table
 					if(!updateRow(product.getProductCode())) {
-						productModel.addRow(new Object[]{product.getProductCode(), product.getProductName(), PDFUtils.getDecimalFormat(product.getProductMRP()), PDFUtils.getDecimalFormat(product.getSellPrice()),quantity.getText(),amount.getText(),product.getPurcasePrice()});
+						productModel.addRow(new Object[]{product.getProductCode(), product.getProductName(), PDFUtils.getDecimalFormat(product.getProductMRP()), PDFUtils.getDecimalFormat(product.getSellPrice()),quantity.getText(),amount.getText(),product.getPurcasePrice(),product.getSupplierId()});
 					}
 					setPaymentFields(Integer.valueOf(quantity.getText()),Double.valueOf(amount.getText()),productModel.getRowCount());
 					setGrossAmt();
@@ -806,6 +842,20 @@ public class NewBill extends JInternalFrame {
 			double tempDisc = grossAmt;
 			tempDisc= tempDisc+(grossAmt/100)*tax;
 			netSalesAmt = tempDisc;
+			tf_NetSalesAmt.setText(PDFUtils.getDecimalFormat((PDFUtils.getDecimalRoundUp(netSalesAmt))));
+		}else{
+			netSalesAmt = grossAmt;
+			tf_NetSalesAmt.setText(PDFUtils.getDecimalFormat((PDFUtils.getDecimalRoundUp(netSalesAmt))));
+		}
+		roundUpAmount();
+	}
+	
+	protected void roundUpAmount() {
+		if(!tf_RoundUp.getText().equals("")){
+			Double roundUpAmt = Double.parseDouble(tf_RoundUp.getText());
+			double tempAmt = grossAmt;
+			tempAmt= tempAmt-roundUpAmt;
+			netSalesAmt = tempAmt;
 			tf_NetSalesAmt.setText(PDFUtils.getDecimalFormat((PDFUtils.getDecimalRoundUp(netSalesAmt))));
 		}else{
 			netSalesAmt = grossAmt;
@@ -866,7 +916,7 @@ public class NewBill extends JInternalFrame {
 					billPurchaseAmt+=product.getPurcasePrice()*Integer.valueOf(quantity.getText());
 					System.out.println("Add Bill Purchase Amt : "+billPurchaseAmt);
 					//Add row to table
-					productModel.addRow(new Object[]{product.getProductCode(), product.getProductName(), PDFUtils.getDecimalFormat(product.getProductMRP()), PDFUtils.getDecimalFormat(product.getSellPrice()),quantity.getText(),amount.getText(),product.getPurcasePrice()});
+					productModel.addRow(new Object[]{product.getProductCode(), product.getProductName(), PDFUtils.getDecimalFormat(product.getProductMRP()), PDFUtils.getDecimalFormat(product.getSellPrice()),quantity.getText(),amount.getText(),product.getPurcasePrice(),product.getSupplierId()});
 					setPaymentFields(Integer.valueOf(quantity.getText()),Double.valueOf(amount.getText()),productModel.getRowCount());
 					setGrossAmt();
 					setNetSaleAmount();
@@ -958,6 +1008,7 @@ public class NewBill extends JInternalFrame {
 				item.setQuantity(Integer.valueOf(table.getModel().getValueAt(i, 4).toString()));
 				item.setPurchasePrice(Double.valueOf(table.getModel().getValueAt(i, 6).toString()));
 				item.setBillNumber(Integer.valueOf(billNumber.getText()));
+				item.setSupplierId(Integer.valueOf(table.getModel().getValueAt(i, 7).toString()));
 				
 				itemsMap.put(Integer.valueOf(table.getModel().getValueAt(i, 0).toString()),item);
 			}else{
@@ -1001,6 +1052,7 @@ public class NewBill extends JInternalFrame {
 		tf_Discount.setText("0.00");
 		tf_DiscountAmt.setText("0.00");
 		cb_PaymentMode.setSelectedIndex(0);
+		cb_salesman.setSelectedIndex(0);
 		tf_TotalAmount.setText("0.00");
 		noOfItems = 0;
 		totalQty = 0;
@@ -1018,6 +1070,7 @@ public class NewBill extends JInternalFrame {
 		productMapWithBarcode = getProductMapWithBarCode();
 		customerMap = getCustomerMap();
 		enableForNewBill();
+		tf_RoundUp.setText("");
 	}
 	
 	private void disableAfterSave(){
@@ -1031,6 +1084,8 @@ public class NewBill extends JInternalFrame {
 		mouseListnerFlag = false;
 		//billDate.setEnabled(false);
 		tf_barCode.setEnabled(false);
+		tf_RoundUp.setEnabled(false);
+		cb_salesman.setEnabled(false);
 	}
 	private void enableForNewBill(){
 		customerMobileNo.setEnabled(true);
@@ -1045,6 +1100,7 @@ public class NewBill extends JInternalFrame {
 		mouseListnerFlag=true;
 		//billDate.setEnabled(true);
 		tf_barCode.setEnabled(true);
+		tf_RoundUp.setEnabled(true);
 	}
 	
 	public List<String> getCustomerNameList(){
@@ -1092,6 +1148,8 @@ public class NewBill extends JInternalFrame {
 		else
 			bill.setTax(0);
 		bill.setTimestamp(new java.sql.Timestamp(System.currentTimeMillis()));
+		bill.setSalesmanMobile(salesmanMap.get((String)cb_salesman.getSelectedItem()));
+		bill.setRoundUpAmt(Double.valueOf(tf_RoundUp.getText().equals("")?"0":tf_RoundUp.getText()));
 	}
 	
 	private List<Product> getProductList(List<ItemDetails> itemList){

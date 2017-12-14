@@ -21,7 +21,7 @@ public class ProductServices {
 
 	private static final String GET_ALL_PRODUCTS = "SELECT  PD.PRODUCT_ID,PD.PRODUCT_NAME,PD.MEASURE,PD.QUANTITY,PD.PURCHASE_PRICE,PD.SELL_PRICE," +
 												"PD.PRODUCT_MRP,PD.DISCOUNT,PD.ENTRY_DATE,PD.LAST_UPDATE_DATE,PD.DESCRIPTION,PD.ENTER_BY," +
-												"PD.PURCHASE_RATE,PD.PRODUCT_TAX,PD.BAR_CODE,PCD.CATEGORY_NAME,SD.SUPPLIER_NAME " +
+												"PD.PURCHASE_RATE,PD.PRODUCT_TAX,PD.BAR_CODE,PCD.CATEGORY_NAME,SD.SUPPLIER_NAME,SD.SUPPLIER_ID " +
 												"FROM PRODUCT_DETAILS PD,PRODUCT_CATEGORY_DETAILS PCD,SUPPLIER_DETAILS SD WHERE PD.CATEGORY_ID = PCD.CATEGORY_ID AND PD.SUPPLIER_ID=SD.SUPPLIER_ID;";
 	
 	private static final String GET_ALL_PRODUCTS_WITH_NO_BARCODE = "SELECT  PD.PRODUCT_ID,PD.PRODUCT_NAME,PD.MEASURE,PD.QUANTITY,PD.PURCHASE_PRICE,PD.SELL_PRICE," +
@@ -59,11 +59,11 @@ public class ProductServices {
 
 	private static final String INS_BILL_DETAILS = "INSERT INTO CUSTOMER_BILL_DETAILS (BILL_NUMBER,BILL_DATE_TIME,CUST_MOB_NO,CUST_NAME,NO_OF_ITEMS," +
 												  "BILL_QUANTITY,TOTAL_AMOUNT,BILL_TAX,GRAND_TOTAL,PAYMENT_MODE," +
-												  "BILL_DISCOUNT,BILL_DISC_AMOUNT,NET_SALES_AMOUNT,BILL_PURCHASE_AMT)" +
-												  " VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+												  "BILL_DISCOUNT,BILL_DISC_AMOUNT,NET_SALES_AMOUNT,BILL_PURCHASE_AMT,SALESMAN_MOB_NO,ROUND_UP)" +
+												  " VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	
 	private static final String INS_BILL_ITEM_DETAILS = "INSERT INTO BILL_ITEM_DETAILS (BILL_NUMBER,ITEM_NUMBER,ITEM_NAME,ITEM_MRP,ITEM_RATE," +
-			  											"ITEM_QTY,ITEM_AMOUNT,ITEM_PURCHASE_AMT) VALUES(?,?,?,?,?,?,?,?)";
+			  											"ITEM_QTY,ITEM_AMOUNT,ITEM_PURCHASE_AMT,SUPPLIER_ID) VALUES(?,?,?,?,?,?,?,?,?)";
 	
 	private static final String UPDATE_PRODUCT_STOCK ="UPDATE PRODUCT_DETAILS SET QUANTITY=QUANTITY-? WHERE PRODUCT_ID=?";
 	
@@ -112,6 +112,7 @@ public class ProductServices {
 				pc.setProductCategory(rs.getString("CATEGORY_NAME"));
 				pc.setProductBarCode(rs.getLong("BAR_CODE"));
 				pc.setSupplierName("SUPPLIER_NAME");
+				pc.setSupplierId(rs.getInt("SUPPLIER_ID"));
 				productList.add(pc);
 				Comparator<Product> cp = Product.getComparator(Product.SortParameter.CATEGORY_NAME_ASCENDING); 
 				Collections.sort(productList,cp);
@@ -333,6 +334,8 @@ public class ProductServices {
 				stmt.setDouble(12, bill.getDiscountAmt());
 				stmt.setDouble(13, bill.getNetSalesAmt());
 				stmt.setDouble(14, bill.getPurchaseAmt());
+				stmt.setLong(15, bill.getSalesmanMobile());
+				stmt.setDouble(16, bill.getRoundUpAmt());
 				int i = stmt.executeUpdate();
 				if(i>0){
 					staus.setStatusCode(0);
@@ -370,6 +373,7 @@ public class ProductServices {
 						stmt.setInt(6, item.getQuantity());
 						stmt.setDouble(7, item.getAmount());
 						stmt.setDouble(8, item.getPurchasePrice());
+						stmt.setInt(9, item.getSupplierId());
 						stmt.addBatch();
 					}
 					

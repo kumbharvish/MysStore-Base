@@ -17,6 +17,8 @@ public class ProductSaleAnalysisServices {
 	
 	private static final String PRODUCT_WISE_PROFIT = "SELECT ITEM_NUMBER ,SUM(ITEM_QTY) AS TOTAL_QTY FROM BILL_ITEM_DETAILS WHERE BILL_NUMBER IN (SELECT BILL_NUMBER FROM CUSTOMER_BILL_DETAILS WHERE DATE(BILL_DATE_TIME) BETWEEN ? AND ?) GROUP BY ITEM_NUMBER ORDER BY SUM(ITEM_QTY) DESC";
 	private static final String PRODUCT_WISE_SALES = "SELECT BID.ITEM_NUMBER , PD.PRODUCT_NAME,BID.ITEM_MRP,SUM(BID.ITEM_QTY) AS TOTAL_QTY FROM BILL_ITEM_DETAILS BID,PRODUCT_DETAILS PD WHERE BID.BILL_NUMBER IN (SELECT BILL_NUMBER FROM CUSTOMER_BILL_DETAILS WHERE DATE(BILL_DATE_TIME) BETWEEN ? AND ?) AND BID.ITEM_NUMBER = PD.PRODUCT_ID GROUP BY BID.ITEM_NUMBER ORDER BY SUM(BID.ITEM_QTY) DESC";
+	
+	private static final String SUPPLIER_WISE_SALES = "SELECT SD.SUPPLIER_NAME,SUM(BID.ITEM_QTY) AS TOTAL_QTY,SUM(BID.ITEM_AMOUNT) AS TOTAL_SALES_AMT FROM BILL_ITEM_DETAILS BID,SUPPLIER_DETAILS SD WHERE BID.BILL_NUMBER IN (SELECT BILL_NUMBER FROM CUSTOMER_BILL_DETAILS WHERE DATE(BILL_DATE_TIME) BETWEEN ? AND ?) AND BID.SUPPLIER_ID = SD.SUPPLIER_ID GROUP BY BID.SUPPLIER_ID ORDER BY SUM(BID.ITEM_MRP) DESC";
 		//Get Product total Quantity between date
 		public static List<ProductAnalysis> getProductTotalQuantity(Date fromDate,Date toDate) {
 			Connection conn = null;
@@ -103,5 +105,40 @@ public class ProductSaleAnalysisServices {
 			}
 			return productAnalysisList;
 		}
+		
+		//Supplier Wise Sales Analysis
+				public static List<ProductAnalysis> getSupplierWiseSales(Date fromDate,Date toDate) {
+					Connection conn = null;
+					PreparedStatement stmt = null;
+					ProductAnalysis product = null;
+					List<ProductAnalysis> productAnalysisList = new ArrayList<ProductAnalysis>();
+					try {
+						if(fromDate==null){
+							fromDate = new Date(1947/01/01);
+						}
+						if(toDate==null){
+							toDate = new Date(System.currentTimeMillis());
+						}
+						conn = PDFUtils.getConnection();
+						stmt = conn.prepareStatement(SUPPLIER_WISE_SALES);
+						stmt.setDate(1, fromDate);
+						stmt.setDate(2, toDate);
+						ResultSet rs = stmt.executeQuery();
+						while (rs.next()) {
+							product = new ProductAnalysis();
+							product.setTotalQty(rs.getInt("TOTAL_QTY"));
+							product.setSupplierName(rs.getString("SUPPLIER_NAME"));
+							product.setTotalSalesAmount(rs.getDouble("TOTAL_SALES_AMT"));
+
+							productAnalysisList.add(product);
+						}
+						rs.close();
+					} catch (Exception e) {
+						e.printStackTrace();
+					} finally {
+						PDFUtils.closeConnectionAndStatment(conn, stmt);
+					}
+					return productAnalysisList;
+				}
 		
 }

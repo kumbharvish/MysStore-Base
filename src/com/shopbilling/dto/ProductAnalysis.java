@@ -17,7 +17,10 @@ public class ProductAnalysis implements Comparable<ProductAnalysis>{
 	
 	private double totalMRPAmount;
 	
-
+	private String supplierName;
+	
+	private double totalSalesAmount;
+	
 	public int getProductCode() {
 		return productCode;
 	}
@@ -85,6 +88,22 @@ public class ProductAnalysis implements Comparable<ProductAnalysis>{
 
 	public void setTotalMRPAmount(double totalMRPAmount) {
 		this.totalMRPAmount = totalMRPAmount;
+	}
+
+	public String getSupplierName() {
+		return supplierName;
+	}
+
+	public void setSupplierName(String supplierName) {
+		this.supplierName = supplierName;
+	}
+
+	public double getTotalSalesAmount() {
+		return totalSalesAmount;
+	}
+
+	public void setTotalSalesAmount(double totalSalesAmount) {
+		this.totalSalesAmount = totalSalesAmount;
 	}
 	
 }

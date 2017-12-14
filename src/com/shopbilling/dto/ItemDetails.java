@@ -17,6 +17,8 @@ public class ItemDetails {
 	private double amount;
 	
 	private double purchasePrice;
+	
+	private int supplierId;
 
 	public int getItemNo() {
 		return itemNo;
@@ -84,6 +86,14 @@ public class ItemDetails {
 
 	public void setBillNumber(int billNumber) {
 		this.billNumber = billNumber;
+	}
+
+	public int getSupplierId() {
+		return supplierId;
+	}
+
+	public void setSupplierId(int supplierId) {
+		this.supplierId = supplierId;
 	}
 
 	
