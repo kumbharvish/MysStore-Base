@@ -32,7 +32,7 @@ public class DBBackupService {
 	    	String mySqlHome = PDFUtils.getAppDataValues("MYSQL_HOME").get(0);
 	    	logger.error("mySqlHome : "+mySqlHome);
 	    	String fileName="\\\\DataBackup_"+sdf.format(currentDate)+".sql";
-	        String executeCmd = mySqlHome+"\\\\bin\\\\mysqldump -u root -ppassword billing_app -r "+folderLocation+fileName;
+	        String executeCmd = mySqlHome+"\\\\bin\\\\mysqldump -u root -ppassword billing_app_shubhamsaree -r "+folderLocation+fileName;
 	        /*NOTE: Executing the command here*/
 	        System.out.println(executeCmd);
 	        logger.error("DB dump : "+executeCmd);
@@ -64,7 +64,7 @@ public class DBBackupService {
 	    	String mySqlHome = PDFUtils.getAppDataValues("MYSQL_HOME").get(0);
 	    	logger.error("mySqlHome : "+mySqlHome);
 	    	String fileName="\\\\DataBackup_"+sdf.format(currentDate)+".sql";
-	        String executeCmd = mySqlHome+"\\\\bin\\\\mysqldump -u root -ppassword billing_app -r "+folderLocation+fileName;
+	        String executeCmd = mySqlHome+"\\\\bin\\\\mysqldump -u root -ppassword billing_app_shubhamsaree -r "+folderLocation+fileName;
 	        /*NOTE: Executing the command here*/
 	        System.out.println(executeCmd);
 	        logger.error("DB dump : "+executeCmd);
@@ -106,7 +106,7 @@ public class DBBackupService {
 	    	System.out.println("Path :"+finalFileLocation);
 	    	String mySqlHome = PDFUtils.getAppDataValues("MYSQL_HOME").get(0);
 	    	
-	        String executeCmd = mySqlHome+"\\bin\\mysql -u root -ppassword billing_app "+finalFileLocation;
+	        String executeCmd = mySqlHome+"\\bin\\mysql -u root -ppassword billing_app_shubhamsaree "+finalFileLocation;
 	        System.out.println("executeCmd :"+executeCmd);
 	        /*NOTE: Executing the command here*/
 	        Process runtimeProcess = Runtime.getRuntime().exec(executeCmd);
