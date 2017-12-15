@@ -287,7 +287,7 @@ public class SaleReport extends JInternalFrame {
 	
 	//Fill Report Table
 	private void fillReportTable(){
-		List<BillDetails> billList= ProductServices.getBillDetails(fromDateChooser.getDate()==null?null:new java.sql.Date(fromDateChooser.getDate().getTime()),toDateChooser.getDate()==null?null:new java.sql.Date(toDateChooser.getDate().getTime()),tf_CustMobile.getText().equals("")?null:Long.valueOf(tf_CustMobile.getText()));
+		List<BillDetails> billList= ProductServices.getBillDetails(fromDateChooser.getDate()==null?null:new java.sql.Date(fromDateChooser.getDate().getTime()),toDateChooser.getDate()==null?null:new java.sql.Date(toDateChooser.getDate().getTime()),tf_CustMobile.getText().equals("")?null:Long.valueOf(tf_CustMobile.getText()),null);
 		calculateConsolidateValues(billList);
 		reportModel.setRowCount(0);
 		if(billList.isEmpty()){

@@ -38,6 +38,8 @@ public class BillDetails {
 	private long salesmanMobile;
 	
 	private double roundUpAmt;
+	
+	private String salesmanName;
 
 	public int getBillNumber() {
 		return billNumber;
@@ -173,6 +175,14 @@ public class BillDetails {
 
 	public void setRoundUpAmt(double roundUpAmt) {
 		this.roundUpAmt = roundUpAmt;
+	}
+
+	public String getSalesmanName() {
+		return salesmanName;
+	}
+
+	public void setSalesmanName(String salesmanName) {
+		this.salesmanName = salesmanName;
 	}
 
 		

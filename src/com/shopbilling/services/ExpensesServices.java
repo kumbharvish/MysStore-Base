@@ -22,13 +22,13 @@ public class ExpensesServices {
 	private static final String GET_EXPENSE = "SELECT * FROM EXPENSE_DETAILS WHERE ID=?";
 	
 	private static final String ADD_EXPENSE = "INSERT INTO EXPENSE_DETAILS " 
-												+ "(CATEGORY,DESCRIPTION,AMOUNT,DATE)" 
-												+ " VALUES(?,?,?,?)";
+												+ "(CATEGORY,DESCRIPTION,AMOUNT,DATE,SALESMAN_MOB_NO)" 
+												+ " VALUES(?,?,?,?,?)";
 	
 	private static final String DELETE_EXPENSE = "DELETE FROM EXPENSE_DETAILS WHERE ID=?";
 	
 	private static final String UPDATE_EXPENSE = "UPDATE EXPENSE_DETAILS SET CATEGORY=?," 
-												+"DESCRIPTION=?, AMOUNT=?, DATE=?"
+												+"DESCRIPTION=?, AMOUNT=?, DATE=?, SALESMAN_MOB_NO=?"
 												+" WHERE ID=?";
 	
 	private static final String GET_EXPENSE_TYPES = "SELECT * FROM APP_EXPENSE_TYPES";
@@ -70,6 +70,7 @@ public class ExpensesServices {
 				pc.setAmount(Double.parseDouble(rs.getString("AMOUNT")));
 				pc.setDescription(rs.getString("DESCRIPTION"));
 				pc.setDate(rs.getDate("DATE"));
+				pc.setSalesmanMobile(rs.getLong("SALESMAN_MOB_NO"));
 				
 				expenseList.add(pc);
 			}
@@ -94,6 +95,7 @@ public class ExpensesServices {
 				stmt.setString(2,expense.getDescription());
 				stmt.setDouble(3,expense.getAmount());
 				stmt.setDate(4,expense.getDate());
+				stmt.setLong(5, expense.getSalesmanMobile());
 				
 				int i = stmt.executeUpdate();
 				if(i>0){
@@ -143,7 +145,8 @@ public class ExpensesServices {
 				stmt.setString(2,expense.getDescription());
 				stmt.setDouble(3, expense.getAmount());
 				stmt.setDate(4, expense.getDate());
-				stmt.setInt(5, expense.getId());
+				stmt.setLong(5, expense.getSalesmanMobile());
+				stmt.setInt(6, expense.getId());
 				
 				int i = stmt.executeUpdate();
 				if(i>0){
@@ -177,6 +180,7 @@ public class ExpensesServices {
 				pc.setAmount(Double.parseDouble(rs.getString("AMOUNT")));
 				pc.setDescription(rs.getString("DESCRIPTION"));
 				pc.setDate(rs.getDate("DATE"));
+				pc.setSalesmanMobile(rs.getLong("SALESMAN_MOB_NO"));
 			}
 			rs.close();
 		} catch (Exception e) {

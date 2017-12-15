@@ -54,7 +54,7 @@ public class ViewCustomerBill extends JDialog {
 	private JTextField tf_TotalQty;
 	private JTextField tf_SubTotal;
 	private JTextField tf_Discount;
-	private JTextField tf_Tax;
+	private JTextField tf_Salesman;
 	private JTextField tf_PaymentMode;
 	private JTextField tf_GrandTotal;
 	private JTextField tf_DiscAmt;
@@ -72,6 +72,7 @@ public class ViewCustomerBill extends JDialog {
 	private JLabel lblTotalReturnAmtValue;
 	private JButton btnViewSalesReturn;
 	private ReturnDetails returnDetails;
+	private JTextField tf_RoundUp;
 	/**
 	 * Create the frame.
 	 */
@@ -79,7 +80,7 @@ public class ViewCustomerBill extends JDialog {
 		super(frame,"View Bill",true);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setIconImage(Toolkit.getDefaultToolkit().getImage("shop32X32.png"));
-		setBounds(350, 100, 950, 534);
+		setBounds(350, 100, 950, 581);
 		setResizable(false);
 		 mainFrame = this;
 		Color lablColor = Color.gray;
@@ -92,13 +93,13 @@ public class ViewCustomerBill extends JDialog {
 		Border border = BorderFactory.createLineBorder(Color.BLACK, 1);
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(null, "Bill Details", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel.setBounds(10, 11, 924, 490);
+		panel.setBounds(10, 11, 924, 530);
 		contentPane.add(panel);
 		panel.setLayout(null);
 		billDetails = bill;
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new TitledBorder(null, "Payment Details", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_1.setBounds(10, 25, 300, 380);
+		panel_1.setBounds(10, 25, 300, 413);
 		panel.add(panel_1);
 		panel_1.setLayout(null);
 		
@@ -269,30 +270,30 @@ public class ViewCustomerBill extends JDialog {
 		lblPay.setForeground(lablColor);
 		panel_1.add(lblPay);
 		
-		JLabel lblTax = new JLabel("Tax(%) ");
-		lblTax.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblTax.setBounds(10, 289, 120, 25);
-		lblTax.setBorder(border);
-		lblTax.setForeground(lablColor);
-		panel_1.add(lblTax);
+		JLabel lblSalesman = new JLabel("Salesman ");
+		lblSalesman.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblSalesman.setBounds(10, 289, 120, 25);
+		lblSalesman.setBorder(border);
+		lblSalesman.setForeground(lablColor);
+		panel_1.add(lblSalesman);
 		
 		JLabel lblNetSalesAmount = new JLabel("Net Sales Amount ");
 		lblNetSalesAmount.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblNetSalesAmount.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNetSalesAmount.setBounds(10, 313, 134, 25);
+		lblNetSalesAmount.setBounds(10, 342, 134, 25);
 		
 		panel_1.add(lblNetSalesAmount);
 		
-		tf_Tax = new JTextField();
-		tf_Tax.setEnabled(false);
-		tf_Tax.setEditable(false);
-		tf_Tax.setColumns(10);
-		tf_Tax.setBounds(129, 289, 161, 25);
-		tf_Tax.setBorder(border);
-		tf_Tax.setText(" "+PDFUtils.getDecimalFormat(bill.getTax()));
-		tf_Tax.setFont(valueFont);
-		tf_Tax.setDisabledTextColor(valueColor);
-		panel_1.add(tf_Tax);
+		tf_Salesman = new JTextField();
+		tf_Salesman.setEnabled(false);
+		tf_Salesman.setEditable(false);
+		tf_Salesman.setColumns(10);
+		tf_Salesman.setBounds(129, 289, 161, 25);
+		tf_Salesman.setBorder(border);
+		tf_Salesman.setFont(valueFont);
+		tf_Salesman.setText(" "+billDetails.getSalesmanName());
+		tf_Salesman.setDisabledTextColor(valueColor);
+		panel_1.add(tf_Salesman);
 		
 		tf_PaymentMode = new JTextField();
 		tf_PaymentMode.setEnabled(false);
@@ -336,14 +337,32 @@ public class ViewCustomerBill extends JDialog {
 		tf_NetSalesAmt.setEditable(false);
 		tf_NetSalesAmt.setColumns(10);
 		tf_NetSalesAmt.setBackground(Color.GRAY);
-		tf_NetSalesAmt.setBounds(59, 338, 231, 35);
+		tf_NetSalesAmt.setBounds(59, 367, 231, 35);
 		tf_NetSalesAmt.setText(PDFUtils.getDecimalFormat(bill.getNetSalesAmt()));
 		panel_1.add(tf_NetSalesAmt);
 		
 		JLabel label = new JLabel("New label");
 		label.setIcon(new ImageIcon(ViewCustomerBill.class.getResource("/images/currency_sign_rupee.png")));
-		label.setBounds(30, 338, 29, 35);
+		label.setBounds(30, 367, 29, 35);
 		panel_1.add(label);
+		
+		JLabel lblRoundUp = new JLabel("Round Up ");
+		lblRoundUp.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblRoundUp.setForeground(Color.GRAY);
+		lblRoundUp.setBorder(border);
+		lblRoundUp.setBounds(10, 313, 120, 25);
+		panel_1.add(lblRoundUp);
+		
+		tf_RoundUp = new JTextField();
+		tf_RoundUp.setFont(new Font("Dialog", Font.BOLD, 13));
+		tf_RoundUp.setEnabled(false);
+		tf_RoundUp.setEditable(false);
+		tf_RoundUp.setBorder(border);
+		tf_RoundUp.setDisabledTextColor(Color.DARK_GRAY);
+		tf_RoundUp.setColumns(10);
+		tf_RoundUp.setText(" "+PDFUtils.getDecimalFormat(bill.getRoundUpAmt()));
+		tf_RoundUp.setBounds(129, 313, 161, 25);
+		panel_1.add(tf_RoundUp);
 		
 		JPanel panel_2 = new JPanel();
 		panel_2.setBorder(new TitledBorder(null, "Item Details", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -413,7 +432,7 @@ public class ViewCustomerBill extends JDialog {
 		
 		JPanel p_salesReturnDtls = new JPanel();
 		p_salesReturnDtls.setBorder(new TitledBorder(null, "Sales Return Details", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		p_salesReturnDtls.setBounds(10, 407, 904, 71);
+		p_salesReturnDtls.setBounds(10, 448, 904, 71);
 		panel.add(p_salesReturnDtls);
 		p_salesReturnDtls.setLayout(null);
 		

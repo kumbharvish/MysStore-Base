@@ -4,7 +4,10 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.Date;
+import java.util.HashMap;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -20,10 +23,10 @@ import javax.swing.border.LineBorder;
 import org.fuin.utils4swing.layout.scalable.DefaultScalableLayoutRegistry;
 import org.fuin.utils4swing.layout.scalable.ScalableLayoutUtils;
 
-import com.shopbilling.constants.AppConstants;
 import com.shopbilling.dto.Expense;
 import com.shopbilling.dto.StatusDTO;
 import com.shopbilling.services.ExpensesServices;
+import com.shopbilling.services.SalesmanServices;
 import com.shopbilling.utils.PDFUtils;
 import com.toedter.calendar.JDateChooser;
 
@@ -33,6 +36,9 @@ public class AddExpenseUI extends JInternalFrame {
 	private JPanel panel_1;
 	private JComboBox expCategory;
 	private JDateChooser tf_Date;
+	private JLabel lblSalesman;
+	private JComboBox cb_salesman;
+	private HashMap<String, Long> salesmanMap = new HashMap<>();
 
 	public AddExpenseUI() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -42,7 +48,7 @@ public class AddExpenseUI extends JInternalFrame {
 		
 		panel_1 = new JPanel();
 		panel_1.setBorder(new LineBorder(new Color(0, 0, 0)));
-		panel_1.setBounds(313, 70, 406, 413);
+		panel_1.setBounds(313, 70, 406, 421);
 		getContentPane().add(panel_1);
 		panel_1.setLayout(null);
 		
@@ -97,6 +103,11 @@ public class AddExpenseUI extends JInternalFrame {
 					expense.setDate(new java.sql.Date(tf_Date.getDate().getTime()));
 					expense.setAmount(Double.parseDouble(tf_Amount.getText()));
 					expense.setDescription(tf_Description.getText());
+					if("Salesman Salary".equals(expCategory.getSelectedItem())) {
+						expense.setSalesmanMobile(salesmanMap.get(cb_salesman.getSelectedItem()));
+					}else {
+						expense.setSalesmanMobile(0);
+					}
 					
 					StatusDTO status = ExpensesServices.addExpense(expense);
 					if(status.getStatusCode()==0){
@@ -111,13 +122,25 @@ public class AddExpenseUI extends JInternalFrame {
 				}
 			}
 		});
-		btnSave.setBounds(158, 339, 89, 23);
+		btnSave.setBounds(158, 372, 89, 23);
 		panel_1.add(btnSave);
 		
 		tf_Date = new JDateChooser(new Date());
 		tf_Date.setBounds(141, 248, 225, 25);
 		tf_Date.setFont(new Font("Tahoma", Font.BOLD, 12));
 		panel_1.add(tf_Date);
+		
+		lblSalesman = new JLabel("Salesman : ");
+		lblSalesman.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblSalesman.setBounds(10, 313, 121, 25);
+		panel_1.add(lblSalesman);
+		
+		cb_salesman = new JComboBox();
+		cb_salesman.setBounds(141, 315, 225, 25);
+		panel_1.add(cb_salesman);
+		cb_salesman.setEnabled(false);
+		SalesmanServices.populateDropdown(cb_salesman, salesmanMap);
+		expCategory.addItemListener(new ItemChangeListener());
 		
 		ScalableLayoutUtils.installScalableLayoutAndKeys(new DefaultScalableLayoutRegistry(), this, 0.1);
 	}
@@ -128,4 +151,20 @@ public class AddExpenseUI extends JInternalFrame {
 		tf_Date.setDate(new Date());
 		tf_Description.setText("");
 	}
+	
+	class ItemChangeListener implements ItemListener{
+	    @Override
+	    public void itemStateChanged(ItemEvent event) {
+	       if (event.getStateChange() == ItemEvent.SELECTED) {
+	          String category = (String)event.getItem();
+	          if("Salesman Salary".equals(category)) {
+	        	  cb_salesman.setEnabled(true);
+	          }else {
+	        	  cb_salesman.setEnabled(false);
+	          }
+	       }
+	    }       
+	}
 }
+
+

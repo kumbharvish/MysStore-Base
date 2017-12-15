@@ -110,7 +110,7 @@ public class SupplierWiseSalesAnalysis extends JInternalFrame {
 				 "Supplier Name","Total Quantity Sold","Total Sales Amount"}
 	       );
 		table.setModel(reportModel);
-		table.getColumnModel().getColumn(1).setPreferredWidth(290);
+		table.getColumnModel().getColumn(0).setPreferredWidth(290);
 		scrollPane.setViewportView(table);
 		 PDFUtils.setTableRowHeight(table);
 		 
@@ -123,13 +123,13 @@ public class SupplierWiseSalesAnalysis extends JInternalFrame {
 		 lblTotalAmount = new JLabel("");
 		 lblTotalAmount.setHorizontalAlignment(SwingConstants.CENTER);
 		 lblTotalAmount.setFont(new Font("Tahoma", Font.BOLD, 16));
-		 lblTotalAmount.setBounds(623, 40, 387, 31);
+		 lblTotalAmount.setBounds(731, 40, 279, 31);
 		 lblTotalAmount.setBorder(border);
 		 panel_2.add(lblTotalAmount);
 		 
 		 JLabel lblLessSold = new JLabel("Total Sales Amount");
 		 lblLessSold.setHorizontalAlignment(SwingConstants.CENTER);
-		 lblLessSold.setBounds(623, 11, 387, 31);
+		 lblLessSold.setBounds(731, 11, 279, 31);
 		 lblLessSold.setBorder(border);
 		 lblLessSold.setFont(new Font("Tahoma", Font.BOLD, 15));
 		 panel_2.add(lblLessSold);
@@ -137,14 +137,14 @@ public class SupplierWiseSalesAnalysis extends JInternalFrame {
 		 lblSupplierName = new JLabel("");
 		 lblSupplierName.setHorizontalAlignment(SwingConstants.CENTER);
 		 lblSupplierName.setFont(new Font("Tahoma", Font.BOLD, 16));
-		 lblSupplierName.setBounds(238, 40, 387, 31);
+		 lblSupplierName.setBounds(239, 40, 494, 31);
 		 lblSupplierName.setBorder(border);
 		 panel_2.add(lblSupplierName);
 		 
 		 JLabel lblMostSold = new JLabel("Supplier Name");
 		 lblMostSold.setHorizontalAlignment(SwingConstants.CENTER);
 		 lblMostSold.setFont(new Font("Tahoma", Font.BOLD, 15));
-		 lblMostSold.setBounds(238, 11, 387, 31);
+		 lblMostSold.setBounds(239, 11, 494, 31);
 		 lblMostSold.setBorder(border);
 		 panel_2.add(lblMostSold);
 		 

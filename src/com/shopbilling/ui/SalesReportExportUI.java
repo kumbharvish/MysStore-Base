@@ -98,7 +98,7 @@ public class SalesReportExportUI extends JInternalFrame {
 	
 	//Fill Report Table
 	private void fillReportTable(){
-		List<BillDetails> billList= ProductServices.getBillDetails(fromDateChooser.getDate()==null?null:new java.sql.Date(fromDateChooser.getDate().getTime()),toDateChooser.getDate()==null?null:new java.sql.Date(toDateChooser.getDate().getTime()),null);
+		List<BillDetails> billList= ProductServices.getBillDetails(fromDateChooser.getDate()==null?null:new java.sql.Date(fromDateChooser.getDate().getTime()),toDateChooser.getDate()==null?null:new java.sql.Date(toDateChooser.getDate().getTime()),null,null);
 		calculateConsolidateValues(billList);
 		if(billList.isEmpty()){
 			JOptionPane.showMessageDialog(getContentPane(), "No Records found for the given period !");

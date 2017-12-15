@@ -5,7 +5,10 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.Date;
+import java.util.HashMap;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -19,10 +22,12 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
-import com.shopbilling.constants.AppConstants;
 import com.shopbilling.dto.Expense;
+import com.shopbilling.dto.SalesmanDetails;
 import com.shopbilling.dto.StatusDTO;
 import com.shopbilling.services.ExpensesServices;
+import com.shopbilling.services.SalesmanServices;
+import com.shopbilling.ui.AddExpenseUI.ItemChangeListener;
 import com.shopbilling.utils.PDFUtils;
 import com.toedter.calendar.JDateChooser;
 
@@ -34,6 +39,9 @@ public class ModifyExpenseUI extends JDialog {
 	JComboBox cb_expenseCategory;
 	JDateChooser dateChooser;
 	Integer id;
+	private JComboBox cb_salesman;
+	private HashMap<String, Long> salesmanMap = new HashMap<>();
+	private HashMap<Long,String> salesmanNameMap = new HashMap<>();
 	/**
 	 * Create the frame.
 	 */
@@ -95,8 +103,9 @@ public class ModifyExpenseUI extends JDialog {
 		cb_expenseCategory = new JComboBox();
 		cb_expenseCategory.setBounds(141, 32, 225, 25);
 		cb_expenseCategory.addItem("-- Select Category --");
-		PDFUtils.populateDropdown(cb_expenseCategory, AppConstants.EXPENSE_TYPE);
+		ExpensesServices.populateDropdown(cb_expenseCategory);
 		cb_expenseCategory.setSelectedItem(exp.getCategory());
+		cb_expenseCategory.addItemListener(new ItemChangeListener());
 		panel.add(cb_expenseCategory);
 		
 		JButton btnUpdate = new JButton("Update");
@@ -109,6 +118,11 @@ public class ModifyExpenseUI extends JDialog {
 		dateChooser.setDate(exp.getDate());
 		panel.add(dateChooser);
 		
+		JLabel label_4 = new JLabel("Salesman : ");
+		label_4.setHorizontalAlignment(SwingConstants.RIGHT);
+		label_4.setBounds(10, 301, 121, 25);
+		panel.add(label_4);
+		
 		btnUpdate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -120,6 +134,11 @@ public class ModifyExpenseUI extends JDialog {
 					expense.setAmount(Double.parseDouble(tf_amount.getText()));
 					expense.setDescription(tf_description.getText());
 					expense.setId(id);
+					if("Salesman Salary".equals(cb_expenseCategory.getSelectedItem())) {
+						expense.setSalesmanMobile(salesmanMap.get(cb_salesman.getSelectedItem()));
+					}else {
+						expense.setSalesmanMobile(0);
+					}
 					StatusDTO status = ExpensesServices.updateExpense(expense);
 					if(status.getStatusCode()==0){
 						JOptionPane.showMessageDialog(getContentPane(), "Expense Updated Successfully !");
@@ -133,5 +152,38 @@ public class ModifyExpenseUI extends JDialog {
 				}
 			}
 		});
+		
+		populateDropdown();
+		cb_salesman = new JComboBox();
+		SalesmanServices.populateDropdown(cb_salesman, salesmanMap);
+		if("Salesman Salary".equals(exp.getCategory())) {
+			cb_salesman.setEnabled(true);
+		}else {
+			cb_salesman.setEnabled(false);
+		}
+		
+		cb_salesman.setBounds(141, 303, 225, 25);
+		cb_salesman.setSelectedItem(salesmanNameMap.get(exp.getSalesmanMobile()));
+		panel.add(cb_salesman);
+	}
+	
+	class ItemChangeListener implements ItemListener{
+	    @Override
+	    public void itemStateChanged(ItemEvent event) {
+	       if (event.getStateChange() == ItemEvent.SELECTED) {
+	          String category = (String)event.getItem();
+	          if("Salesman Salary".equals(category)) {
+	        	  cb_salesman.setEnabled(true);
+	          }else {
+	        	  cb_salesman.setEnabled(false);
+	          }
+	       }
+	    }       
+	}
+	
+	public void populateDropdown(){
+		for(SalesmanDetails w :SalesmanServices.getAllWiremans()){
+			salesmanNameMap.put(w.getMobileNo(),w.getName());
+		}
 	}
 }

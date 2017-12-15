@@ -423,15 +423,17 @@ public class ProductServices {
 		}
 		
 		//Get Bill Details
-		public static List<BillDetails> getBillDetails(Date fromDate,Date toDate,Long customerMobile) {
+		public static List<BillDetails> getBillDetails(Date fromDate,Date toDate,Long customerMobile,Long salesmanMobile) {
 			Connection conn = null;
 			PreparedStatement stmt = null;
 			BillDetails billDetails=null;
 			List<BillDetails> billDetailsList = new ArrayList<BillDetails>();
-			StringBuilder SELECT_BILL_DETAILS = new StringBuilder("SELECT CBD.*,CD.CUST_NAME AS CUSTOMER_NAME FROM CUSTOMER_BILL_DETAILS CBD,CUSTOMER_DETAILS CD WHERE DATE(CBD.BILL_DATE_TIME) BETWEEN ? AND ?  AND CBD.CUST_MOB_NO=CD.CUST_MOB_NO ");
+			StringBuilder SELECT_BILL_DETAILS = new StringBuilder("SELECT CBD.*,CD.CUST_NAME AS CUSTOMER_NAME,SD.NAME AS SALESMAN_NAME FROM CUSTOMER_BILL_DETAILS CBD,CUSTOMER_DETAILS CD,SALESMAN_DETAILS SD WHERE DATE(CBD.BILL_DATE_TIME) BETWEEN ? AND ?  "
+					+ "AND CBD.CUST_MOB_NO=CD.CUST_MOB_NO AND CBD.SALESMAN_MOB_NO=SD.MOBILE_NUMBER ");
 			
 			String ORDER_BY_CLAUSE = "ORDER BY CBD.BILL_DATE_TIME DESC";
 			String CUSTOMER_MOB_QEUERY = " AND CBD.CUST_MOB_NO LIKE ? ";
+			String SUPPLIER_MOB_QEUERY = " AND CBD.SALESMAN_MOB_NO = ? ";
 			try {
 				if(fromDate==null){
 					fromDate = new Date(1947/01/01);
@@ -442,6 +444,9 @@ public class ProductServices {
 				if(customerMobile!=null){
 					SELECT_BILL_DETAILS.append(CUSTOMER_MOB_QEUERY);
 				}
+				if(salesmanMobile!=null){
+					SELECT_BILL_DETAILS.append(SUPPLIER_MOB_QEUERY);
+				}
 					SELECT_BILL_DETAILS.append(ORDER_BY_CLAUSE);
 					conn = PDFUtils.getConnection();
 					stmt = conn.prepareStatement(SELECT_BILL_DETAILS.toString());
@@ -449,6 +454,8 @@ public class ProductServices {
 					stmt.setDate(2, toDate);
 					if(customerMobile!=null){
 						stmt.setString(3, "%"+customerMobile+"%");
+					}else if(salesmanMobile!=null){
+						stmt.setLong(3, salesmanMobile);
 					}
 					System.out.println("SELECT_BILL_DETAILS " +SELECT_BILL_DETAILS);
 					ResultSet rs = stmt.executeQuery();
@@ -469,6 +476,8 @@ public class ProductServices {
 						billDetails.setDiscountAmt(rs.getDouble("BILL_DISC_AMOUNT"));
 						billDetails.setNetSalesAmt(rs.getDouble("NET_SALES_AMOUNT"));
 						billDetails.setPurchaseAmt(rs.getDouble("BILL_PURCHASE_AMT"));
+						billDetails.setSalesmanName(rs.getString("SALESMAN_NAME"));
+						billDetails.setRoundUpAmt(rs.getDouble("ROUND_UP"));
 						
 						billDetailsList.add(billDetails);
 				}

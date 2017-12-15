@@ -40,9 +40,11 @@ import com.shopbilling.dto.Customer;
 import com.shopbilling.services.AutoSuggestTable;
 import com.shopbilling.services.ButtonColumn;
 import com.shopbilling.services.ProductServices;
+import com.shopbilling.services.SalesmanServices;
 import com.shopbilling.services.UserServices;
 import com.shopbilling.utils.PDFUtils;
 import com.toedter.calendar.JDateChooser;
+import javax.swing.JComboBox;
 
 public class SellReport extends JInternalFrame {
 	private JTable table;
@@ -69,21 +71,10 @@ public class SellReport extends JInternalFrame {
 	private Map<Integer,BillDetails> billsMap;
 	private JFrame parentFrame;
 	private JTextField tf_CustMobile;
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					SellReport frame = new SellReport();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	private JComboBox cb_salesman ;
+	private HashMap<String,Long> salesmanMap = new  HashMap<>();
+	
+	
 	/**
 	 * Create the frame.
 	 */
@@ -95,7 +86,7 @@ public class SellReport extends JInternalFrame {
 		
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(null, "Report Date", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel.setBounds(10, 11, 1150, 60);
+		panel.setBounds(10, 11, 1150, 100);
 		getContentPane().add(panel);
 		panel.setLayout(null);
 		parentFrame = (JFrame)this.getTopLevelAncestor();
@@ -149,14 +140,26 @@ public class SellReport extends JInternalFrame {
 		panel.add(tf_CustMobile);
 		tf_CustMobile.setColumns(10);
 		
+		JLabel lblSalesman = new JLabel("Salesman :");
+		lblSalesman.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblSalesman.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblSalesman.setBounds(559, 61, 108, 28);
+		panel.add(lblSalesman);
+		
+		cb_salesman = new JComboBox();
+		cb_salesman.setBounds(677, 60, 236, 28);
+		panel.add(cb_salesman);
+		cb_salesman.addItem("--- SELECT ---");
+		SalesmanServices.populateDropdown(cb_salesman, salesmanMap);
+		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new TitledBorder(null, "Bill Details", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_1.setBounds(10, 82, 1150, 356);
+		panel_1.setBounds(10, 122, 1150, 316);
 		getContentPane().add(panel_1);
 		panel_1.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(15, 26, 1120, 319);
+		scrollPane.setBounds(15, 26, 1120, 279);
 		panel_1.add(scrollPane);
 		
 		table = new JTable();
@@ -314,7 +317,8 @@ public class SellReport extends JInternalFrame {
 	
 	//Fill Report Table
 	private void fillReportTable(){
-		List<BillDetails> billList= ProductServices.getBillDetails(fromDateChooser.getDate()==null?null:new java.sql.Date(fromDateChooser.getDate().getTime()),toDateChooser.getDate()==null?null:new java.sql.Date(toDateChooser.getDate().getTime()),tf_CustMobile.getText().equals("")?null:customerMap.get(tf_CustMobile.getText()).getCustMobileNumber());
+		List<BillDetails> billList= ProductServices.getBillDetails(fromDateChooser.getDate()==null?null:new java.sql.Date(fromDateChooser.getDate().getTime()),toDateChooser.getDate()==null?null:new java.sql.Date(toDateChooser.getDate().getTime())
+				,tf_CustMobile.getText().equals("")?null:customerMap.get(tf_CustMobile.getText()).getCustMobileNumber(),cb_salesman.getSelectedIndex()==0?null:salesmanMap.get(cb_salesman.getSelectedItem()));
 		calculateConsolidateValues(billList);
 		reportModel.setRowCount(0);
 		if(billList.isEmpty()){

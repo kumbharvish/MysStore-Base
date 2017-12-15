@@ -34,8 +34,10 @@ import org.fuin.utils4swing.layout.scalable.ScalableLayoutUtils;
 
 import com.shopbilling.constants.AppConstants;
 import com.shopbilling.dto.Expense;
+import com.shopbilling.dto.SalesmanDetails;
 import com.shopbilling.services.ButtonColumn;
 import com.shopbilling.services.ExpensesServices;
+import com.shopbilling.services.SalesmanServices;
 import com.shopbilling.utils.PDFUtils;
 import com.toedter.calendar.JDateChooser;
 
@@ -49,6 +51,7 @@ public class ViewExpensesUI extends JInternalFrame {
 	private Map<Integer,Expense> expenseMap;
 	private JFrame parentFrame;
 	private JComboBox cb_expenseCategory;
+	HashMap<Long,String> salesmanMap = new HashMap<>();
 	/**
 	 * Create the frame.
 	 */
@@ -211,6 +214,7 @@ public class ViewExpensesUI extends JInternalFrame {
 		 table.getColumnModel().getColumn(6).setMinWidth(0);
 		 table.getColumnModel().getColumn(6).setMaxWidth(0);
 		 table.getColumnModel().getColumn(6).setWidth(0);
+		 populateDropdown();
 		 ScalableLayoutUtils.installScalableLayoutAndKeys(new DefaultScalableLayoutRegistry(), this, 0.1);
 	}
 	
@@ -224,9 +228,19 @@ public class ViewExpensesUI extends JInternalFrame {
 		}else{
 			for(Expense b : expenseList){
 				
-				reportModel.addRow(new Object[]{b.getCategory(),PDFUtils.getDecimalFormat(b.getAmount()),b.getDescription(),b.getDate(),"Delete","Update",b.getId()});
+				reportModel.addRow(new Object[]{b.getCategory(),PDFUtils.getDecimalFormat(b.getAmount()),getDescription(b),b.getDate(),"Delete","Update",b.getId()});
 			}
 		}
+	}
+
+	private String getDescription(Expense b) {
+		StringBuilder desc = new StringBuilder("");
+		if("Salesman Salary".equals(b.getCategory())) {
+			desc.append("Salesman : "+salesmanMap.get(b.getSalesmanMobile())).append("  : ").append(b.getDescription());
+		}else {
+			desc.append(b.getDescription());
+		}
+		return desc.toString();
 	}
 
 	private void calculateConsolidateValues(List<Expense> expenseList) {
@@ -238,5 +252,10 @@ public class ViewExpensesUI extends JInternalFrame {
 			expenseMap.put(expense.getId(), expense);
 		}
 		lblTotalAmountValue.setText("Rs. "+PDFUtils.getDecimalFormat(totalAmount)+" /-");
+	}
+	public void populateDropdown(){
+		for(SalesmanDetails w :SalesmanServices.getAllWiremans()){
+			salesmanMap.put(w.getMobileNo(),w.getName());
+		}
 	}
 }

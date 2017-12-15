@@ -13,6 +13,10 @@ public class Expense {
 	private String description;
 	
 	private Date date;
+	
+	private long salesmanMobile;
+	
+	private String salesmanName;
 
 	public String getCategory() {
 		return category;
@@ -52,6 +56,22 @@ public class Expense {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public Long getSalesmanMobile() {
+		return salesmanMobile;
+	}
+
+	public void setSalesmanMobile(long salesmanMobile) {
+		this.salesmanMobile = salesmanMobile;
+	}
+
+	public String getSalesmanName() {
+		return salesmanName;
+	}
+
+	public void setSalesmanName(String salesmanName) {
+		this.salesmanName = salesmanName;
 	}
 	
 	
