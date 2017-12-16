@@ -95,7 +95,8 @@ public class ModifyExpenseUI extends JDialog {
 		cb_expenseCategory = new JComboBox();
 		cb_expenseCategory.setBounds(141, 32, 225, 25);
 		cb_expenseCategory.addItem("-- Select Category --");
-		PDFUtils.populateDropdown(cb_expenseCategory, AppConstants.EXPENSE_TYPE);
+		//PDFUtils.populateDropdown(cb_expenseCategory, AppConstants.EXPENSE_TYPE);
+		ExpensesServices.populateDropdown(cb_expenseCategory);
 		cb_expenseCategory.setSelectedItem(exp.getCategory());
 		panel.add(cb_expenseCategory);
 		
