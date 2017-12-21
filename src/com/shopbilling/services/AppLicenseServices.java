@@ -111,9 +111,15 @@ public class AppLicenseServices {
 		Date currentTime = new Date();
 		String lastRun = getAppSecurityData();
 		try {
-			Date prevDate = sdf.parse(lastRun);
-			if(currentTime.compareTo(prevDate)<0){
-				isSystemDateChanged = true;
+			if(lastRun!=null) {
+				Date prevDate = sdf.parse(lastRun);
+				if(currentTime.compareTo(prevDate)<0){
+					isSystemDateChanged = true;
+				}
+			}else {
+					logger.error("## Configuration Missing ## :: Database Entry Missing for APP_SECURITY_DATA");
+					isSystemDateChanged = true;
+					return isSystemDateChanged;
 			}
 		} catch (ParseException e) {
 			logger.error("isSystemDateChanged Date Parse Exception",e);
