@@ -47,6 +47,8 @@ public class SupplierServices {
 	
 	private static final String IS_SUPPLIER_ENTRY_AVAILABLE = "SELECT SUPPLIER_ID FROM STOCK_INVOICE_DETAILS WHERE SUPPLIER_ID=?";
 	
+	private static final String IS_SUPPLIER_PRODUCT_AVAILABLE = "SELECT SUPPLIER_ID FROM PRODUCT_DETAILS WHERE SUPPLIER_ID=?";
+	
 	private final static Logger logger = Logger.getLogger(SupplierServices.class);
 
 	
@@ -406,14 +408,25 @@ public class SupplierServices {
 	public static StatusDTO isSupplierEntryAvailable(Integer supplierId) {
 		Connection conn = null;
 		PreparedStatement stmt = null;
+		PreparedStatement stmt2 = null;
 		StatusDTO status = new StatusDTO(-1);
+	
 		try {
 			conn = PDFUtils.getConnection();
-			stmt = conn.prepareStatement(IS_SUPPLIER_ENTRY_AVAILABLE);
+			stmt = conn.prepareStatement(IS_SUPPLIER_PRODUCT_AVAILABLE);
+			stmt2 = conn.prepareStatement(IS_SUPPLIER_ENTRY_AVAILABLE);
 			stmt.setInt(1, supplierId);
 			ResultSet rs = stmt.executeQuery();
 			if (rs.next()) {
 				status.setStatusCode(0);
+			}else {
+				stmt2.setInt(1, supplierId);
+				ResultSet rs2 = stmt2.executeQuery();
+				if(rs2.next()) {
+					status.setStatusCode(0);
+				}
+				rs2.close();
+				stmt2.close();
 			}
 			rs.close();
 		} catch (Exception e) {

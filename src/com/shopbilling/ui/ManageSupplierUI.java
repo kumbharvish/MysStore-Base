@@ -318,7 +318,7 @@ public class ManageSupplierUI extends JInternalFrame {
 			if(dialogResult == JOptionPane.YES_OPTION){
 				StatusDTO status = SupplierServices.isSupplierEntryAvailable(Integer.parseInt(supplierId.getText()));
 				if(status.getStatusCode()==0){
-					JOptionPane.showMessageDialog(contentPane, "Delete operation not allowed. Purchase entry present for this supplier!");
+					JOptionPane.showMessageDialog(contentPane, "Delete operation not allowed. Products present for this supplier or Purchase Entry!");
 				}else{
 					SupplierServices.deleteSupplier(Integer.parseInt(supplierId.getText()));
 					resetSupplierTextFields();
