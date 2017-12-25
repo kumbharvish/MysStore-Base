@@ -131,16 +131,10 @@ public class ManageStoreUI extends JFrame {
 					UserDetails userDetails = UserServices.validateUser(user, pwd);
 					if(userDetails!=null){
 						setVisible(false);
-						if(AppConstants.ADMIN_USER_TYPE.equals(userDetails.getUserType())){
 							//OPEN APPLICATION WINDOW
 							MainWindow mw = new MainWindow(userDetails);
 							mw.setVisible(true);
-						}else if(AppConstants.CASHIER_USER_TYPE.equals(userDetails.getUserType())) {
-							SaleWindow sw = new SaleWindow(userDetails);
-							sw.setVisible(true);
-						}else{
-							JOptionPane.showMessageDialog(contentPane, "Invalid User Type !");
-						}
+						
 					}else{
 						JOptionPane.showMessageDialog(contentPane, "Entered username / password is incorrect!","Login Failed",JOptionPane.WARNING_MESSAGE);
 					}

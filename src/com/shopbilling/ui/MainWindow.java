@@ -2,6 +2,7 @@ package com.shopbilling.ui;
 
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
@@ -22,6 +23,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
@@ -35,6 +37,8 @@ import com.shopbilling.dto.UserDetails;
 import com.shopbilling.services.DBBackupService;
 import com.shopbilling.services.MyStoreServices;
 import com.shopbilling.utils.PDFUtils;
+
+import javafx.scene.control.MenuItem;
 
 public class MainWindow extends JFrame{
 
@@ -108,12 +112,63 @@ public class MainWindow extends JFrame{
 	private JButton btnSalesReturn;
 	private JButton btnCounter;
 	private JMenuBar menuBar;
+	private JMenu mnMenu;
+	private JMenu mnProductManagement;
+	private JMenuItem mntmManageProductCategory;
+	private JMenuItem mntmManageProducts;
 	private JMenu mnBusinessAnalysis;
 	private JMenuItem mntmLogOut;
 	private JMenu mnWelcomeUser;
+	private JMenuItem mntmMyStoreDetails;
 	private JMenuItem mntmManageAccount;
 	private JMenuItem mntmDailySalesCollection;
 	private JFrame parentFrame;
+	private JMenuItem mntmQuickStockCorrection;
+	private JMenu mnBarcodeSetup;
+	private JMenuItem mntmCreateForProducts;
+	private JMenuItem mntmPrintBarcodeFor;
+	private JMenu mnStockManagement;
+	private JMenuItem mntmManageSuppliers;
+	private JMenuItem mntmStockPurchaseEntry;
+	private JMenuItem mntmStockPurchaseHistory;
+	private JMenu mnSalesReturn;
+	private JMenuItem mntmNewReturn;
+	private JMenuItem mntmSalesReturnReport;
+	private JMenu mnCustomerManagement;
+	private JMenuItem mntmManageCustomers;
+	private JMenuItem mntmCustomerPaymentHistory;
+	private JMenuItem mntmCustomerPurchaseHistory;
+	private JMenu mnExpenses;
+	private JMenuItem mntmAddExpense;
+	private JMenuItem mntmViewExpenses;
+	private JMenu mnSalesManagement;
+	private JMenuItem mntmManageSalesman;
+	private JMenu mnSettings ;
+	private JMenuItem mntmDataBackupMail;
+	private JMenuItem mntmProductWise;
+	private JMenuItem mntmBillWiseReports;
+	private JMenuItem mntmPurchaseEntryWise;
+	private JMenuItem mntmCustomerWiseProfit;
+	private JMenuItem mntmProductWiseSales;
+	private JMenuItem mntmSupplierWiseSales;
+	private JMenu mnReports;
+	private JMenuItem mntmProductProfitReport;
+	private JMenuItem mntmSalesStockValue;
+	private JMenuItem mntmCustomersReport;
+	private JMenuItem mntmZeroStockProducts;
+	private JMenuItem mntmProductCategoryWise;
+	private JMenuItem mntmSalesReport;
+	private JMenuItem mntmSalesReturnReportExport;
+	private JMenuItem mntmMonthlyReport;
+	private JMenuItem mntmProfitLossStatement;
+	private JMenu mnGraphicalReports;
+	private JMenuItem mntmPaymentModeWise;
+	private JMenuItem mntmMonthlySalesAmount ;
+	private JMenu mnHelp;
+	private JMenuItem mntmAboutUs;
+	
+	
+	
 	/**
 	 * Launch the application.
 	 */
@@ -186,7 +241,7 @@ public class MainWindow extends JFrame{
 			}
 		});
 		
-		JMenuItem mntmMyStoreDetails = new JMenuItem("My Store Details");
+		mntmMyStoreDetails = new JMenuItem("My Store Details");
 		mntmMyStoreDetails.setIcon(new ImageIcon(MainWindow.class.getResource("/images/shop16.png")));
 		mnWelcomeUser.add(mntmMyStoreDetails);
 		
@@ -201,15 +256,15 @@ public class MainWindow extends JFrame{
 		mntmLogOut.setIcon(new ImageIcon(MainWindow.class.getResource("/images/exit.png")));
 		mnWelcomeUser.add(mntmLogOut);
 		
-		JMenu mnMenu = new JMenu("Menu");
+		mnMenu = new JMenu("Menu");
 		mnMenu.setIcon(new ImageIcon(MainWindow.class.getResource("/images/about_menu.png")));
 		menuBar.add(mnMenu);
 		
-		JMenu mnProductManagement = new JMenu("Product Management");
+		mnProductManagement = new JMenu("Product Management");
 		mnProductManagement.setIcon(new ImageIcon(MainWindow.class.getResource("/images/briefcase.png")));
 		mnMenu.add(mnProductManagement);
 		
-		JMenuItem mntmManageProductCategory = new JMenuItem("Manage Product Category");
+		mntmManageProductCategory = new JMenuItem("Manage Product Category");
 		mnProductManagement.add(mntmManageProductCategory);
 		
 		mntmManageProductCategory.addActionListener(new ActionListener() {
@@ -221,7 +276,7 @@ public class MainWindow extends JFrame{
 			}
 		});
 		
-		JMenuItem mntmManageProducts = new JMenuItem("Manage Products");
+		mntmManageProducts = new JMenuItem("Manage Products");
 		mnProductManagement.add(mntmManageProducts);
 		
 		mntmManageProducts.addActionListener(new ActionListener() {
@@ -233,15 +288,15 @@ public class MainWindow extends JFrame{
 			}
 		});
 		
-		JMenuItem mntmQuickStockCorrection = new JMenuItem("Quick Stock Correction");
+		mntmQuickStockCorrection = new JMenuItem("Quick Stock Correction");
 		mnProductManagement.add(mntmQuickStockCorrection);
 		mntmQuickStockCorrection.setIcon(null);
 		
-		JMenu mnBarcodeSetup = new JMenu("Barcode Management");
+		mnBarcodeSetup = new JMenu("Barcode Management");
 		mnMenu.add(mnBarcodeSetup);
 		mnBarcodeSetup.setIcon(new ImageIcon(MainWindow.class.getResource("/images/barcode (2).png")));
 		
-		JMenuItem mntmCreateForProducts = new JMenuItem("Generate Barcode For Product");
+		mntmCreateForProducts = new JMenuItem("Generate Barcode For Product");
 		mntmCreateForProducts.setIcon(null);
 		mnBarcodeSetup.add(mntmCreateForProducts);
 		
@@ -253,15 +308,15 @@ public class MainWindow extends JFrame{
 			}
 		});
 		
-		JMenuItem mntmPrintBarcodeFor = new JMenuItem("Print Barcode Label");
+		mntmPrintBarcodeFor = new JMenuItem("Print Barcode Label");
 		mntmPrintBarcodeFor.setIcon(null);
 		mnBarcodeSetup.add(mntmPrintBarcodeFor);
 		
-		JMenu mnStockManagement = new JMenu("Stock Management");
+		mnStockManagement = new JMenu("Stock Management");
 		mnStockManagement.setIcon(new ImageIcon(MainWindow.class.getResource("/images/shopping_cart_full.png")));
 		mnMenu.add(mnStockManagement);
 		
-		JMenuItem mntmManageSuppliers = new JMenuItem("Manage Suppliers");
+		mntmManageSuppliers = new JMenuItem("Manage Suppliers");
 		mnStockManagement.add(mntmManageSuppliers);
 		
 		mntmManageSuppliers.addActionListener(new ActionListener() {
@@ -272,7 +327,7 @@ public class MainWindow extends JFrame{
 			}
 		});
 		
-		JMenuItem mntmStockPurchaseEntry = new JMenuItem("Stock Purchase Entry");
+		mntmStockPurchaseEntry = new JMenuItem("Stock Purchase Entry");
 		mnStockManagement.add(mntmStockPurchaseEntry);
 		
 		mntmStockPurchaseEntry.addActionListener(new ActionListener() {
@@ -283,7 +338,7 @@ public class MainWindow extends JFrame{
 			}
 		});
 
-		JMenuItem mntmStockPurchaseHistory = new JMenuItem("Stock Purchase History");
+		mntmStockPurchaseHistory = new JMenuItem("Stock Purchase History");
 		mnStockManagement.add(mntmStockPurchaseHistory);
 		
 		mntmStockPurchaseHistory.addActionListener(new ActionListener() {
@@ -294,11 +349,11 @@ public class MainWindow extends JFrame{
 			}
 		});
 		
-		JMenu mnSalesReturn = new JMenu("Sales Return");
+		mnSalesReturn = new JMenu("Sales Return");
 		mnSalesReturn.setIcon(new ImageIcon(MainWindow.class.getResource("/images/shopcartdown.png")));
 		mnMenu.add(mnSalesReturn);
 		
-		JMenuItem mntmNewReturn = new JMenuItem("New Return");
+		mntmNewReturn = new JMenuItem("New Return");
 		mnSalesReturn.add(mntmNewReturn);
 		
 		mntmNewReturn.addActionListener(new ActionListener() {
@@ -309,7 +364,7 @@ public class MainWindow extends JFrame{
 			}
 		});
 		
-		JMenuItem mntmSalesReturnReport = new JMenuItem("Sales Return Report");
+		mntmSalesReturnReport = new JMenuItem("Sales Return Report");
 		mnSalesReturn.add(mntmSalesReturnReport);
 		
 		mntmSalesReturnReport.addActionListener(new ActionListener() {
@@ -320,11 +375,11 @@ public class MainWindow extends JFrame{
 			}
 		});
 		
-		JMenu mnCustomerManagement = new JMenu("Customer Management");
+		mnCustomerManagement = new JMenu("Customer Management");
 		mnCustomerManagement.setIcon(new ImageIcon(MainWindow.class.getResource("/images/user.png")));
 		mnMenu.add(mnCustomerManagement);
 		
-		JMenuItem mntmManageCustomers = new JMenuItem("Manage Customer Details");
+		mntmManageCustomers = new JMenuItem("Manage Customer Details");
 		mnCustomerManagement.add(mntmManageCustomers);
 		
 		mntmManageCustomers.addActionListener(new ActionListener() {
@@ -336,7 +391,7 @@ public class MainWindow extends JFrame{
 			}
 		});
 		
-		JMenuItem mntmCustomerPaymentHistory = new JMenuItem("Customer Payment History");
+		mntmCustomerPaymentHistory = new JMenuItem("Customer Payment History");
 		mnCustomerManagement.add(mntmCustomerPaymentHistory);
 		
 		mntmCustomerPaymentHistory.addActionListener(new ActionListener() {
@@ -347,7 +402,7 @@ public class MainWindow extends JFrame{
 			}
 		});
 		
-		JMenuItem mntmCustomerPurchaseHistory = new JMenuItem("Customer Purchase History");
+		mntmCustomerPurchaseHistory = new JMenuItem("Customer Purchase History");
 		mnCustomerManagement.add(mntmCustomerPurchaseHistory);
 		
 		mntmCustomerPurchaseHistory.addActionListener(new ActionListener() {
@@ -358,14 +413,14 @@ public class MainWindow extends JFrame{
 			}
 		});
 		
-		JMenu mnExpenses = new JMenu("Expenses");
+		mnExpenses = new JMenu("Expenses");
 		mnExpenses.setIcon(new ImageIcon(MainWindow.class.getResource("/images/banknote.png")));
 		mnMenu.add(mnExpenses);
 		
-		JMenuItem mntmAddExpense = new JMenuItem("Add Expense");
+		mntmAddExpense = new JMenuItem("Add Expense");
 		mnExpenses.add(mntmAddExpense);
 		
-		JMenuItem mntmViewExpenses = new JMenuItem("View Expenses");
+		mntmViewExpenses = new JMenuItem("View Expenses");
 		mnExpenses.add(mntmViewExpenses);
 		
 		mntmViewExpenses.addActionListener(new ActionListener() {
@@ -384,11 +439,11 @@ public class MainWindow extends JFrame{
 			}
 		});
 		
-		JMenu mnSalesManagement = new JMenu("Salesman Management");
+		mnSalesManagement = new JMenu("Salesman Management");
 		mnSalesManagement.setIcon(new ImageIcon(MainWindow.class.getResource("/images/user (1).png")));
 		mnMenu.add(mnSalesManagement);
 		
-		JMenuItem mntmManageSalesman = new JMenuItem("Manage Salesman");
+		mntmManageSalesman = new JMenuItem("Manage Salesman");
 		mnSalesManagement.add(mntmManageSalesman);
 		
 		mntmManageSalesman.addActionListener(new ActionListener() {
@@ -399,11 +454,11 @@ public class MainWindow extends JFrame{
 			}
 		});
 		
-		JMenu mnSettings = new JMenu("Settings");
+		mnSettings = new JMenu("Settings");
 		mnSettings.setIcon(new ImageIcon(MainWindow.class.getResource("/images/advancedsettings (1).png")));
 		mnMenu.add(mnSettings);
 		
-		JMenuItem mntmDataBackupMail = new JMenuItem("Data Backup Mail Settings");
+		mntmDataBackupMail = new JMenuItem("Data Backup Mail Settings");
 		mnSettings.add(mntmDataBackupMail);
 		
 		mntmDataBackupMail.addActionListener(new ActionListener() {
@@ -433,7 +488,7 @@ public class MainWindow extends JFrame{
 		mnBusinessAnalysis.setIcon(new ImageIcon(MainWindow.class.getResource("/images/research.png")));
 		menuBar.add(mnBusinessAnalysis);
 		
-		JMenuItem mntmProductWise = new JMenuItem("Product Wise Profit");
+		mntmProductWise = new JMenuItem("Product Wise Profit");
 		mntmProductWise.setIcon(new ImageIcon(MainWindow.class.getResource("/images/product_193.png")));
 		mnBusinessAnalysis.add(mntmProductWise);
 		
@@ -445,7 +500,7 @@ public class MainWindow extends JFrame{
 			}
 		});
 		
-		JMenuItem mntmBillWiseReports = new JMenuItem("Bill Wise Profit");
+		mntmBillWiseReports = new JMenuItem("Bill Wise Profit");
 		mntmBillWiseReports.setIcon(new ImageIcon(MainWindow.class.getResource("/images/invoice.png")));
 		mnBusinessAnalysis.add(mntmBillWiseReports);
 		mntmBillWiseReports.addActionListener(new ActionListener() {
@@ -455,7 +510,7 @@ public class MainWindow extends JFrame{
 				containerPanel.add(billWiseProfit);
 			}
 		});
-		JMenuItem mntmPurchaseEntryWise = new JMenuItem("Stock Entry Wise Profit");
+		mntmPurchaseEntryWise = new JMenuItem("Stock Entry Wise Profit");
 		mntmPurchaseEntryWise.setIcon(new ImageIcon(MainWindow.class.getResource("/images/stock_draw_circle_pie.png")));
 		mnBusinessAnalysis.add(mntmPurchaseEntryWise);
 		mntmPurchaseEntryWise.addActionListener(new ActionListener() {
@@ -466,15 +521,15 @@ public class MainWindow extends JFrame{
 			}
 		});
 		
-		JMenuItem mntmCustomerWiseProfit = new JMenuItem("Customer Wise Profit");
+		mntmCustomerWiseProfit = new JMenuItem("Customer Wise Profit");
 		mntmCustomerWiseProfit.setIcon(new ImageIcon(MainWindow.class.getResource("/images/customers (1).png")));
 		mnBusinessAnalysis.add(mntmCustomerWiseProfit);
 		
-		JMenuItem mntmProductWiseSales = new JMenuItem("Product Wise Sales");
+		mntmProductWiseSales = new JMenuItem("Product Wise Sales");
 		mntmProductWiseSales.setIcon(new ImageIcon(MainWindow.class.getResource("/images/product_193 (2).png")));
 		mnBusinessAnalysis.add(mntmProductWiseSales);
 		
-		JMenuItem mntmSupplierWiseSales = new JMenuItem("Supplier Wise Sales");
+		mntmSupplierWiseSales = new JMenuItem("Supplier Wise Sales");
 		mntmSupplierWiseSales.setIcon(new ImageIcon(MainWindow.class.getResource("/images/report_go.png")));
 		mnBusinessAnalysis.add(mntmSupplierWiseSales);
 		
@@ -502,11 +557,11 @@ public class MainWindow extends JFrame{
 			}
 		});
 		
-		JMenu mnReports = new JMenu("Reports");
+		mnReports = new JMenu("Reports");
 		mnReports.setIcon(new ImageIcon(MainWindow.class.getResource("/images/report_check.png")));
 		menuBar.add(mnReports);
 		
-		JMenuItem mntmProductProfitReport = new JMenuItem("Product Profit Report");
+		mntmProductProfitReport = new JMenuItem("Product Profit Report");
 		mntmProductProfitReport.setIcon(new ImageIcon(MainWindow.class.getResource("/images/product_193 (1).png")));
 		mnReports.add(mntmProductProfitReport);
 		
@@ -518,7 +573,7 @@ public class MainWindow extends JFrame{
 			}
 		});
 		
-		JMenuItem mntmSalesStockValue = new JMenuItem("Sales Stock Value Report");
+		mntmSalesStockValue = new JMenuItem("Sales Stock Value Report");
 		mntmSalesStockValue.setIcon(new ImageIcon(MainWindow.class.getResource("/images/stock_edit_bookmark.png")));
 		mnReports.add(mntmSalesStockValue);
 		
@@ -530,31 +585,31 @@ public class MainWindow extends JFrame{
 			}
 		});
 		
-		JMenuItem mntmCustomersReport = new JMenuItem("Customers Report");
+		mntmCustomersReport = new JMenuItem("Customers Report");
 		mntmCustomersReport.setIcon(new ImageIcon(MainWindow.class.getResource("/images/customers (2).png")));
 		mnReports.add(mntmCustomersReport);
 		
-		JMenuItem mntmZeroStockProducts = new JMenuItem("Zero Stock Products Report");
+		mntmZeroStockProducts = new JMenuItem("Zero Stock Products Report");
 		mntmZeroStockProducts.setIcon(new ImageIcon(MainWindow.class.getResource("/images/trashcan_empty.png")));
 		mnReports.add(mntmZeroStockProducts);
 		
-		JMenuItem mntmProductCategoryWise = new JMenuItem("Product Category Wise Stock Report");
+		mntmProductCategoryWise = new JMenuItem("Product Category Wise Stock Report");
 		mntmProductCategoryWise.setIcon(new ImageIcon(MainWindow.class.getResource("/images/category.png")));
 		mnReports.add(mntmProductCategoryWise);
 		
-		JMenuItem mntmSalesReport = new JMenuItem("Sales Report");
+		mntmSalesReport = new JMenuItem("Sales Report");
 		mntmSalesReport.setIcon(new ImageIcon(MainWindow.class.getResource("/images/report_check.png")));
 		mnReports.add(mntmSalesReport);
 		
-		JMenuItem mntmSalesReturnReportExport = new JMenuItem("Sales Return Report");
+		mntmSalesReturnReportExport = new JMenuItem("Sales Return Report");
 		mntmSalesReturnReportExport.setIcon(new ImageIcon(MainWindow.class.getResource("/images/shopcartdown (1).png")));
 		mnReports.add(mntmSalesReturnReportExport);
 		
-		JMenuItem mntmMonthlyReport = new JMenuItem("Monthly Report");
+		mntmMonthlyReport = new JMenuItem("Monthly Report");
 		mntmMonthlyReport.setIcon(new ImageIcon(MainWindow.class.getResource("/images/stats.png")));
 		mnReports.add(mntmMonthlyReport);
 		
-		JMenuItem mntmProfitLossStatement = new JMenuItem("Profit Loss Report");
+		mntmProfitLossStatement = new JMenuItem("Profit Loss Report");
 		mntmProfitLossStatement.setIcon(new ImageIcon(MainWindow.class.getResource("/images/chart_up.png")));
 		mnReports.add(mntmProfitLossStatement);
 		
@@ -606,11 +661,11 @@ public class MainWindow extends JFrame{
 			}
 		});
 		
-		JMenu mnGraphicalReports = new JMenu("Graphical Reports");
+		mnGraphicalReports = new JMenu("Graphical Reports");
 		mnGraphicalReports.setIcon(new ImageIcon(MainWindow.class.getResource("/images/chart_02.png")));
 		menuBar.add(mnGraphicalReports);
 		
-		JMenuItem mntmPaymentModeWise = new JMenuItem("Payment Mode Wise Sales Amount");
+		mntmPaymentModeWise = new JMenuItem("Payment Mode Wise Sales Amount");
 		mntmPaymentModeWise.setIcon(new ImageIcon(MainWindow.class.getResource("/images/pie_chart_red.png")));
 		mnGraphicalReports.add(mntmPaymentModeWise);
 		
@@ -618,15 +673,15 @@ public class MainWindow extends JFrame{
 		mntmDailySalesCollection.setIcon(new ImageIcon(MainWindow.class.getResource("/images/chart_bar.png")));
 		mnGraphicalReports.add(mntmDailySalesCollection);
 		
-		JMenuItem mntmMonthlySalesAmount = new JMenuItem("Monthly Sales Amount & Profit");
+		mntmMonthlySalesAmount = new JMenuItem("Monthly Sales Amount & Profit");
 		mntmMonthlySalesAmount.setIcon(new ImageIcon(MainWindow.class.getResource("/images/chart_bar.png")));
 		mnGraphicalReports.add(mntmMonthlySalesAmount);
 		
-		JMenu mnHelp = new JMenu("Help");
+		mnHelp = new JMenu("Help");
 		mnHelp.setIcon(new ImageIcon(MainWindow.class.getResource("/images/help_browser.png")));
 		menuBar.add(mnHelp);
 		
-		JMenuItem mntmAboutUs = new JMenuItem("About Us");
+		mntmAboutUs = new JMenuItem("About Us");
 		mntmAboutUs.setIcon(new ImageIcon(MainWindow.class.getResource("/images/get_info.png")));
 		mnHelp.add(mntmAboutUs);
 		
@@ -857,8 +912,28 @@ public class MainWindow extends JFrame{
 		System.out.println("height "+height);
 		//Display alert for license expire
 		PDFUtils.licenseExpiryAlert(getContentPane());
+		if("CASHIER".equals(userDetails.getUserType())) {
+			hideMenus();
+		}
 	}
 	
+	private void hideMenus() {
+		final JMenuItem[] menuItems = new JMenuItem[] {mntmMyStoreDetails,mntmManageProductCategory,mntmManageProducts};
+		final JButton[] buttons = new JButton[] {btnProducts,btnCustomer,btnStockEntry};
+		final JMenu[] menus = new JMenu[] {mnBusinessAnalysis,mnReports,mnGraphicalReports,mnBarcodeSetup,mnStockManagement,mnCustomerManagement,
+				mnExpenses,mnSalesManagement,mnSettings,mnSalesReturn};
+		
+		for(JMenuItem item :menuItems ) {
+			item.setVisible(false);
+		}
+		for(JButton item :buttons ) {
+			item.setVisible(false);
+		}
+		for(JMenu item :menus ) {
+			item.setVisible(false);
+		}
+	}
+
 	protected void closeAllInternalFrames() {
 		if(newBill != null){
 			if(!btnNewBill.isEnabled())
