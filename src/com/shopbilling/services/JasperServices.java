@@ -155,15 +155,27 @@ public class JasperServices {
 		}
 		
 		//Barcode Data Source
-		public static List<Map<String,?>> createDataForBarcode(List<Barcode> barcodeList){
+		public static List<Map<String,?>> createDataForBarcode(Barcode barcode,int noOfLabels,int startPosition){
 			 List<Map<String,?>> dataSourceMaps = new ArrayList<Map<String, ?>> ();
-	        for (Barcode barcode : barcodeList) {
+			 
+	        for (int i=1;i<startPosition;i++) {
 	            Map<String,Object> map = new HashMap<String, Object>();
-	            map.put("ProductName", barcode.getProductName());
-	            map.put("Barcode", barcode.getBarcode());
-	            map.put("Price", PDFUtils.getDecimalFormat(barcode.getPrice()));
+	            map.put("ProductName", "");
 	            dataSourceMaps.add(map);
-	        }  
+	        }
+			 
+	        for(int i=1;i<=noOfLabels;i++) {
+	        	 Map<String,Object> map = new HashMap<String, Object>();
+	        	 map.put("ProductName", barcode.getProductName());
+		         map.put("Barcode", barcode.getBarcode());
+		         map.put("Price", PDFUtils.getDecimalFormat(barcode.getPrice()));
+		         dataSourceMaps.add(map);
+	        }
+	        /*for(int i=1;i<=noOfLabels;i++) {
+	        	 Map<String,Object> map = new HashMap<String, Object>();
+	        	 map.put("ProductName", String.valueOf(i));
+		         dataSourceMaps.add(map);
+	        }*/
 	        return dataSourceMaps;
 		}
 }

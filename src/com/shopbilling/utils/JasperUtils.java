@@ -11,7 +11,9 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import com.shopbilling.constants.AppConstants;
+import com.shopbilling.dto.Barcode;
 import com.shopbilling.dto.MyStoreDetails;
+import com.shopbilling.services.JasperServices;
 import com.shopbilling.services.MyStoreServices;
 
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -168,11 +170,13 @@ public class JasperUtils {
         return isSucess;
     }
 	    
-	/*public static void main(String[] args) {
+	public static void main(String[] args) {
 		
-		BillDetails bill = ProductServices.getBillDetails(new java.sql.Date(System.currentTimeMillis()), new java.sql.Date(System.currentTimeMillis())).get(0);
-		bill.setItemDetails(ProductServices.getItemDetails(bill.getBillNumber()));
-		List<Map<String,?>> dataSrc = JasperServices.createDataForBill(bill);
-		createJasperPDF("E:\\Billing_Application\\Bill_Print_002.jrxml", dataSrc);
-	}*/
+		Barcode b = new Barcode();
+		b.setBarcode("123456789123");
+		b.setProductName("DOODH BISCUITS");
+		b.setPrice(10);
+		List<Map<String,?>> dataSrc = JasperServices.createDataForBarcode(b, 24, 1);
+		createPDFForBarcode(dataSrc,"Barcode_25_Test.jasper", "");
+	}
 }
