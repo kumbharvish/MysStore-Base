@@ -37,6 +37,7 @@ import javax.swing.table.JTableHeader;
 import org.apache.log4j.Logger;
 
 import com.shopbilling.properties.AppProperties;
+import com.shopbilling.services.BillingServices;
 
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
@@ -166,11 +167,12 @@ public class PDFUtils {
 	}
 
 	public static int getBillNumber() {
-		int min = 1000000;
+		/*int min = 1000000;
 		int max = 9999999;
 		int randonCode = (int) Math.floor(Math.random() * (max - min + 1))
-				+ min;
-		return randonCode;
+				+ min;*/
+		//Get Sequential Bill Number from DB
+		return BillingServices.getNewBillNumber();
 	}
 	
 	public static long getBarcode() {

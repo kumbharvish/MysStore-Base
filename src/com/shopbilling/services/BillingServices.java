@@ -3,6 +3,7 @@ package com.shopbilling.services;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.List;
 
 import com.shopbilling.dto.BillDetails;
@@ -27,6 +28,9 @@ public class BillingServices {
 	
 	private static final String UPDATE_OPENING_CASH = "UPDATE CASH_COUNTER SET AMOUNT=?" 
 			+" WHERE DATE=?";
+	
+	private static final String NEW_BILL_NUMBER = "SELECT (MAX(BILL_NUMBER)+1) AS BILL_NO FROM CUSTOMER_BILL_DETAILS "; 
+	
 	
 	//Modify Bill Details
 	public static StatusDTO modifyBillDetails(BillDetails bill) {
@@ -195,5 +199,32 @@ public class BillingServices {
 			PDFUtils.closeConnectionAndStatment(conn, stmt);
 		}
 		return status;
+	}
+	
+	public static Integer getNewBillNumber() {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		Integer newBillNumber=0;
+		try {
+			conn = PDFUtils.getConnection();
+			stmt = conn.prepareStatement(NEW_BILL_NUMBER);
+			ResultSet rs = stmt.executeQuery();
+			if (rs.next()) {
+				newBillNumber = rs.getInt("BILL_NO");
+				if(newBillNumber==0) {
+					newBillNumber=1;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1;
+		} finally {
+			PDFUtils.closeConnectionAndStatment(conn, stmt);
+		}
+		return newBillNumber;
+	}
+	
+	public static void main(String[] args) {
+		System.out.println(getNewBillNumber());
 	}
 }
