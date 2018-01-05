@@ -4,10 +4,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import org.apache.log4j.Logger;
+
 import com.shopbilling.dto.MyStoreDetails;
+import com.shopbilling.ui.SplashRun;
 import com.shopbilling.utils.PDFUtils;
 
 public class MyStoreServices {
+	
+	private final static Logger logger = Logger.getLogger(MyStoreServices.class);
 	
 	private static final String UPDATE_STORE_DETAILS = "UPDATE MY_STORE_DETAILS SET NAME=?," 
 			+"ADDRESS=?, ADDRESS2=?,CITY=?,DISTRICT=?,STATE=?,PHONE=?,CST_NUMBER=?,PAN_NUMBER=?,VAT_NUMBER=?,ELECTRICITY_NO=?," 
@@ -19,13 +24,14 @@ public class MyStoreServices {
 	public static MyStoreDetails getMyStoreDetails() {
 		Connection conn = null;
 		PreparedStatement stmt = null;
-		MyStoreDetails myStoreDetails = new MyStoreDetails();
+		MyStoreDetails myStoreDetails = null;
 		try {
 			conn = PDFUtils.getConnection();
 			stmt = conn.prepareStatement(GET_MY_STORE_DETAILS);
 			ResultSet rs = stmt.executeQuery();
 
-			while (rs.next()) {
+			if (rs.next()) {
+				myStoreDetails = new MyStoreDetails();
 				myStoreDetails.setMyStoreId(rs.getInt("STORE_ID"));
 				myStoreDetails.setStoreName(rs.getString("NAME"));
 				myStoreDetails.setAddress(rs.getString("ADDRESS"));
@@ -45,6 +51,7 @@ public class MyStoreServices {
 			rs.close();
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error("getMyStoreDetails -->"+e);
 		} finally {
 			PDFUtils.closeConnectionAndStatment(conn, stmt);
 		}
@@ -96,6 +103,7 @@ public class MyStoreServices {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error("updateStoreDetails -->"+e);
 		} finally {
 			PDFUtils.closeConnectionAndStatment(conn, stmt);
 		}

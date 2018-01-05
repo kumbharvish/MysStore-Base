@@ -90,14 +90,19 @@ public class ManageStoreUI extends JFrame {
 		lblContactNo.setForeground(Color.BLACK);
 		lblContactNo.setFont(new Font("Tahoma", Font.BOLD, 13));
 		MyStoreDetails storeDetails = MyStoreServices.getMyStoreDetails();
-		JLabel lblNewLabel = new JLabel(storeDetails.getStoreName().toUpperCase()+" , "+storeDetails.getCity().toUpperCase());
+		
+		JLabel lblNewLabel = new JLabel();
 		lblNewLabel.setBounds(214, 50, 926, 76);
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 35));
+		if(storeDetails!=null)
+		lblNewLabel.setText(storeDetails.getStoreName().toUpperCase()+" , "+storeDetails.getCity().toUpperCase());
+		else
+			lblNewLabel.setText("Store Name Missing");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		JLabel lblstoreLogo = new JLabel("");
 		lblstoreLogo.setBounds(101, 24, 199, 139);
-		if(storeDetails.getImage()!=null){
+		if(storeDetails!=null && storeDetails.getImage()!=null){
 			lblstoreLogo.setIcon(PDFUtils.resizeImage(storeDetails.getImage(), lblstoreLogo));
 		}
 		
