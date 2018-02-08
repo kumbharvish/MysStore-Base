@@ -175,7 +175,14 @@ public class PDFUtils {
 		
 		return BillingServices.getNewBillNumber();
 	}
-	
+	//This method used for random return number and stock number generation
+	public static int getRandomNumber() {
+		int min = 1000000;
+		int max = 9999999;
+		int randonCode = (int) Math.floor(Math.random() * (max - min + 1))
+				+ min;
+		return randonCode;
+	}
 	public static long getBarcode() {
 		long min = 700000000000L;
 		long max = 799999999999L;

@@ -120,7 +120,7 @@ public class StockPurchaseEntryUI extends JInternalFrame {
 		invoiceDetailsPanel.setBorder(new TitledBorder(null, "Invoice Details", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel_3.add(invoiceDetailsPanel);
 		invoiceDetailsPanel.setLayout(null);
-		stockNumber = PDFUtils.getBillNumber();
+		stockNumber = PDFUtils.getRandomNumber();
 		JLabel lblNewLabel = new JLabel("Invoice Date *:");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblNewLabel.setBounds(10, 21, 124, 25);
@@ -723,7 +723,7 @@ public class StockPurchaseEntryUI extends JInternalFrame {
 	private void resetStockDetails(){
 		
 		stockItemModel.setRowCount(0);
-		stockNumber = PDFUtils.getBillNumber();
+		stockNumber = PDFUtils.getRandomNumber();
 		dc_invoiceDate.setDate(null);
 		cb_PayMode.setSelectedIndex(0);
 		cb_Suppliers.setSelectedIndex(0);
