@@ -940,7 +940,7 @@ public class POS extends JInternalFrame {
 				itemsMap.put(Integer.valueOf(table.getModel().getValueAt(i, 0).toString()),item);
 			}else{
 				ItemDetails tempItem = itemsMap.get(Integer.valueOf(table.getModel().getValueAt(i, 0).toString()));
-				int qty = tempItem.getQuantity()+1;
+				double qty = tempItem.getQuantity()+1;
 				tempItem.setQuantity(qty);
 				itemsMap.put(Integer.valueOf(table.getModel().getValueAt(i, 0).toString()),tempItem);
 			}

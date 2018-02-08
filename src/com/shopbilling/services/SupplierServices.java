@@ -225,7 +225,7 @@ public class SupplierServices {
 							stmt.setString(3, item.getItemName());
 							stmt.setDouble(4,item.getMRP());
 							stmt.setDouble(5, item.getRate());
-							stmt.setInt(6, item.getQuantity());
+							stmt.setDouble(6, item.getQuantity());
 							stmt.setDouble(7, item.getAmount());
 							stmt.setDouble(8, item.getTax());
 							stmt.setDouble(9, item.getPurchasePrice());
@@ -260,7 +260,7 @@ public class SupplierServices {
 						stmt = conn.prepareStatement(UPDATE_PRODUCT_STOCK);
 						for(StockItemDetails item : itemList){
 							stmt.setInt(2, item.getItemNo());
-							stmt.setInt(1, item.getQuantity());
+							stmt.setDouble(1, item.getQuantity());
 							stmt.addBatch();
 						}
 						int batch[] = stmt.executeBatch();
@@ -323,7 +323,7 @@ public class SupplierServices {
 							supplierInvoiceDetails.setInvoiceDate(rs.getDate("INVOICE_DATE"));
 							supplierInvoiceDetails.setComments(rs.getString("COMMENTS"));
 							supplierInvoiceDetails.setNoOfItems(rs.getInt("NO_OF_ITEMS"));
-							supplierInvoiceDetails.setTotalQuanity(rs.getInt("TOTAL_QTY"));
+							supplierInvoiceDetails.setTotalQuanity(rs.getDouble("TOTAL_QTY"));
 							supplierInvoiceDetails.setTotalAmtWOTax(rs.getDouble("TOTAL_AMT_WO_TAX"));
 							supplierInvoiceDetails.setTotalTax(rs.getDouble("TOTAL_TAX"));
 							supplierInvoiceDetails.setTotalMRPAmt(rs.getDouble("TOTAL_MRP_AMT"));
@@ -360,7 +360,7 @@ public class SupplierServices {
 						stockItemDetails.setItemName(rs.getString("ITEM_NAME"));
 						stockItemDetails.setMRP(rs.getDouble("MRP"));
 						stockItemDetails.setRate(rs.getDouble("RATE"));
-						stockItemDetails.setQuantity(rs.getInt("QUANTITY"));
+						stockItemDetails.setQuantity(rs.getDouble("QUANTITY"));
 						stockItemDetails.setAmount(rs.getDouble("AMOUNT"));
 						stockItemDetails.setTax(rs.getDouble("TAX"));
 						stockItemDetails.setPurchasePrice(rs.getDouble("PURCHASE_PRICE"));

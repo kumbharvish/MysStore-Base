@@ -24,7 +24,7 @@ public class ReturnDetails {
 	
 	private int noOfItems;
 	
-	private int totalQuanity;
+	private double totalQuanity;
 	
 	private double totalAmount;
 	
@@ -170,11 +170,11 @@ public class ReturnDetails {
 		this.noOfItems = noOfItems;
 	}
 
-	public int getTotalQuanity() {
+	public double getTotalQuanity() {
 		return totalQuanity;
 	}
 
-	public void setTotalQuanity(int totalQuanity) {
+	public void setTotalQuanity(double totalQuanity) {
 		this.totalQuanity = totalQuanity;
 	}
 

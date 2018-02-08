@@ -280,7 +280,7 @@ public class QuickStockCorrection extends JDialog {
 		tf_newQty.addKeyListener(new KeyAdapter() {
 			   public void keyTyped(KeyEvent e) {
 			      char c = e.getKeyChar();
-			      if ( ((c < '0') || (c > '9')) && (c != KeyEvent.VK_BACK_SPACE)) {
+			      if ( ((c < '0') || (c > '9')) && (c != KeyEvent.VK_BACK_SPACE)&& (c != KeyEvent.VK_PERIOD)) {
 			         e.consume();  // ignore event
 			      }
 			   }
@@ -292,7 +292,7 @@ public class QuickStockCorrection extends JDialog {
 			if(PDFUtils.isMandatoryEntered(tf_newQty)){
 				Product product = new Product();
 				product.setProductCode(Integer.valueOf(tf_ItemNumber.getText().trim()));
-				product.setQuanity(Integer.valueOf(tf_newQty.getText().trim()));
+				product.setQuanity(Double.valueOf(tf_newQty.getText().trim()));
 				List<Product> productList = new ArrayList<Product>();
 				Product p = ProductServices.getProduct(product.getProductCode());
 				product.setDescription("Existing Stock: "+p.getQuanity()+" Correction Qty: "+product.getQuanity());
@@ -305,7 +305,7 @@ public class QuickStockCorrection extends JDialog {
 					productList.add(product);
 					ProductHistoryServices.addProductStockLedger(productList, AppConstants.STOCK_IN, AppConstants.QUICK_STOCK_CORR)	;
 				}
-				product.setQuanity(Integer.valueOf(tf_newQty.getText().trim()));
+				product.setQuanity(Double.valueOf(tf_newQty.getText().trim()));
 				boolean flag = ProductServices.quickStockCorrection(product);
 				if(flag){
 					resetFields();

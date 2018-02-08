@@ -53,7 +53,7 @@ public class SellReport extends JInternalFrame {
 	private JDateChooser fromDateChooser;
 	private int totalCustomerCount=0;
 	private int totalNoOfItems=0;
-	private int totalQty=0;
+	private double totalQty=0;
 	private double totalDiscAmt=0;
 	private double pendingPayment=0;
 	private double cashPayment=0;

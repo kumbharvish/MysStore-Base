@@ -85,7 +85,7 @@ public class StockPurchaseEntryUI extends JInternalFrame {
 	private JComboBox<String> cb_Suppliers;
 	private JComboBox cb_PayMode;
 	private int noOfItems = 0;
-	private int totalQty = 0;
+	private double totalQty = 0;
 	private double totalAmtWOTax = 0;
 	private double totalMRPAmount=0;
 	private double totalTaxAmount=0;
@@ -120,7 +120,7 @@ public class StockPurchaseEntryUI extends JInternalFrame {
 		invoiceDetailsPanel.setBorder(new TitledBorder(null, "Invoice Details", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel_3.add(invoiceDetailsPanel);
 		invoiceDetailsPanel.setLayout(null);
-		stockNumber = PDFUtils.getBillNumber();
+		stockNumber = PDFUtils.getRandomNumber();
 		JLabel lblNewLabel = new JLabel("Invoice Date *:");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblNewLabel.setBounds(10, 21, 124, 25);
@@ -476,7 +476,7 @@ public class StockPurchaseEntryUI extends JInternalFrame {
 		tf_ItemQty.addKeyListener(new KeyAdapter() {
 			   public void keyTyped(KeyEvent e) {
 			      char c = e.getKeyChar();
-			      if ( ((c < '0') || (c > '9')) && (c != KeyEvent.VK_BACK_SPACE)) {
+			      if ( ((c < '0') || (c > '9')) && (c != KeyEvent.VK_BACK_SPACE)&& (c != KeyEvent.VK_PERIOD)) {
 			         e.consume();  // ignore event
 			      }
 			    	  if(c=='\n' && !tf_ItemName.getText().equals("")&& !tf_ItemRate.getText().equals("") && !tf_ItemQty.getText().equals("")){
@@ -577,7 +577,7 @@ public class StockPurchaseEntryUI extends JInternalFrame {
 			item.setItemName(stockItemTable.getModel().getValueAt(i, 0).toString());
 			item.setMRP(Double.valueOf(stockItemTable.getModel().getValueAt(i, 1).toString()));
 			item.setRate(Double.valueOf(stockItemTable.getModel().getValueAt(i, 3).toString()));
-			item.setQuantity(Integer.valueOf(stockItemTable.getModel().getValueAt(i, 4).toString()));
+			item.setQuantity(Double.valueOf(stockItemTable.getModel().getValueAt(i, 4).toString()));
 			item.setPurchasePrice(Double.valueOf(stockItemTable.getModel().getValueAt(i, 6).toString()));
 			item.setAmount(Double.valueOf(stockItemTable.getModel().getValueAt(i, 5).toString()));
 			item.setTax(Double.valueOf(stockItemTable.getModel().getValueAt(i, 2).toString()));
@@ -635,14 +635,14 @@ public class StockPurchaseEntryUI extends JInternalFrame {
 					productsInTable.add(product.getProductName());
 					//Add row to table
 					stockItemModel.addRow(new Object[]{product.getProductName(), PDFUtils.getDecimalFormat(product.getProductMRP()), !tf_TAX.getText().equals("")?PDFUtils.getDecimalFormat(Double.valueOf(tf_TAX.getText())):0,PDFUtils.getDecimalFormat(Double.valueOf(tf_ItemRate.getText())),tf_ItemQty.getText(),PDFUtils.getDecimalFormat(var_amount),getPurchasePrice(!tf_TAX.getText().equals("")?Double.valueOf(tf_TAX.getText()):0,Double.valueOf(tf_ItemRate.getText())),product.getProductCode()});
-					setPaymentFields(Integer.valueOf(tf_ItemQty.getText()),var_amount,Double.valueOf(tf_ItemRate.getText()),product.getProductMRP(),stockItemModel.getRowCount());
+					setPaymentFields(Double.valueOf(tf_ItemQty.getText()),var_amount,Double.valueOf(tf_ItemRate.getText()),product.getProductMRP(),stockItemModel.getRowCount());
 			
 			}else{
 				JOptionPane.showMessageDialog(getContentPane(), "Item already present!");
 			}
 		}
 	}
-	private void setPaymentFields(int newQuantity, Double amount,Double itemRate,Double itemMRP, int rowCount) {
+	private void setPaymentFields(double newQuantity, Double amount,Double itemRate,Double itemMRP, int rowCount) {
 
 		noOfItems=rowCount;
 		totalQty+=newQuantity;
@@ -651,7 +651,7 @@ public class StockPurchaseEntryUI extends JInternalFrame {
 		totalMRPAmount+=itemMRP*newQuantity;
 		setAmountQty();
 	}
-	private void setPaymentFieldsDelete(int newQuantity, Double amount,Double itemRate,Double itemMRP,Double tax, int rowCount) {
+	private void setPaymentFieldsDelete(double newQuantity, Double amount,Double itemRate,Double itemMRP,Double tax, int rowCount) {
 
 		noOfItems=rowCount;
 		totalQty-=newQuantity;
@@ -723,7 +723,7 @@ public class StockPurchaseEntryUI extends JInternalFrame {
 	private void resetStockDetails(){
 		
 		stockItemModel.setRowCount(0);
-		stockNumber = PDFUtils.getBillNumber();
+		stockNumber = PDFUtils.getRandomNumber();
 		dc_invoiceDate.setDate(null);
 		cb_PayMode.setSelectedIndex(0);
 		cb_Suppliers.setSelectedIndex(0);
@@ -777,7 +777,7 @@ public class StockPurchaseEntryUI extends JInternalFrame {
 			}
 			supplierInvoiceDetails.setPaymentMode((String)cb_PayMode.getSelectedItem());
 			supplierInvoiceDetails.setNoOfItems(Integer.valueOf(tf_NoOfItems.getText()));
-			supplierInvoiceDetails.setTotalQuanity(Integer.valueOf(tf_TotalQty.getText()));
+			supplierInvoiceDetails.setTotalQuanity(Double.valueOf(tf_TotalQty.getText()));
 			supplierInvoiceDetails.setTotalAmtWOTax(Double.valueOf(tf_TotalAmtWOTax.getText()));
 			supplierInvoiceDetails.setTotalTax(Double.valueOf(tf_TotalTax.getText()));
 			supplierInvoiceDetails.setTotalMRPAmt(Double.valueOf(tf_TotalMRPAmt.getText()));
@@ -808,7 +808,7 @@ public class StockPurchaseEntryUI extends JInternalFrame {
 			if(dialogResult == JOptionPane.YES_OPTION){
 				String removeProduct = stockItemTable.getModel().getValueAt(row, 0).toString();
 				double removeAmt = Double.valueOf(stockItemTable.getModel().getValueAt(row, 5).toString());
-				int removeQty = Integer.valueOf(stockItemTable.getModel().getValueAt(row, 4).toString());
+				double removeQty = Double.valueOf(stockItemTable.getModel().getValueAt(row, 4).toString());
 				double itemRate = Double.valueOf(stockItemTable.getModel().getValueAt(row, 3).toString());
 				double itemMRP = Double.valueOf(stockItemTable.getModel().getValueAt(row, 1).toString());
 				double tax = Double.valueOf(stockItemTable.getModel().getValueAt(row, 2).toString());

@@ -120,7 +120,7 @@ public class ProductHistoryServices {
 			for(Product product:productList){
 				stmt.setInt(1,product.getProductCode());
 				stmt.setTimestamp(2,new java.sql.Timestamp(System.currentTimeMillis()));
-				stmt.setInt(3, product.getQuanity());
+				stmt.setDouble(3, product.getQuanity());
 				stmt.setString(4, product.getDescription());
 				stmt.setString(5,transactionType);
 				stmt.addBatch();
@@ -163,8 +163,8 @@ public class ProductHistoryServices {
 				pc.setTimeStamp(rs.getTimestamp("TIMESTAMP"));
 				pc.setNarration(rs.getString("NARRATION"));
 				pc.setTransactionType(rs.getString("TRANSACTION_TYPE"));
-				pc.setStockIn(rs.getInt("STOCK_IN"));
-				pc.setStockOut(rs.getInt("STOCK_OUT"));
+				pc.setStockIn(rs.getDouble("STOCK_IN"));
+				pc.setStockOut(rs.getDouble("STOCK_OUT"));
 
 				stockLedgerList.add(pc);
 			}

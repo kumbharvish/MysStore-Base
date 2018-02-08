@@ -280,7 +280,7 @@ public class StockEntry extends JInternalFrame {
 		invoiceDetailsPanel.setBorder(new TitledBorder(null, "Invoice Details", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel_3.add(invoiceDetailsPanel);
 		invoiceDetailsPanel.setLayout(null);
-		stockNumber = PDFUtils.getBillNumber();
+		stockNumber = PDFUtils.getRandomNumber();
 		JLabel lblNewLabel = new JLabel("Invoice Date *:");
 		lblNewLabel.setBounds(10, 21, 134, 25);
 		invoiceDetailsPanel.add(lblNewLabel);
@@ -1181,7 +1181,7 @@ public class StockEntry extends JInternalFrame {
 	private void resetStockDetails(){
 		
 		stockItemModel.setRowCount(0);
-		stockNumber = PDFUtils.getBillNumber();
+		stockNumber = PDFUtils.getRandomNumber();
 		dc_invoiceDate.setDate(null);
 		cb_PayMode.setSelectedIndex(0);
 		cb_Suppliers.setSelectedIndex(0);

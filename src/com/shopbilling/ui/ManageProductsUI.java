@@ -150,7 +150,7 @@ public class ManageProductsUI extends JInternalFrame {
 		        }
 		    });
 		 populateUnits(measure);
-		 measure.setEnabled(false);
+		 measure.setEnabled(true);
 		 purchasePrice = new JTextField();
 		 purchasePrice.setFont(new Font("Tahoma", Font.BOLD, 12));
 		 purchasePrice.setEnabled(false);
@@ -262,7 +262,7 @@ public class ManageProductsUI extends JInternalFrame {
 				Product product = new Product();
 				product.setProductCode(Integer.valueOf(productCode.getText()));
 				product.setProductName(productName.getText());
-				product.setQuanity(Integer.valueOf(quantity.getText()));
+				product.setQuanity(Double.valueOf(quantity.getText()));
 				
 				ViewStockLedgerUI viewLedger = new ViewStockLedgerUI(product, frame);
 				viewLedger.setVisible(true);
@@ -330,7 +330,7 @@ public class ManageProductsUI extends JInternalFrame {
 	quantity.addKeyListener(new KeyAdapter() {
 		   public void keyTyped(KeyEvent e) {
 		      char c = e.getKeyChar();
-		      if ( ((c < '0') || (c > '9')) && (c != KeyEvent.VK_BACK_SPACE)) {
+		      if ( ((c < '0') || (c > '9')) && (c != KeyEvent.VK_BACK_SPACE)&& (c != KeyEvent.VK_PERIOD)) {
 		         e.consume();  // ignore event
 		      }
 		   }
@@ -432,12 +432,11 @@ public class ManageProductsUI extends JInternalFrame {
 	}
 	//populate units in dropdown
 	public void populateUnits(JComboBox<String> units){
-		/*//List<String> unitsList = AppUtils.getAppDataValues("MEASURES");
+		List<String> unitsList = PDFUtils.getAppDataValues("MEASURES");
 		
 		for (String unit : unitsList){
 			units.addItem(unit);
-		}*/
-		units.addItem("Quantity");
+		}
 	}
 
 	public UserDetails getUserDetails() {

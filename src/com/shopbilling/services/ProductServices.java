@@ -98,7 +98,7 @@ public class ProductServices {
 				pc.setProductCode(rs.getInt("PRODUCT_ID"));
 				pc.setProductName(rs.getString("PRODUCT_NAME"));
 				pc.setMeasure(rs.getString("MEASURE"));
-				pc.setQuanity(rs.getInt("QUANTITY"));
+				pc.setQuanity(rs.getDouble("QUANTITY"));
 				pc.setPurcaseRate(rs.getDouble("PURCHASE_RATE"));
 				pc.setProductTax(rs.getDouble("PRODUCT_TAX"));
 				pc.setPurcasePrice(rs.getDouble("PURCHASE_PRICE"));
@@ -141,8 +141,8 @@ public class ProductServices {
 				pc.setProductCode(rs.getInt("PRODUCT_ID"));
 				pc.setProductName(rs.getString("PRODUCT_NAME"));
 				pc.setMeasure(rs.getString("MEASURE"));
-				pc.setQuanity(rs.getInt("QUANTITY"));
-				pc.setQuanity(rs.getInt("QUANTITY"));
+				pc.setQuanity(rs.getDouble("QUANTITY"));
+				pc.setQuanity(rs.getDouble("QUANTITY"));
 				pc.setPurcasePrice(rs.getDouble("PURCHASE_PRICE"));
 				pc.setSellPrice(rs.getDouble("SELL_PRICE"));
 				pc.setProductMRP(rs.getDouble("PRODUCT_MRP"));
@@ -178,7 +178,7 @@ public class ProductServices {
 				stmt.setInt(1,product.getProductCode());
 				stmt.setString(2,product.getProductName());
 				stmt.setString(3, product.getMeasure());
-				stmt.setInt(4,product.getQuanity());
+				stmt.setDouble(4,product.getQuanity());
 				stmt.setDouble(5,product.getPurcasePrice());
 				stmt.setDouble(6, product.getSellPrice());
 				stmt.setDouble(7,product.getSellPrice());//MRP same as sell price
@@ -241,7 +241,7 @@ public class ProductServices {
 				stmt = conn.prepareStatement(UPDATE_PRODUCT);
 				stmt.setString(1,product.getProductName());
 				stmt.setString(2, product.getMeasure());
-				stmt.setInt(3,product.getQuanity());
+				stmt.setDouble(3,product.getQuanity());
 				stmt.setDouble(4,product.getPurcasePrice());
 				stmt.setDouble(5, product.getSellPrice());
 				stmt.setDouble(6,product.getSellPrice());
@@ -288,8 +288,8 @@ public class ProductServices {
 				pc.setProductCode(rs.getInt("PRODUCT_ID"));
 				pc.setProductName(rs.getString("PRODUCT_NAME"));
 				pc.setMeasure(rs.getString("MEASURE"));
-				pc.setQuanity(rs.getInt("QUANTITY"));
-				pc.setQuanity(rs.getInt("QUANTITY"));
+				pc.setQuanity(rs.getDouble("QUANTITY"));
+				pc.setQuanity(rs.getDouble("QUANTITY"));
 				pc.setPurcasePrice(rs.getDouble("PURCHASE_PRICE"));
 				pc.setSellPrice(rs.getDouble("SELL_PRICE"));
 				pc.setProductMRP(rs.getDouble("PRODUCT_MRP"));
@@ -325,7 +325,7 @@ public class ProductServices {
 				stmt.setLong(3, bill.getCustomerMobileNo());
 				stmt.setString(4, bill.getCustomerName());
 				stmt.setInt(5,bill.getNoOfItems());
-				stmt.setInt(6, bill.getTotalQuanity());
+				stmt.setDouble(6, bill.getTotalQuanity());
 				stmt.setDouble(7, bill.getTotalAmount());
 				stmt.setDouble(8, bill.getTax());
 				stmt.setDouble(9, bill.getGrandTotal());
@@ -370,7 +370,7 @@ public class ProductServices {
 						stmt.setString(3, item.getItemName());
 						stmt.setDouble(4,item.getMRP());
 						stmt.setDouble(5, item.getRate());
-						stmt.setInt(6, item.getQuantity());
+						stmt.setDouble(6, item.getQuantity());
 						stmt.setDouble(7, item.getAmount());
 						stmt.setDouble(8, item.getPurchasePrice());
 						stmt.setInt(9, item.getSupplierId());
@@ -404,7 +404,7 @@ public class ProductServices {
 					stmt = conn.prepareStatement(UPDATE_PRODUCT_STOCK);
 					for(ItemDetails item : itemList){
 						stmt.setInt(2, item.getItemNo());
-						stmt.setInt(1, item.getQuantity());
+						stmt.setDouble(1, item.getQuantity());
 						stmt.addBatch();
 					}
 					int batch[] = stmt.executeBatch();
@@ -467,7 +467,7 @@ public class ProductServices {
 						billDetails.setCustomerMobileNo(rs.getLong("CUST_MOB_NO"));
 						billDetails.setCustomerName(rs.getString("CUSTOMER_NAME"));
 						billDetails.setNoOfItems(rs.getInt("NO_OF_ITEMS"));
-						billDetails.setTotalQuanity(rs.getInt("BILL_QUANTITY"));
+						billDetails.setTotalQuanity(rs.getDouble("BILL_QUANTITY"));
 						billDetails.setTotalAmount(rs.getDouble("TOTAL_AMOUNT"));
 						billDetails.setTax(rs.getDouble("BILL_TAX"));
 						billDetails.setGrandTotal(rs.getDouble("GRAND_TOTAL"));
@@ -508,7 +508,7 @@ public class ProductServices {
 					itemDetails.setItemName(rs.getString("PRODUCT_NAME"));
 					itemDetails.setMRP(rs.getDouble("ITEM_MRP"));
 					itemDetails.setRate(rs.getDouble("ITEM_RATE"));
-					itemDetails.setQuantity(rs.getInt("ITEM_QTY"));
+					itemDetails.setQuantity(rs.getDouble("ITEM_QTY"));
 					
 					itemDetailsList.add(itemDetails);
 				}
@@ -553,7 +553,7 @@ public class ProductServices {
 					pc.setProductCode(rs.getInt("PRODUCT_ID"));
 					pc.setProductName(rs.getString("PRODUCT_NAME"));
 					pc.setMeasure(rs.getString("MEASURE"));
-					pc.setQuanity(rs.getInt("QUANTITY"));
+					pc.setQuanity(rs.getDouble("QUANTITY"));
 					pc.setPurcaseRate(rs.getDouble("PURCHASE_RATE"));
 					pc.setProductTax(rs.getDouble("PRODUCT_TAX"));
 					pc.setPurcasePrice(rs.getDouble("PURCHASE_PRICE"));
@@ -596,7 +596,7 @@ public class ProductServices {
 					pc.setProductCode(rs.getInt("PRODUCT_ID"));
 					pc.setProductName(rs.getString("PRODUCT_NAME"));
 					pc.setMeasure(rs.getString("MEASURE"));
-					pc.setQuanity(rs.getInt("QUANTITY"));
+					pc.setQuanity(rs.getDouble("QUANTITY"));
 					pc.setPurcaseRate(rs.getDouble("PURCHASE_RATE"));
 					pc.setProductTax(rs.getDouble("PRODUCT_TAX"));
 					pc.setPurcasePrice(rs.getDouble("PURCHASE_PRICE"));
@@ -662,7 +662,7 @@ public class ProductServices {
 				
 				stmt = conn.prepareStatement(QUICK_STOCK_CORRECTION);
 				stmt.setInt(2, product.getProductCode());
-				stmt.setInt(1, product.getQuanity());
+				stmt.setDouble(1, product.getQuanity());
 					
 				int i = stmt.executeUpdate();
 				if(i>0){
@@ -696,7 +696,7 @@ public class ProductServices {
 					billDetails.setCustomerMobileNo(rs.getLong("CUST_MOB_NO"));
 					billDetails.setCustomerName(rs.getString("CUSTOMER_NAME"));
 					billDetails.setNoOfItems(rs.getInt("NO_OF_ITEMS"));
-					billDetails.setTotalQuanity(rs.getInt("BILL_QUANTITY"));
+					billDetails.setTotalQuanity(rs.getDouble("BILL_QUANTITY"));
 					billDetails.setTotalAmount(rs.getDouble("TOTAL_AMOUNT"));
 					billDetails.setTax(rs.getDouble("BILL_TAX"));
 					billDetails.setGrandTotal(rs.getDouble("GRAND_TOTAL"));
@@ -731,7 +731,7 @@ public class ProductServices {
 					billDetails.setCustomerMobileNo(rs.getLong("CUST_MOB_NO"));
 					billDetails.setCustomerName(rs.getString("CUSTOMER_NAME"));
 					billDetails.setNoOfItems(rs.getInt("NO_OF_ITEMS"));
-					billDetails.setTotalQuanity(rs.getInt("BILL_QUANTITY"));
+					billDetails.setTotalQuanity(rs.getDouble("BILL_QUANTITY"));
 					billDetails.setTotalAmount(rs.getDouble("TOTAL_AMOUNT"));
 					billDetails.setTax(rs.getDouble("BILL_TAX"));
 					billDetails.setGrandTotal(rs.getDouble("GRAND_TOTAL"));

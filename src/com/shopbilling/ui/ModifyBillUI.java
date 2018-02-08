@@ -87,7 +87,7 @@ public class ModifyBillUI extends JDialog {
 	JButton btnSaveBill;
 	//
 	private int noOfItems = 0;
-	private int totalQty = 0;
+	private double totalQty = 0;
 	private double totalAmt = 0;
 	private double grossAmt=0;
 	//private double discountAmt=0;
@@ -751,7 +751,7 @@ public class ModifyBillUI extends JDialog {
 				itemsMap.put(Integer.valueOf(table.getModel().getValueAt(i, 0).toString()),item);
 			}else{
 				ItemDetails tempItem = itemsMap.get(Integer.valueOf(table.getModel().getValueAt(i, 0).toString()));
-				int qty = tempItem.getQuantity()+1;
+				double qty = tempItem.getQuantity()+1;
 				tempItem.setQuantity(qty);
 				itemsMap.put(Integer.valueOf(table.getModel().getValueAt(i, 0).toString()),tempItem);
 			}

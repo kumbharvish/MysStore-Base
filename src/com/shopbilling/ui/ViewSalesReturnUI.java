@@ -291,7 +291,7 @@ public class ViewSalesReturnUI extends JDialog {
 		tf_ReturnDate.setEditable(false);
 		tf_ReturnNumber = new JTextField();
 		tf_ReturnNumber.setEditable(false);
-		tf_ReturnNumber.setText(String.valueOf(PDFUtils.getBillNumber()));
+		tf_ReturnNumber.setText(String.valueOf(PDFUtils.getRandomNumber()));
 		tf_ReturnNumber.setFont(font);
 		tf_Comments = new JTextField();
 		tf_Comments.setFont(font);
@@ -537,7 +537,7 @@ public class ViewSalesReturnUI extends JDialog {
 		tf_ReturnDate.setEditable(false);
 		tf_ReturnNumber = new JTextField();
 		tf_ReturnNumber.setEditable(false);
-		tf_ReturnNumber.setText(String.valueOf(PDFUtils.getBillNumber()));
+		tf_ReturnNumber.setText(String.valueOf(PDFUtils.getRandomNumber()));
 		tf_ReturnNumber.setFont(font);
 		tf_Comments = new JTextField();
 		tf_Comments.setFont(font);

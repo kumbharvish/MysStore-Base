@@ -32,9 +32,6 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
-import net.java.dev.designgridlayout.DesignGridLayout;
-import net.java.dev.designgridlayout.LabelAlignment;
-
 import org.fuin.utils4swing.layout.scalable.DefaultScalableLayoutRegistry;
 import org.fuin.utils4swing.layout.scalable.ScalableLayoutUtils;
 
@@ -51,6 +48,9 @@ import com.shopbilling.services.ProductServices;
 import com.shopbilling.services.SalesReturnServices;
 import com.shopbilling.services.UserServices;
 import com.shopbilling.utils.PDFUtils;
+
+import net.java.dev.designgridlayout.DesignGridLayout;
+import net.java.dev.designgridlayout.LabelAlignment;
 
 public class SalesReturnUI extends JInternalFrame {
 
@@ -70,7 +70,7 @@ public class SalesReturnUI extends JInternalFrame {
 	private JTextField amount;
 	private JPanel itemDetailsPanel;
 	private List<ItemDetails> itemList;
-	private HashMap<Integer,Integer> itemQtyMap;
+	private HashMap<Integer,Double> itemQtyMap;
 	private List<Integer> productsInTable = new ArrayList<Integer>();
 	private HashMap<String,Product> productMap; 
 	private HashMap<Long,Product> productMapWithBarcode;
@@ -85,7 +85,7 @@ public class SalesReturnUI extends JInternalFrame {
 	private JTextField tf_Comments;
 	//
 	private int noOfItems = 0;
-	private int totalQty = 0;
+	private double totalQty = 0;
 	//private double discountAmt=0;
 	private double netSalesAmt=0;
 	private double subTotalAmt=0;
@@ -293,7 +293,7 @@ public class SalesReturnUI extends JInternalFrame {
 					rate.setText(itemRatetmp);
 					int removeProduct = Integer.valueOf(table.getModel().getValueAt(row, 0).toString());
 					double removeAmt = Double.valueOf(table.getModel().getValueAt(row, 5).toString());
-					int removeQty = Integer.valueOf(table.getModel().getValueAt(row, 4).toString());
+					double removeQty = Double.valueOf(table.getModel().getValueAt(row, 4).toString());
 					
 					PDFUtils.removeItemFromList(productsInTable,removeProduct);
 					billPurchaseAmt-=(Double.valueOf(table.getModel().getValueAt(row, 6).toString()))*removeQty;
@@ -476,7 +476,7 @@ public class SalesReturnUI extends JInternalFrame {
 		tf_ReturnDate.setEditable(false);
 		tf_ReturnNumber = new JTextField();
 		tf_ReturnNumber.setEditable(false);
-		tf_ReturnNumber.setText(String.valueOf(PDFUtils.getBillNumber()));
+		tf_ReturnNumber.setText(String.valueOf(PDFUtils.getRandomNumber()));
 		tf_ReturnNumber.setFont(font);
 		tf_Comments = new JTextField();
 		tf_Comments.setFont(font);
@@ -503,7 +503,7 @@ public class SalesReturnUI extends JInternalFrame {
 					if(dialogResult == JOptionPane.YES_OPTION){
 						int removeProduct = Integer.valueOf(table.getModel().getValueAt(row, 0).toString());
 						double removeAmt = Double.valueOf(table.getModel().getValueAt(row, 5).toString());
-						int removeQty = Integer.valueOf(table.getModel().getValueAt(row, 4).toString());
+						double removeQty = Double.valueOf(table.getModel().getValueAt(row, 4).toString());
 						
 						PDFUtils.removeItemFromList(productsInTable,removeProduct);
 						billPurchaseAmt-=(Double.valueOf(table.getModel().getValueAt(row, 6).toString()))*removeQty;
@@ -517,7 +517,7 @@ public class SalesReturnUI extends JInternalFrame {
 		quantity.addKeyListener(new KeyAdapter() {
 			   public void keyTyped(KeyEvent e) {
 			      char c = e.getKeyChar();
-			      if ( ((c < '0') || (c > '9')) && (c != KeyEvent.VK_BACK_SPACE)) {
+			      if ( ((c < '0') || (c > '9')) && (c != KeyEvent.VK_BACK_SPACE)&& (c != KeyEvent.VK_PERIOD)) {
 			         e.consume();  // ignore event
 			      }
 			      if(c=='\n'){
@@ -525,7 +525,7 @@ public class SalesReturnUI extends JInternalFrame {
 			    		  if(!PDFUtils.isMandatoryEntered(quantity) || quantity.getText().equals("0")){
 			    			  JOptionPane.showMessageDialog(getContentPane(), "Please Enter valid quantity");
 			    		  }else{
-			    			  if(Integer.valueOf(quantity.getText())>itemQtyMap.get(Integer.valueOf(itemNo.getText()))){
+			    			  if(Double.valueOf(quantity.getText())>itemQtyMap.get(Integer.valueOf(itemNo.getText()))){
 			    				  JOptionPane.showMessageDialog(getContentPane(), "Item Quantity should be equal to or less than purchased quantity");
 				    		  }else{
 				    			  addRecordToTable(productMap.get(itemName.getText()));
@@ -544,7 +544,7 @@ public class SalesReturnUI extends JInternalFrame {
 				amount.setText("");
 				if(!quantity.getText().equals("")){
 					Double pRate = Double.parseDouble(rate.getText());
-					int pQty = Integer.valueOf(quantity.getText());
+					double pQty = Double.valueOf(quantity.getText());
 					Double pAmount= pQty*pRate;
 					amount.setText(PDFUtils.getDecimalFormat(pAmount));
 				}
@@ -604,7 +604,7 @@ public class SalesReturnUI extends JInternalFrame {
 
 	//Create Item Quantity Map
 	private void createItemQuantityMap(List<ItemDetails> itemList2) {
-		itemQtyMap = new HashMap<Integer, Integer>();
+		itemQtyMap = new HashMap<Integer, Double>();
 		for(ItemDetails item : itemList2){
 			itemQtyMap.put(item.getItemNo(), item.getQuantity());
 		}
@@ -660,11 +660,11 @@ public class SalesReturnUI extends JInternalFrame {
 		if(product!=null){
 			if(!productsInTable.contains(product.getProductCode())){
 					productsInTable.add(product.getProductCode());
-					billPurchaseAmt+=product.getPurcasePrice()*Integer.valueOf(quantity.getText());
+					billPurchaseAmt+=product.getPurcasePrice()*Double.valueOf(quantity.getText());
 					System.out.println("Add Bill Purchase Amt : "+billPurchaseAmt);
 					//Add row to table
 					productModel.addRow(new Object[]{product.getProductCode(), product.getProductName(), PDFUtils.getDecimalFormat(product.getProductMRP()), PDFUtils.getDecimalFormat(product.getSellPrice()),quantity.getText(),amount.getText(),product.getPurcasePrice()});
-					setPaymentFields(Integer.valueOf(quantity.getText()),Double.valueOf(amount.getText()),productModel.getRowCount());
+					setPaymentFields(Double.valueOf(quantity.getText()),Double.valueOf(amount.getText()),productModel.getRowCount());
 			}else{
 				JOptionPane.showMessageDialog(getContentPane(), "Item already present!");
 			}
@@ -677,7 +677,7 @@ public class SalesReturnUI extends JInternalFrame {
 		}
 	}
 	
-	private void setPaymentFields(int newQuantity, Double amount, int rowCount) {
+	private void setPaymentFields(double newQuantity, Double amount, int rowCount) {
 
 		noOfItems=getNoOfItems();
 		totalQty+=newQuantity;
@@ -732,7 +732,7 @@ public class SalesReturnUI extends JInternalFrame {
 				item.setItemName(table.getModel().getValueAt(i, 1).toString());
 				item.setMRP(Double.valueOf(table.getModel().getValueAt(i, 2).toString()));
 				item.setRate(Double.valueOf(table.getModel().getValueAt(i, 3).toString()));
-				item.setQuantity(Integer.valueOf(table.getModel().getValueAt(i, 4).toString()));
+				item.setQuantity(Double.valueOf(table.getModel().getValueAt(i, 4).toString()));
 				item.setPurchasePrice(Double.valueOf(table.getModel().getValueAt(i, 6).toString()));
 				item.setBillNumber(Integer.valueOf(tf_ReturnNumber.getText()));
 				
@@ -751,7 +751,7 @@ public class SalesReturnUI extends JInternalFrame {
 	private void resetBillDetails(Boolean flag){
 		productModel.setRowCount(0);
 		if(flag){
-			tf_ReturnNumber.setText(String.valueOf(PDFUtils.getBillNumber()));
+			tf_ReturnNumber.setText(String.valueOf(PDFUtils.getRandomNumber()));
 			tf_ReturnDate.setText(PDFUtils.getFormattedDate(new Date()));
 		}
 		billNumber.setText("");
@@ -781,7 +781,7 @@ public class SalesReturnUI extends JInternalFrame {
 		tax=0;
 		discount=0;
 		productsInTable.clear();
-		itemQtyMap = new HashMap<Integer, Integer>();
+		itemQtyMap = new HashMap<Integer, Double>();
 		if(itemList!=null)
 		itemList.clear();
 		btnSaveBill.setEnabled(true);
@@ -832,7 +832,7 @@ public class SalesReturnUI extends JInternalFrame {
 					bill.setBillNetSalesAmt(Double.valueOf(billNetSalesAmt.getText()));
 					bill.setNoOfItems(Integer.valueOf(tf_NoOfItems.getText()));
 					bill.setReturnpaymentMode(billPayMode.getText());
-					bill.setTotalQuanity(Integer.valueOf(tf_TotalQty.getText()));
+					bill.setTotalQuanity(Double.valueOf(tf_TotalQty.getText()));
 					bill.setTimestamp(new java.sql.Timestamp(System.currentTimeMillis()));
 					bill.setComments(tf_Comments.getText());
 					bill.setBillDate(new java.sql.Date(PDFUtils.getFormattedDate(billDate.getText()).getTime()));

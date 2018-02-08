@@ -97,7 +97,7 @@ public class NewBill extends JInternalFrame {
 	JButton btnCashHelp;
 	//
 	private int noOfItems = 0;
-	private int totalQty = 0;
+	private double totalQty = 0;
 	private double totalAmt = 0;
 	private double grossAmt=0;
 	//private double discountAmt=0;
@@ -610,7 +610,7 @@ public class NewBill extends JInternalFrame {
 					if(dialogResult == JOptionPane.YES_OPTION){
 						int removeProduct = Integer.valueOf(table.getModel().getValueAt(row, 0).toString());
 						double removeAmt = Double.valueOf(table.getModel().getValueAt(row, 5).toString());
-						int removeQty = Integer.valueOf(table.getModel().getValueAt(row, 4).toString());
+						double removeQty = Double.valueOf(table.getModel().getValueAt(row, 4).toString());
 						
 						PDFUtils.removeItemFromList(productsInTable,removeProduct);
 						billPurchaseAmt-=(Double.valueOf(table.getModel().getValueAt(row, 6).toString()))*removeQty;
@@ -637,7 +637,7 @@ public class NewBill extends JInternalFrame {
 		quantity.addKeyListener(new KeyAdapter() {
 			   public void keyTyped(KeyEvent e) {
 			      char c = e.getKeyChar();
-			      if ( ((c < '0') || (c > '9')) && (c != KeyEvent.VK_BACK_SPACE)) {
+			      if ( ((c < '0') || (c > '9')) && (c != KeyEvent.VK_BACK_SPACE) && (c != KeyEvent.VK_PERIOD)) {
 			         e.consume();  // ignore event
 			      }
 			      if(c=='\n'){
@@ -653,7 +653,7 @@ public class NewBill extends JInternalFrame {
 				amount.setText("");
 				if(!quantity.getText().equals("")){
 					Double pRate = Double.parseDouble(rate.getText());
-					int pQty = Integer.valueOf(quantity.getText());
+					double pQty = Double.valueOf(quantity.getText());
 					Double pAmount= pQty*pRate;
 					amount.setText(PDFUtils.getDecimalFormat(pAmount));
 				}
@@ -794,14 +794,14 @@ public class NewBill extends JInternalFrame {
 
 	private void addRecordToTableWithBarCode(Product product) {
 		if(product!=null){
-				if(product.getQuanity()>=Integer.valueOf(quantity.getText())){
+				if(product.getQuanity()>=Double.valueOf(quantity.getText())){
 					productsInTable.add(product.getProductCode());
-					billPurchaseAmt+=product.getPurcasePrice()*Integer.valueOf(quantity.getText());
+					billPurchaseAmt+=product.getPurcasePrice()*Double.valueOf(quantity.getText());
 					//Add row to table
 					if(!updateRow(product.getProductCode())) {
 						productModel.addRow(new Object[]{product.getProductCode(), product.getProductName(), PDFUtils.getDecimalFormat(product.getProductMRP()), PDFUtils.getDecimalFormat(product.getSellPrice()),quantity.getText(),amount.getText(),product.getPurcasePrice(),product.getSupplierId()});
 					}
-					setPaymentFields(Integer.valueOf(quantity.getText()),Double.valueOf(amount.getText()),productModel.getRowCount());
+					setPaymentFields(Double.valueOf(quantity.getText()),Double.valueOf(amount.getText()),productModel.getRowCount());
 					setGrossAmt();
 					setNetSaleAmount();
 				}else{
@@ -815,7 +815,7 @@ public class NewBill extends JInternalFrame {
 	    for (int i = 0; i < productModel.getRowCount(); i++) {
 	    	Integer code = (Integer)productModel.getValueAt(i, 0);
 	        if (code.equals(productCode)) {
-	        	int qty = Integer.parseInt((String)productModel.getValueAt(i, 4));
+	        	double qty = Double.parseDouble((String)productModel.getValueAt(i, 4));
 	        	double rate = Double.parseDouble((String)productModel.getValueAt(i, 3));
 	        	productModel.setValueAt(String.valueOf(qty+1), i, 4);
 	        	productModel.setValueAt(PDFUtils.getAmountFormat((qty+1)*rate), i, 5);
@@ -911,13 +911,13 @@ public class NewBill extends JInternalFrame {
 	private void addRecordToTable(Product product) {
 		if(product!=null){
 			if(!productsInTable.contains(product.getProductCode())){
-				if(product.getQuanity()>=Integer.valueOf(quantity.getText())){
+				if(product.getQuanity()>=Double.valueOf(quantity.getText())){
 					productsInTable.add(product.getProductCode());
-					billPurchaseAmt+=product.getPurcasePrice()*Integer.valueOf(quantity.getText());
+					billPurchaseAmt+=product.getPurcasePrice()*Double.valueOf(quantity.getText());
 					System.out.println("Add Bill Purchase Amt : "+billPurchaseAmt);
 					//Add row to table
 					productModel.addRow(new Object[]{product.getProductCode(), product.getProductName(), PDFUtils.getDecimalFormat(product.getProductMRP()), PDFUtils.getDecimalFormat(product.getSellPrice()),quantity.getText(),amount.getText(),product.getPurcasePrice(),product.getSupplierId()});
-					setPaymentFields(Integer.valueOf(quantity.getText()),Double.valueOf(amount.getText()),productModel.getRowCount());
+					setPaymentFields(Double.valueOf(quantity.getText()),Double.valueOf(amount.getText()),productModel.getRowCount());
 					setGrossAmt();
 					setNetSaleAmount();
 				}else{
@@ -931,7 +931,7 @@ public class NewBill extends JInternalFrame {
 		}
 	}
 	
-	private void setPaymentFields(int newQuantity, Double amount, int rowCount) {
+	private void setPaymentFields(double newQuantity, Double amount, int rowCount) {
 
 		noOfItems=getNoOfItems();
 		totalQty+=newQuantity;
@@ -1005,7 +1005,7 @@ public class NewBill extends JInternalFrame {
 				item.setItemName(table.getModel().getValueAt(i, 1).toString());
 				item.setMRP(Double.valueOf(table.getModel().getValueAt(i, 2).toString()));
 				item.setRate(Double.valueOf(table.getModel().getValueAt(i, 3).toString()));
-				item.setQuantity(Integer.valueOf(table.getModel().getValueAt(i, 4).toString()));
+				item.setQuantity(Double.valueOf(table.getModel().getValueAt(i, 4).toString()));
 				item.setPurchasePrice(Double.valueOf(table.getModel().getValueAt(i, 6).toString()));
 				item.setBillNumber(Integer.valueOf(billNumber.getText()));
 				item.setSupplierId(Integer.valueOf(table.getModel().getValueAt(i, 7).toString()));
@@ -1013,7 +1013,7 @@ public class NewBill extends JInternalFrame {
 				itemsMap.put(Integer.valueOf(table.getModel().getValueAt(i, 0).toString()),item);
 			}else{
 				ItemDetails tempItem = itemsMap.get(Integer.valueOf(table.getModel().getValueAt(i, 0).toString()));
-				int qty = tempItem.getQuantity()+1;
+				double qty = tempItem.getQuantity()+1;
 				tempItem.setQuantity(qty);
 				itemsMap.put(Integer.valueOf(table.getModel().getValueAt(i, 0).toString()),tempItem);
 			}
@@ -1142,7 +1142,7 @@ public class NewBill extends JInternalFrame {
 		bill.setPaymentMode((String)cb_PaymentMode.getSelectedItem());
 		bill.setPurchaseAmt(billPurchaseAmt);
 		bill.setTotalAmount(Double.valueOf(tf_TotalAmount.getText()));
-		bill.setTotalQuanity(Integer.valueOf(tf_TotalQty.getText()));
+		bill.setTotalQuanity(Double.valueOf(tf_TotalQty.getText()));
 		if(!tf_TAX.getText().equals(""))
 			bill.setTax(Double.valueOf(tf_TAX.getText()));
 		else

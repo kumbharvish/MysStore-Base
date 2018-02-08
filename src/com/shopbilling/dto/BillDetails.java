@@ -17,7 +17,7 @@ public class BillDetails {
 	
 	private int noOfItems;
 	
-	private int totalQuanity;
+	private double totalQuanity;
 	
 	private double totalAmount;
 	
@@ -89,11 +89,11 @@ public class BillDetails {
 		this.noOfItems = noOfItems;
 	}
 
-	public int getTotalQuanity() {
+	public double getTotalQuanity() {
 		return totalQuanity;
 	}
 
-	public void setTotalQuanity(int totalQuanity) {
+	public void setTotalQuanity(double totalQuanity) {
 		this.totalQuanity = totalQuanity;
 	}
 

@@ -14,7 +14,7 @@ public class Product {
 	
 	private String measure;
 	
-	private int quanity;
+	private double quanity;
 	
 	private double purcaseRate;
 
@@ -78,11 +78,11 @@ public class Product {
 		this.measure = measure;
 	}
 
-	public int getQuanity() {
+	public double getQuanity() {
 		return quanity;
 	}
 
-	public void setQuanity(int quanity) {
+	public void setQuanity(double quanity) {
 		this.quanity = quanity;
 	}
 

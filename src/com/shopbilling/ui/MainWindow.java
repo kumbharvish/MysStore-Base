@@ -919,7 +919,7 @@ public class MainWindow extends JFrame{
 	
 	private void hideMenus() {
 		final JMenuItem[] menuItems = new JMenuItem[] {mntmMyStoreDetails,mntmManageProductCategory,mntmManageProducts};
-		final JButton[] buttons = new JButton[] {btnProducts,btnCustomer,btnStockEntry};
+		final JButton[] buttons = new JButton[] {btnProducts,btnCounter,btnStockEntry};
 		final JMenu[] menus = new JMenu[] {mnBusinessAnalysis,mnReports,mnGraphicalReports,mnBarcodeSetup,mnStockManagement,mnCustomerManagement,
 				mnExpenses,mnSalesManagement,mnSettings,mnSalesReturn};
 		
