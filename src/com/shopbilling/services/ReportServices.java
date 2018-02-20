@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,6 +67,8 @@ public class ReportServices {
 	private static final String  GET_SALES_RETURN_PROFIT_AMT = "SELECT  SUM(RETURN_TOTAL_AMOUNT-RETURN_PURCHASE_AMT) AS NEGATIVE_PROFIT FROM SALES_RETURN_DETAILS  WHERE DATE(RETURN_DATE) BETWEEN ? AND ? AND RETURN_PURCHASE_AMT!=0";
 	
 	private static final String GET_TOTAL_EXP = "SELECT ED.CATEGORY,ED.AMOUNT FROM EXPENSE_DETAILS ED,APP_EXPENSE_TYPES ET WHERE DATE(DATE) BETWEEN ? and ? and ED.CATEGORY=ET.NAME AND ET.TYPE !='SAVINGS';";
+	
+	private static final String GET_TOTAL_PROFIT = "SELECT SUM(NET_SALES_AMOUNT) AS TOTAL_AMT,SUM(BILL_PURCHASE_AMT) AS TOTAL_PUR_AMT FROM CUSTOMER_BILL_DETAILS where DATE_FORMAT(BILL_DATE_TIME,'%b %y') =DATE_FORMAT(?,'%b %y');";
 	
 	//Get Total Amount of Sales except pending bills
 		public static List<CashCounter> getCashCounterDetails(Date fromDate,Date toDate) {
@@ -275,6 +278,15 @@ public class ReportServices {
 			if (rs8.next()) {
 				report.setTotalQtySold(totalQtySold - rs8.getInt("TOTAL_QTY_RETURNED"));
 			}
+			
+			//Total Profit
+			stmt = conn.prepareStatement(GET_TOTAL_PROFIT);
+			stmt.setDate(1,fromDate);
+			ResultSet rs9 = stmt.executeQuery();
+			if (rs9.next()) {
+				report.setTotalProfitAmount(rs9.getInt("TOTAL_AMT") - rs9.getInt("TOTAL_PUR_AMT"));
+			}
+			
 		} catch(Exception e){
 			e.printStackTrace();
 		} finally {

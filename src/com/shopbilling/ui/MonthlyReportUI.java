@@ -39,6 +39,8 @@ public class MonthlyReportUI extends JInternalFrame {
 	private JLabel lblTotalStockPurchaseValue;
 	private JYearChooser yearChooser;
 	private JMonthChooser monthChooser;
+	private JLabel lblTotalSalesValue;
+	private JLabel lblTotalProfitValue;
 
 	public MonthlyReportUI() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -68,41 +70,41 @@ public class MonthlyReportUI extends JInternalFrame {
 		JLabel lblTotalSalesPending = new JLabel("Total Sales Pending Amount");
 		lblTotalSalesPending.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTotalSalesPending.setFont(new Font("Tahoma", Font.BOLD, 13));
-		lblTotalSalesPending.setBounds(98, 143, 292, 60);
+		lblTotalSalesPending.setBounds(98, 134, 292, 35);
 		lblTotalSalesPending.setBorder(border);
 		panel.add(lblTotalSalesPending);
 		
 		lblTotalSalesPendingValue = new JLabel("0.00");
 		lblTotalSalesPendingValue.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTotalSalesPendingValue.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblTotalSalesPendingValue.setBounds(389, 143, 206, 60);
+		lblTotalSalesPendingValue.setBounds(389, 134, 206, 35);
 		lblTotalSalesPendingValue.setBorder(border);
 		panel.add(lblTotalSalesPendingValue);
 		
 		JLabel lblTotalSalesCash = new JLabel("Total Sales Cash Amount");
 		lblTotalSalesCash.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTotalSalesCash.setFont(new Font("Tahoma", Font.BOLD, 13));
-		lblTotalSalesCash.setBounds(98, 202, 292, 60);
+		lblTotalSalesCash.setBounds(98, 180, 292, 35);
 		lblTotalSalesCash.setBorder(border);
 		panel.add(lblTotalSalesCash);
 		
 		lblTotalSalesCashValue = new JLabel("0.00");
 		lblTotalSalesCashValue.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTotalSalesCashValue.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblTotalSalesCashValue.setBounds(389, 202, 206, 60);
+		lblTotalSalesCashValue.setBounds(389, 180, 206, 35);
 		lblTotalSalesCashValue.setBorder(border);
 		panel.add(lblTotalSalesCashValue);
 		
 		JLabel lblTotalSalesReturnAmt = new JLabel("Total Sales Return Amount");
 		lblTotalSalesReturnAmt.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTotalSalesReturnAmt.setFont(new Font("Tahoma", Font.BOLD, 13));
-		lblTotalSalesReturnAmt.setBounds(98, 261, 292, 60);
+		lblTotalSalesReturnAmt.setBounds(98, 317, 292, 35);
 		lblTotalSalesReturnAmt.setBorder(border);
 		panel.add(lblTotalSalesReturnAmt);
 		
 		lblTotalSalesReturnAmtValue = new JLabel("0.00");
 		lblTotalSalesReturnAmtValue.setHorizontalAlignment(SwingConstants.CENTER);
-		lblTotalSalesReturnAmtValue.setBounds(389, 261, 206, 60);
+		lblTotalSalesReturnAmtValue.setBounds(389, 317, 206, 35);
 		lblTotalSalesReturnAmtValue.setBorder(border);
 		lblTotalSalesReturnAmtValue.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		panel.add(lblTotalSalesReturnAmtValue);
@@ -110,13 +112,13 @@ public class MonthlyReportUI extends JInternalFrame {
 		JLabel lblTotalExpensesAmt = new JLabel("Total Expenses Amount");
 		lblTotalExpensesAmt.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTotalExpensesAmt.setFont(new Font("Tahoma", Font.BOLD, 13));
-		lblTotalExpensesAmt.setBounds(98, 320, 292, 60);
+		lblTotalExpensesAmt.setBounds(98, 363, 292, 35);
 		lblTotalExpensesAmt.setBorder(border);
 		panel.add(lblTotalExpensesAmt);
 		
 		lblTotalExpensesAmtValue = new JLabel("0.00");
 		lblTotalExpensesAmtValue.setHorizontalAlignment(SwingConstants.CENTER);
-		lblTotalExpensesAmtValue.setBounds(389, 320, 206, 60);
+		lblTotalExpensesAmtValue.setBounds(389, 363, 206, 35);
 		lblTotalExpensesAmtValue.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblTotalExpensesAmtValue.setBorder(border);
 		panel.add(lblTotalExpensesAmtValue);
@@ -124,14 +126,14 @@ public class MonthlyReportUI extends JInternalFrame {
 		JLabel lblTotalCustomerSettleAmt = new JLabel("Total Customer Settlement Amount");
 		lblTotalCustomerSettleAmt.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTotalCustomerSettleAmt.setFont(new Font("Tahoma", Font.BOLD, 13));
-		lblTotalCustomerSettleAmt.setBounds(98, 379, 292, 60);
+		lblTotalCustomerSettleAmt.setBounds(98, 409, 292, 35);
 		lblTotalCustomerSettleAmt.setBorder(border);
 		panel.add(lblTotalCustomerSettleAmt);
 		
 		lblTotalCustomerSettleAmtValue = new JLabel("0.00");
 		lblTotalCustomerSettleAmtValue.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTotalCustomerSettleAmtValue.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblTotalCustomerSettleAmtValue.setBounds(389, 379, 206, 60);
+		lblTotalCustomerSettleAmtValue.setBounds(389, 409, 206, 35);
 		lblTotalCustomerSettleAmtValue.setBorder(border);
 		panel.add(lblTotalCustomerSettleAmtValue);
 		
@@ -139,20 +141,20 @@ public class MonthlyReportUI extends JInternalFrame {
 		JLabel lblTotalStockPurchase = new JLabel("Total Stock Purchase Amount");
 		lblTotalStockPurchase.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTotalStockPurchase.setFont(new Font("Tahoma", Font.BOLD, 13));
-		lblTotalStockPurchase.setBounds(98, 438, 292, 60);
+		lblTotalStockPurchase.setBounds(98, 455, 292, 35);
 		lblTotalStockPurchase.setBorder(border);
 		panel.add(lblTotalStockPurchase);
 		
 		JLabel lblTotalQuantitySold = new JLabel("Total Quantity Sold");
 		lblTotalQuantitySold.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTotalQuantitySold.setFont(new Font("Tahoma", Font.BOLD, 13));
-		lblTotalQuantitySold.setBounds(98, 497, 292, 60);
+		lblTotalQuantitySold.setBounds(98, 501, 292, 35);
 		lblTotalQuantitySold.setBorder(border);
 		panel.add(lblTotalQuantitySold);
 		
 		lblTotalQuantitySoldValue = new JLabel("0");
 		lblTotalQuantitySoldValue.setHorizontalAlignment(SwingConstants.CENTER);
-		lblTotalQuantitySoldValue.setBounds(389, 497, 206, 60);
+		lblTotalQuantitySoldValue.setBounds(389, 501, 206, 35);
 		lblTotalQuantitySoldValue.setBorder(border);
 		lblTotalQuantitySoldValue.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		panel.add(lblTotalQuantitySoldValue);
@@ -160,7 +162,7 @@ public class MonthlyReportUI extends JInternalFrame {
 		lblTotalStockPurchaseValue = new JLabel("0.00");
 		lblTotalStockPurchaseValue.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTotalStockPurchaseValue.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblTotalStockPurchaseValue.setBounds(389, 438, 206, 60);
+		lblTotalStockPurchaseValue.setBounds(389, 455, 206, 35);
 		lblTotalStockPurchaseValue.setBorder(border);
 		panel.add(lblTotalStockPurchaseValue);
 		
@@ -192,6 +194,34 @@ public class MonthlyReportUI extends JInternalFrame {
 		});
 		btnNewButton.setBounds(472, 98, 105, 25);
 		panel.add(btnNewButton);
+		
+		JLabel lblTotalProfit = new JLabel("Total Profit Amount");
+		lblTotalProfit.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTotalProfit.setFont(new Font("Tahoma", Font.BOLD, 13));
+		lblTotalProfit.setBounds(98, 270, 292, 36);
+		lblTotalProfit.setBorder(border);
+		panel.add(lblTotalProfit);
+		
+		lblTotalProfitValue = new JLabel();
+		lblTotalProfitValue.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTotalProfitValue.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblTotalProfitValue.setBounds(389, 270, 206, 36);
+		lblTotalProfitValue.setBorder(border);
+		panel.add(lblTotalProfitValue);
+		
+		JLabel lblTotalSales = new JLabel("Total Sales Amount");
+		lblTotalSales.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTotalSales.setFont(new Font("Tahoma", Font.BOLD, 13));
+		lblTotalSales.setBounds(98, 226, 292, 35);
+		lblTotalSales.setBorder(border);
+		panel.add(lblTotalSales);
+		
+		lblTotalSalesValue = new JLabel();
+		lblTotalSalesValue.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTotalSalesValue.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblTotalSalesValue.setBounds(389, 226, 206, 35);
+		lblTotalSalesValue.setBorder(border);
+		panel.add(lblTotalSalesValue);
 		getReport();
 		
 		ScalableLayoutUtils.installScalableLayoutAndKeys(new DefaultScalableLayoutRegistry(), this, 0.1);
@@ -223,5 +253,7 @@ public class MonthlyReportUI extends JInternalFrame {
 	        lblTotalCustomerSettleAmtValue.setText(PDFUtils.getAmountFormat(report.getTotalCustSettlementAmt()));
 	        lblTotalStockPurchaseValue.setText(PDFUtils.getAmountFormat(report.getTotalPurchaseAmt()));
 	        lblTotalQuantitySoldValue.setText(String.valueOf(report.getTotalQtySold()));
+	        lblTotalProfitValue.setText(PDFUtils.getDecimalFormat(report.getTotalProfitAmount()));
+	        lblTotalSalesValue.setText(PDFUtils.getDecimalFormat(report.getTotalSalesAmount()));
 	}
 }

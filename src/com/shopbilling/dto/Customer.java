@@ -15,6 +15,7 @@ public class Customer{
 	private Timestamp entryDate;
 	private Timestamp lastUpdateDate;
 	private String narration;
+	private double totalPurAmt;
 	
 	public String getCustName() {
 		return custName;
@@ -80,8 +81,14 @@ public class Customer{
 	public void setNarration(String narration) {
 		this.narration = narration;
 	}
+	public double getTotalPurAmt() {
+		return totalPurAmt;
+	}
+	public void setTotalPurAmt(double totalPurAmt) {
+		this.totalPurAmt = totalPurAmt;
+	}
 	public enum SortParameter {
-        CUSTOMER_NAME_ASCENDING,CUST_BALANCE_ASCENDING
+        CUSTOMER_NAME_ASCENDING,CUST_BALANCE_ASCENDING,CUST_PUR_AMT_ASC
     }
 	private static class CustomerComparator implements Comparator<Customer> {
         private SortParameter[] parameters;
@@ -103,6 +110,14 @@ public class Customer{
                 	        return 1;
                 	    }
                 	    else if(o1.getBalanceAmt() > o2.getBalanceAmt()){
+                	        return -1;
+                	    }
+                        break;
+                    case CUST_PUR_AMT_ASC:
+                    	if (o1.getTotalPurAmt() < o2.getTotalPurAmt()) {
+                	        return 1;
+                	    }
+                	    else if(o1.getTotalPurAmt() > o2.getTotalPurAmt()){
                 	        return -1;
                 	    }
                         break;

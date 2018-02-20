@@ -36,6 +36,9 @@ public class UserServices {
 	
 	private static final String GET_ALL_CUSTOMERS = "SELECT * FROM CUSTOMER_DETAILS";
 	
+	private static final String GET_CUST_REPORT = "SELECT C.*,SUM(CBD.NET_SALES_AMOUNT) AS TOTAL_PUR_AMT FROM CUSTOMER_DETAILS C,CUSTOMER_BILL_DETAILS CBD "
+												+ "WHERE C.CUST_MOB_NO=CBD.CUST_MOB_NO GROUP BY CBD.CUST_MOB_NO";
+	
 	private static final String INS_CUSTOMER = "INSERT INTO CUSTOMER_DETAILS (CUST_MOB_NO,CUST_NAME,CUST_EMAIL,CUST_CITY,ENTRY_DATE,LAST_UPDATE) "
 			+ "VALUES(?,?,?,?,?,?)";
 	
@@ -398,6 +401,41 @@ public class UserServices {
 					
 					customerList.add(customer);
 					Comparator<Customer> cp = Customer.getComparator(Customer.SortParameter.CUSTOMER_NAME_ASCENDING); 
+					Collections.sort(customerList,cp);
+				}
+				rs.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				PDFUtils.closeConnectionAndStatment(conn, stmt);
+			}
+			return customerList;
+		}
+		
+		//Customers Report
+		public static List<Customer> getCustomersReport() {
+			Connection conn = null;
+			PreparedStatement stmt = null;
+			Customer customer = null;
+			List<Customer> customerList = new ArrayList<Customer>();
+			try {
+				conn = PDFUtils.getConnection();
+				stmt = conn.prepareStatement(GET_CUST_REPORT);
+				ResultSet rs = stmt.executeQuery();
+
+				while (rs.next()) {
+					customer = new Customer();
+					customer.setCustMobileNumber(rs.getLong("CUST_MOB_NO"));
+					customer.setCustName(rs.getString("CUST_NAME"));
+					customer.setBalanceAmt(rs.getDouble("BALANCE_AMOUNT"));
+					customer.setCustCity(rs.getString("CUST_CITY"));
+					customer.setCustEmail(rs.getString("CUST_EMAIL"));
+					customer.setEntryDate(rs.getTimestamp("ENTRY_DATE"));
+					customer.setLastUpdateDate(rs.getTimestamp("LAST_UPDATE"));
+					customer.setTotalPurAmt(rs.getDouble("TOTAL_PUR_AMT"));
+					
+					customerList.add(customer);
+					Comparator<Customer> cp = Customer.getComparator(Customer.SortParameter.CUST_PUR_AMT_ASC); 
 					Collections.sort(customerList,cp);
 				}
 				rs.close();

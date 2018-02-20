@@ -15,6 +15,10 @@ public class MonthlyReport {
 	private double totalPurchaseAmt;
 	
 	private int totalQtySold;
+	
+	private double totalSalesAmount;
+	
+	private double totalProfitAmount;
 
 	public double getTotalSalesPendingAmt() {
 		return totalSalesPendingAmt;
@@ -81,6 +85,22 @@ public class MonthlyReport {
 				+ ", totalCustSettlementAmt=" + totalCustSettlementAmt
 				+ ", totalPurchaseAmt=" + totalPurchaseAmt + ", totalQtySold="
 				+ totalQtySold + "]";
+	}
+
+	public double getTotalSalesAmount() {
+		return totalSalesCashAmt + totalSalesPendingAmt;
+	}
+
+	public void setTotalSalesAmount(double totalSalesAmount) {
+		this.totalSalesAmount = totalSalesAmount;
+	}
+
+	public double getTotalProfitAmount() {
+		return totalProfitAmount;
+	}
+
+	public void setTotalProfitAmount(double totalProfitAmount) {
+		this.totalProfitAmount = totalProfitAmount;
 	}
 	
 }

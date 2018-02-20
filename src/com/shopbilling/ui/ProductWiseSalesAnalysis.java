@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -27,9 +28,12 @@ import org.fuin.utils4swing.layout.scalable.DefaultScalableLayoutRegistry;
 import org.fuin.utils4swing.layout.scalable.ScalableLayoutUtils;
 
 import com.shopbilling.dto.ProductAnalysis;
+import com.shopbilling.dto.Supplier;
 import com.shopbilling.services.ProductSaleAnalysisServices;
+import com.shopbilling.services.SupplierServices;
 import com.shopbilling.utils.PDFUtils;
 import com.toedter.calendar.JDateChooser;
+import javax.swing.JComboBox;
 
 public class ProductWiseSalesAnalysis extends JInternalFrame {
 	private JTable table;
@@ -38,6 +42,8 @@ public class ProductWiseSalesAnalysis extends JInternalFrame {
 	private JDateChooser fromDateChooser;
 	private  JLabel lblLessSoldValue;
 	private JLabel lblMostSoldValue;
+	private JComboBox cb_Suppliers;
+	private HashMap<String,Integer> supplierIdMap; 
 	/**
 	 * Create the frame.
 	 */
@@ -56,12 +62,12 @@ public class ProductWiseSalesAnalysis extends JInternalFrame {
 		
 		JLabel lblFromDate = new JLabel("From Date :");
 		lblFromDate.setFont(new Font("Tahoma", Font.BOLD, 14));
-		lblFromDate.setBounds(212, 16, 99, 28);
+		lblFromDate.setBounds(23, 19, 99, 28);
 		panel.add(lblFromDate);
 		
 		JLabel lblToDate = new JLabel("To Date :");
 		lblToDate.setFont(new Font("Tahoma", Font.BOLD, 14));
-		lblToDate.setBounds(545, 16, 79, 28);
+		lblToDate.setBounds(307, 19, 79, 28);
 		panel.add(lblToDate);
 		
 		JButton btnGetReport = new JButton("Get Report");
@@ -76,16 +82,26 @@ public class ProductWiseSalesAnalysis extends JInternalFrame {
 		panel.add(btnGetReport);
 		
 		fromDateChooser = new JDateChooser();
-		fromDateChooser.setBounds(321, 16, 133, 28);
+		fromDateChooser.setBounds(132, 19, 133, 28);
 		fromDateChooser.setDate(new Date());
 		fromDateChooser.setFont(new Font("Tahoma", Font.BOLD, 12));
 		panel.add(fromDateChooser);
 		
 		toDateChooser = new JDateChooser();
-		toDateChooser.setBounds(634, 16, 133, 28);
+		toDateChooser.setBounds(396, 19, 133, 28);
 		toDateChooser.setDate(new Date());
 		toDateChooser.setFont(new Font("Tahoma", Font.BOLD, 12));
 		panel.add(toDateChooser);
+		
+		JLabel label = new JLabel("To Date :");
+		label.setFont(new Font("Tahoma", Font.BOLD, 14));
+		label.setBounds(556, 19, 79, 28);
+		panel.add(label);
+		
+		cb_Suppliers = new JComboBox();
+		cb_Suppliers.setBounds(632, 19, 188, 28);
+		panel.add(cb_Suppliers);
+		populateSupplier(cb_Suppliers);
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Product Details", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -107,10 +123,10 @@ public class ProductWiseSalesAnalysis extends JInternalFrame {
 					}
 		 };
 		 reportModel.setColumnIdentifiers(new String[] {
-				 "Product Code", "Product Name","Total Sales Amount","Total Quantity Sold"}
+				 "Product Code", "Product Name","Total Sales Amount","Total Quantity Sold","Current Stock"}
 	       );
 		table.setModel(reportModel);
-		table.getColumnModel().getColumn(1).setPreferredWidth(290);
+		table.getColumnModel().getColumn(1).setPreferredWidth(200);
 		scrollPane.setViewportView(table);
 		 PDFUtils.setTableRowHeight(table);
 		 
@@ -157,7 +173,7 @@ public class ProductWiseSalesAnalysis extends JInternalFrame {
 	
 	//Fill Report Table
 	private void fillReportTable(){
-		List<ProductAnalysis> list= ProductSaleAnalysisServices.getProductWiseSales(fromDateChooser.getDate()==null?null:new java.sql.Date(fromDateChooser.getDate().getTime()),toDateChooser.getDate()==null?null:new java.sql.Date(toDateChooser.getDate().getTime()));
+		List<ProductAnalysis> list= ProductSaleAnalysisServices.getProductWiseSales(fromDateChooser.getDate()==null?null:new java.sql.Date(fromDateChooser.getDate().getTime()),toDateChooser.getDate()==null?null:new java.sql.Date(toDateChooser.getDate().getTime()),supplierIdMap.get((String)cb_Suppliers.getSelectedItem()));
 		reportModel.setRowCount(0);
 		if(list.isEmpty()){
 			JOptionPane.showMessageDialog(getContentPane(), "No Records found for the given period !");
@@ -167,7 +183,7 @@ public class ProductWiseSalesAnalysis extends JInternalFrame {
 		}else{
 			for(ProductAnalysis b : list){
 				
-				reportModel.addRow(new Object[]{b.getProductCode(),b.getProductName(),PDFUtils.getDecimalFormat(b.getTotalMRPAmount()),b.getTotalQty()});
+				reportModel.addRow(new Object[]{b.getProductCode(),b.getProductName(),PDFUtils.getDecimalFormat(b.getTotalMRPAmount()),b.getTotalQty(),b.getCurrentQty()});
 			}
 			setReportValues();
 		}
@@ -178,5 +194,14 @@ public class ProductWiseSalesAnalysis extends JInternalFrame {
 		String lessSoldProduct = (String)reportModel.getValueAt(reportModel.getRowCount()-1, 1);
 		lblLessSoldValue.setText(" "+lessSoldProduct);
 		lblMostSoldValue.setText(" "+mostSoldProduct);
+	}
+	
+	public void populateSupplier(JComboBox<String> combobox){
+		supplierIdMap = new HashMap<String, Integer>();
+		combobox.addItem("----- SELECT SUPPLIER-----");
+		for(Supplier supplier :SupplierServices.getAllSuppliers()){
+			combobox.addItem(supplier.getSupplierName());
+			supplierIdMap.put(supplier.getSupplierName(), supplier.getSupplierID());
+		}
 	}
 }

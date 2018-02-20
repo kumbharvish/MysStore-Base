@@ -45,6 +45,7 @@ public class CustomersReportUI extends JInternalFrame {
 	private DefaultTableModel reportModel;
 	private JRadioButton rdbtnCustomerName;
 	private JRadioButton rdbtnBalanceAmt;
+	private JRadioButton rdbtnTotalPurchaseAmount;
 	private JTextField tf_totalCustomers;
 	private JTextField tf_totalCustBalanceAmt;
 	private int totalCustomers=0;
@@ -79,7 +80,7 @@ public class CustomersReportUI extends JInternalFrame {
 					}
 		 };
 		 reportModel.setColumnIdentifiers(new String[] {
-				 "Mobile Number", "Name","City","Email","Entry Date","Pending Amount"}
+				 "Mobile Number", "Name","City","Total Purchase","Entry Date","Pending Amount"}
 	       );
 		table.setModel(reportModel);
 		scrollPane.setViewportView(table);
@@ -117,9 +118,18 @@ public class CustomersReportUI extends JInternalFrame {
 		JLabel lblSortBy = new JLabel("Sort by :");
 		lblSortBy.setBounds(233, 22, 53, 21);
 		getContentPane().add(lblSortBy);
-		
+		rdbtnTotalPurchaseAmount = new JRadioButton("Total Purchase Amount");
+		 rdbtnTotalPurchaseAmount.setSelected(false);
+		 rdbtnTotalPurchaseAmount.setBounds(602, 21, 179, 23);
+		 getContentPane().add(rdbtnTotalPurchaseAmount);
+		 
 		rdbtnCustomerName = new JRadioButton("Customer Name");
 		rdbtnCustomerName.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				chageSortParam();
+			}
+		});
+		rdbtnTotalPurchaseAmount.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				chageSortParam();
 			}
@@ -135,15 +145,13 @@ public class CustomersReportUI extends JInternalFrame {
 				chageSortParam();
 			}
 		});
-		
-		
 		getContentPane().add(rdbtnBalanceAmt);
 		PDFUtils.setTableRowHeight(table);
 		 ButtonGroup bg = new ButtonGroup();
 			bg.add(rdbtnBalanceAmt);
 			bg.add(rdbtnCustomerName);
+			bg.add(rdbtnTotalPurchaseAmount);
 			rdbtnCustomerName.setSelected(true);
-			 rdbtnBalanceAmt.setSelected(false);
 		 
 		 JPanel panel = new JPanel();
 		 panel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Total Customers", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -181,6 +189,7 @@ public class CustomersReportUI extends JInternalFrame {
 		 label.setIcon(new ImageIcon(SalesStockReportUI.class.getResource("/images/currency_sign_rupee.png")));
 		 label.setBounds(10, 112, 29, 30);
 		 panel.add(label);
+		 
 		 fillReportTable(Customer.SortParameter.CUSTOMER_NAME_ASCENDING);
 		 
 		 ScalableLayoutUtils.installScalableLayoutAndKeys(new DefaultScalableLayoutRegistry(), this, 0.1);
@@ -188,7 +197,7 @@ public class CustomersReportUI extends JInternalFrame {
 	private void fillReportTable(Customer.SortParameter VALUE) {
 		 totalCustBalanceAmt=0;
 		 totalCustomers=0;
-		List<Customer> customerList= UserServices.getAllCustomers();
+		List<Customer> customerList= UserServices.getCustomersReport();
 		 Comparator<Customer> cp = Customer.getComparator(VALUE); 
 			Collections.sort(customerList,cp);
 			reportModel.setRowCount(0);
@@ -197,7 +206,7 @@ public class CustomersReportUI extends JInternalFrame {
 				JOptionPane.showMessageDialog(getContentPane(), "No Customer found!");
 			}else{
 				for(Customer p : customerList){
-					reportModel.addRow(new Object[]{p.getCustMobileNumber(), p.getCustName(),p.getCustCity(),p.getCustEmail() ,sdf.format(p.getEntryDate()),PDFUtils.getDecimalFormat(p.getBalanceAmt())});
+					reportModel.addRow(new Object[]{p.getCustMobileNumber(), p.getCustName(),p.getCustCity(),PDFUtils.getDecimalFormat(p.getTotalPurAmt()) ,sdf.format(p.getEntryDate()),PDFUtils.getDecimalFormat(p.getBalanceAmt())});
 					totalCustBalanceAmt += p.getBalanceAmt();
 				}
 				setTotalFieldValues();
@@ -210,6 +219,9 @@ public class CustomersReportUI extends JInternalFrame {
 		}
 		if(rdbtnBalanceAmt.isSelected()){
 			fillReportTable(Customer.SortParameter.CUST_BALANCE_ASCENDING);
+		}
+		if(rdbtnTotalPurchaseAmount.isSelected()){
+			fillReportTable(Customer.SortParameter.CUST_PUR_AMT_ASC);
 		}
 	}
 	

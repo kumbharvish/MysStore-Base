@@ -21,6 +21,8 @@ public class ProductAnalysis implements Comparable<ProductAnalysis>{
 	
 	private double totalSalesAmount;
 	
+	private int currentQty;
+	
 	public int getProductCode() {
 		return productCode;
 	}
@@ -104,6 +106,14 @@ public class ProductAnalysis implements Comparable<ProductAnalysis>{
 
 	public void setTotalSalesAmount(double totalSalesAmount) {
 		this.totalSalesAmount = totalSalesAmount;
+	}
+
+	public int getCurrentQty() {
+		return currentQty;
+	}
+
+	public void setCurrentQty(int currentQty) {
+		this.currentQty = currentQty;
 	}
 	
 }
