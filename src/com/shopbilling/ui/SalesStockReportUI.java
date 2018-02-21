@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,11 +34,14 @@ import org.fuin.utils4swing.layout.scalable.ScalableLayoutUtils;
 
 import com.shopbilling.constants.AppConstants;
 import com.shopbilling.dto.Product;
+import com.shopbilling.dto.Supplier;
 import com.shopbilling.services.ExcelServices;
 import com.shopbilling.services.JasperServices;
 import com.shopbilling.services.ProductServices;
+import com.shopbilling.services.SupplierServices;
 import com.shopbilling.utils.JasperUtils;
 import com.shopbilling.utils.PDFUtils;
+import javax.swing.JComboBox;
 
 public class SalesStockReportUI extends JInternalFrame {
 	private JTable table;
@@ -54,9 +58,9 @@ public class SalesStockReportUI extends JInternalFrame {
 	private double totalStockPurchaseAmt=0;
 
 	private JTextField tf_totalStockPurchaseAmt;
-	/**
-	 * Create the frame.
-	 */
+	private JComboBox cb_Suppliers;
+	private HashMap<String,Integer> supplierIdMap;
+	
 	public SalesStockReportUI() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(200, 85, 1107, 698);
@@ -221,6 +225,20 @@ public class SalesStockReportUI extends JInternalFrame {
 		 JLabel lblTotalStockPurchase = new JLabel("Total Stock Purchase Amount");
 		 lblTotalStockPurchase.setBounds(10, 143, 170, 25);
 		 panel.add(lblTotalStockPurchase);
+		 
+		 JLabel lblSupplier = new JLabel("Supplier :");
+		 lblSupplier.setBounds(968, 200, 134, 25);
+		 getContentPane().add(lblSupplier);
+		 
+		 cb_Suppliers = new JComboBox();
+		 cb_Suppliers.setBounds(968, 236, 185, 25);
+		 getContentPane().add(cb_Suppliers);
+		 populateSupplier(cb_Suppliers);
+		 cb_Suppliers.addActionListener (new ActionListener () {
+			    public void actionPerformed(ActionEvent e) {
+			    	chageSortParam();
+			    }
+			});
 		 fillReportTable(Product.SortParameter.STOCK_VALUE_AMT_ASC);
 		 ScalableLayoutUtils.installScalableLayoutAndKeys(new DefaultScalableLayoutRegistry(), this, 0.1);
 	}
@@ -229,12 +247,13 @@ public class SalesStockReportUI extends JInternalFrame {
 		 totalQty=0;
 		totalStockValueAmt=0;
 		totalStockPurchaseAmt=0;
-		List<Product> productList= ProductServices.getAllProducts();
+		List<Product> productList= ProductServices.getAllProductsBySupplier(supplierIdMap.get((String)cb_Suppliers.getSelectedItem()));
 		 Comparator<Product> cp = Product.getComparator(PROFIT_ASCENDING); 
 			Collections.sort(productList,cp);
 			reportModel.setRowCount(0);
 			totalProducts = productList.size();
 			if(productList.isEmpty()){
+				resetTotalFieldValues();
 				JOptionPane.showMessageDialog(getContentPane(), "No Product found!");
 			}else{
 				for(Product p : productList){
@@ -264,6 +283,13 @@ public class SalesStockReportUI extends JInternalFrame {
 		tf_totalQty.setText(String.valueOf(totalQty));
 		tf_totalStockAmount.setText(PDFUtils.getDecimalFormat(totalStockValueAmt));
 		tf_totalStockPurchaseAmt.setText(PDFUtils.getDecimalFormat(totalStockPurchaseAmt));
+	}
+	
+	private void resetTotalFieldValues(){
+		tf_totalProducts.setText("0");
+		tf_totalQty.setText("0");
+		tf_totalStockAmount.setText("0.00");
+		tf_totalStockPurchaseAmt.setText("0.00");
 	}
 	
 	protected void exportExcel() {
@@ -310,6 +336,15 @@ public class SalesStockReportUI extends JInternalFrame {
 			JOptionPane.showMessageDialog(getContentPane(), "Report Exported Sucessfully! ");
 		}else{
 			JOptionPane.showMessageDialog(getContentPane(),"Error Occured! ","Error",JOptionPane.WARNING_MESSAGE);
+		}
+	}
+	
+	public void populateSupplier(JComboBox<String> combobox){
+		supplierIdMap = new HashMap<String, Integer>();
+		combobox.addItem("----- SELECT SUPPLIER-----");
+		for(Supplier supplier :SupplierServices.getAllSuppliers()){
+			combobox.addItem(supplier.getSupplierName());
+			supplierIdMap.put(supplier.getSupplierName(), supplier.getSupplierID());
 		}
 	}
 }
