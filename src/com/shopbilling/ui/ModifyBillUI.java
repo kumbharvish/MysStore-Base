@@ -918,7 +918,7 @@ public class ModifyBillUI extends JDialog {
 		bill.setPaymentMode((String)cb_PaymentMode.getSelectedItem());
 		bill.setPurchaseAmt(billPurchaseAmt);
 		bill.setTotalAmount(Double.valueOf(tf_TotalAmount.getText()));
-		bill.setTotalQuanity(Integer.valueOf(tf_TotalQty.getText()));
+		bill.setTotalQuanity(Double.valueOf(tf_TotalQty.getText()));
 		if(!tf_TAX.getText().equals(""))
 			bill.setTax(Double.valueOf(tf_TAX.getText()));
 		else
