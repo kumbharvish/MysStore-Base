@@ -634,7 +634,7 @@ public class StockPurchaseEntryUI extends JInternalFrame {
 			if(!productsInTable.contains(product.getProductName())){
 					productsInTable.add(product.getProductName());
 					//Add row to table
-					stockItemModel.addRow(new Object[]{product.getProductName(), PDFUtils.getDecimalFormat(product.getProductMRP()), !tf_TAX.getText().equals("")?PDFUtils.getDecimalFormat(Double.valueOf(tf_TAX.getText())):0,PDFUtils.getDecimalFormat(Double.valueOf(tf_ItemRate.getText())),tf_ItemQty.getText(),PDFUtils.getDecimalFormat(var_amount),getPurchasePrice(!tf_TAX.getText().equals("")?Double.valueOf(tf_TAX.getText()):0,Double.valueOf(tf_ItemRate.getText())),product.getProductCode()});
+					stockItemModel.addRow(new Object[]{product.getProductName(), PDFUtils.getDecimalFormat(product.getProductMRP()), !tf_TAX.getText().equals("")?PDFUtils.getDecimalFormat(Double.valueOf(tf_TAX.getText())):0,PDFUtils.getDecimalFormat(Double.valueOf(tf_ItemRate.getText())),PDFUtils.getDecimalFormat(Double.valueOf(tf_ItemQty.getText())),PDFUtils.getDecimalFormat(var_amount),getPurchasePrice(!tf_TAX.getText().equals("")?Double.valueOf(tf_TAX.getText()):0,Double.valueOf(tf_ItemRate.getText())),product.getProductCode()});
 					setPaymentFields(Double.valueOf(tf_ItemQty.getText()),var_amount,Double.valueOf(tf_ItemRate.getText()),product.getProductMRP(),stockItemModel.getRowCount());
 			
 			}else{

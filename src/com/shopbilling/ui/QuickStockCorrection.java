@@ -377,4 +377,10 @@ public class QuickStockCorrection extends JDialog {
 		tf_Barcode.setText("");
 		tf_newQty.setText("");
 	}
+	
+	public static void main(String[] args) {
+		char c1[]= {'a','b','c','d','e','f','g'};
+		String s = new String(c1,2,4);
+		System.out.println(s);
+	}
 }

@@ -7,7 +7,7 @@ public class ProductAnalysis implements Comparable<ProductAnalysis>{
 	
 	private String productName;
 	
-	private int totalQty;
+	private double totalQty;
 	
 	private double purcasePrice;
 	
@@ -21,7 +21,7 @@ public class ProductAnalysis implements Comparable<ProductAnalysis>{
 	
 	private double totalSalesAmount;
 	
-	private int currentQty;
+	private double currentQty;
 	
 	public int getProductCode() {
 		return productCode;
@@ -39,11 +39,11 @@ public class ProductAnalysis implements Comparable<ProductAnalysis>{
 		this.productName = productName;
 	}
 
-	public int getTotalQty() {
+	public double getTotalQty() {
 		return totalQty;
 	}
 
-	public void setTotalQty(int totalQty) {
+	public void setTotalQty(double totalQty) {
 		this.totalQty = totalQty;
 	}
 
@@ -108,11 +108,11 @@ public class ProductAnalysis implements Comparable<ProductAnalysis>{
 		this.totalSalesAmount = totalSalesAmount;
 	}
 
-	public int getCurrentQty() {
+	public double getCurrentQty() {
 		return currentQty;
 	}
 
-	public void setCurrentQty(int currentQty) {
+	public void setCurrentQty(double currentQty) {
 		this.currentQty = currentQty;
 	}
 	
