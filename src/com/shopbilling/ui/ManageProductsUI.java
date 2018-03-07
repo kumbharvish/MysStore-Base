@@ -482,7 +482,7 @@ public class ManageProductsUI extends JInternalFrame {
 					productToUpdate.setProductName(productName.getText());
 					productToUpdate.setDescription(productDescription.getText());
 					productToUpdate.setMeasure((String)measure.getSelectedItem());
-					productToUpdate.setQuanity(Integer.valueOf(quantity.getText()));
+					productToUpdate.setQuanity(Double.valueOf(quantity.getText()));
 					//productToUpdate.setProductCategory((String)productCategory.getSelectedItem());
 					productToUpdate.setCategoryCode(productCategoryMap.get((String)productCategory.getSelectedItem()));
 					productToUpdate.setSupplierId(productSupplierMap.get((String)cb_suppliers.getSelectedItem()));
@@ -564,7 +564,7 @@ public class ManageProductsUI extends JInternalFrame {
 				productToSave.setProductName(productName.getText());
 				productToSave.setDescription(productDescription.getText());
 				productToSave.setMeasure((String)measure.getSelectedItem());
-				productToSave.setQuanity(Integer.valueOf(quantity.getText()));
+				productToSave.setQuanity(Double.valueOf(quantity.getText()));
 				//productToSave.setProductCategory((String)productCategory.getSelectedItem());
 				productToSave.setCategoryCode(productCategoryMap.get((String)productCategory.getSelectedItem()));
 				productToSave.setSupplierId(productSupplierMap.get((String)cb_suppliers.getSelectedItem()));
