@@ -10,6 +10,7 @@ import java.awt.SystemColor;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Timer;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -29,15 +30,20 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
+import org.apache.log4j.Logger;
+
 import com.shopbilling.constants.AppConstants;
 import com.shopbilling.dto.MyStoreDetails;
 import com.shopbilling.dto.UserDetails;
 import com.shopbilling.services.DBBackupService;
+import com.shopbilling.services.DBScheduledDumpTask;
 import com.shopbilling.services.MyStoreServices;
 import com.shopbilling.utils.PDFUtils;
 
 public class MainWindow extends JFrame{
 
+	private final static Logger logger = Logger.getLogger(MainWindow.class);
+	
 	private JPanel contentPane;
 	private UserDetails userDetails;
 	private JPanel containerPanel;
@@ -817,7 +823,11 @@ public class MainWindow extends JFrame{
 		contentPane.add(myStoreNamelbl);
 		
 		//Create Database Backup
-		DBBackupService.createDBDump();
+		//DBBackupService.createDBDump();
+		
+		//Start Scheduled DB Dump task
+        startScheduledDBDumpTask();
+		
 		// Add Opening Stock Value Amount Entry
 		//ReportServices.doRecurrsiveInsertOpeningAmount();
 		
@@ -829,6 +839,14 @@ public class MainWindow extends JFrame{
 		//Display alert for license expire
 		PDFUtils.licenseExpiryAlert(getContentPane());
 	}
+	
+	 private void startScheduledDBDumpTask() {
+	    	Timer time = new Timer();
+	    	Integer dbDumpInterval = Integer.parseInt(PDFUtils.getAppDataValues("DB_DUMP_INTERVAL").get(0));
+	    	logger.info("---- DB Dump Scheduled with Interval of :: "+dbDumpInterval+" Mins ---");
+	    	dbDumpInterval = dbDumpInterval*60*1000; //Convert Minutes to Milliseconds
+			time.schedule(new DBScheduledDumpTask(), 0, dbDumpInterval); 		
+		}
 	
 	protected void closeAllInternalFrames() {
 		if(newBill != null){

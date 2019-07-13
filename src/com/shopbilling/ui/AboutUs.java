@@ -72,7 +72,7 @@ public class AboutUs extends JInternalFrame {
 		panel.add(lblVersion);
 		
 		textField_1 = new JLabel();
-		textField_1.setText(" 2.3");
+		textField_1.setText(" 2.4");
 		textField_1.setFont(new Font("Tahoma", Font.BOLD, 15));
 		textField_1.setEnabled(false);
 		textField_1.setBounds(286, 129, 161, 30);

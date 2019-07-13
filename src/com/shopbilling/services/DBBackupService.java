@@ -29,13 +29,13 @@ public class DBBackupService {
 	    	Date currentDate = new Date();
 	    	SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 	    	String folderLocation = PDFUtils.getAppDataValues("MYSTORE_HOME").get(0)+AppConstants.DATA_BACKUP_FOLDER;
+	    	
 	    	String mySqlHome = PDFUtils.getAppDataValues("MYSQL_HOME").get(0);
-	    	logger.error("mySqlHome : "+mySqlHome);
-	    	String fileName="\\\\DataBackup_"+sdf.format(currentDate)+".sql";
+	    	
+	    	String fileName="\\\\DataBackup_"+sdf.format(currentDate)+"_"+System.currentTimeMillis()+".sql";
 	        String executeCmd = mySqlHome+"\\\\bin\\\\mysqldump -u root -ppassword billing_app -r "+folderLocation+fileName;
-	        /*NOTE: Executing the command here*/
-	        System.out.println(executeCmd);
 	        logger.error("DB dump : "+executeCmd);
+	        
 	        Process runtimeProcess = Runtime.getRuntime().exec(executeCmd);
 	        int processComplete = runtimeProcess.waitFor();
 
@@ -62,11 +62,10 @@ public class DBBackupService {
 	    	SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 	    	String folderLocation = PDFUtils.getAppDataValues("MYSTORE_HOME").get(0)+AppConstants.DATA_BACKUP_FOLDER;
 	    	String mySqlHome = PDFUtils.getAppDataValues("MYSQL_HOME").get(0);
-	    	logger.error("mySqlHome : "+mySqlHome);
-	    	String fileName="\\\\DataBackup_"+sdf.format(currentDate)+".sql";
-	        String executeCmd = mySqlHome+"\\\\bin\\\\mysqldump -u root -ppassword billing_app -r "+folderLocation+fileName;
-	        /*NOTE: Executing the command here*/
-	        System.out.println(executeCmd);
+	    	
+	    	String fileName="\\\\DataBackup_"+sdf.format(currentDate)+"_"+System.currentTimeMillis()+".sql";
+	        
+	    	String executeCmd = mySqlHome+"\\\\bin\\\\mysqldump -u root -ppassword billing_app -r "+folderLocation+fileName;
 	        logger.error("DB dump : "+executeCmd);
 	        Process runtimeProcess = Runtime.getRuntime().exec(executeCmd);
 	        int processComplete = runtimeProcess.waitFor();
